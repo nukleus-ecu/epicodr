@@ -22,8 +22,8 @@ install.Rtools()
 if(!require(devtools)) install.packages("devtools")
 library(devtools)
 
-// replace version "latest" with a specific version
-// See section *Versions* for more details
+# replace version "latest" with a specific version
+# See section *Versions* for more details
 devtools::install_github("nukleus-ecu/epicodr@*release")
 
 # Specifiy location where to find data zip file
