@@ -1,10 +1,10 @@
-# primary-codeR <img src="man/figures/logo.png" align="right" width="100" />
+# epicodr <img src="man/figures/logo.png" align="right" width="100" />
 Import, primary coding and export functions for SUEP, HAP, POP data
 
 ## :floppy_disk: Versions & Download
 
-The latest versions of primary-codeR can be found here: 
-[Releases](https://github.com/nukleus-ecu/primary-codeR/releases)
+The latest versions of epicodr can be found here: 
+[Releases](https://github.com/nukleus-ecu/epicodr/releases)
 
 ## :hammer: How to use this repository
 
@@ -19,7 +19,7 @@ install.packages("devtools")
 library(devtools)
 // replace version "latest" with a specific version
 // See section *Versions* for more details
-devtools::install_github("nukleus-ecu/primary-codeR@*latest")
+devtools::install_github("nukleus-ecu/epicodr@*latest")
 
 # Specifiy location where to find data zip file
 zip_file_path <- "data/import/NAME_OF_EXPORT_FILE.zip"
@@ -47,7 +47,7 @@ write_tsExport(data_primary_coded, format = "sav", path = "data/export/", metada
 ### Alternative: Clone this Repository
 
 1. Install a R runtime environment and git on your computer. Provide Internet access.
-2. Clone this repository: ```git clone https://github.com/nukleus-ecu/primary-codeR.git```
+2. Clone this repository: ```git clone https://github.com/nukleus-ecu/epicodr.git```
 3. Export data from secuTrial and place the *.zip file in [data/import/](data/import).
 4. Open and run script [R/run/sample.R](R/run/sample.R) for sample import, primary coding and SPSS export or create a new R script by yourself.
 5. Data is exported to folder [data/export](data/export).
@@ -108,15 +108,3 @@ Inside [R/pop](R/pop), the code is structured as follows:
 - [30-primary-coding.R](R/pop/30-primary-coding.R) implements the primary coding of hap
 - [XX-export.R](R/pop/XX-export.R) contains export functions, e.g. in SPSS format
 
-### Packages in use
-
-- *rlang*
-- *tidyverse*
-- *lubridate*
-- *labelled*
-- *secuTrialR* to load secutrial exported datasets
-- *rmarkdown* to generate reports
-- *ggplot2* for plotting
-- *tableone* to generate tables
-- *kableExtra* to plot tables
-- *testthat* for testing
