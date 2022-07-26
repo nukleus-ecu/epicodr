@@ -15,11 +15,16 @@ Using this repository, you can import data exported from SecuTrial, perform prim
 1. Install a R runtime environment and git on your computer. Provide Internet access.
 2. Create a R file and put the following code inside:
 ```r
-install.packages("devtools")
+if(!require(installr)) install.packages("installr")
+library(installr)
+install.Rtools()
+
+if(!require(devtools)) install.packages("devtools")
 library(devtools)
+
 // replace version "latest" with a specific version
 // See section *Versions* for more details
-devtools::install_github("nukleus-ecu/epicodr@*latest")
+devtools::install_github("nukleus-ecu/epicodr@*release")
 
 # Specifiy location where to find data zip file
 zip_file_path <- "data/import/NAME_OF_EXPORT_FILE.zip"
