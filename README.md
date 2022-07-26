@@ -26,6 +26,9 @@ library(devtools)
 # See section *Versions* for more details
 devtools::install_github("nukleus-ecu/epicodr@*release")
 
+# Load package epicodr
+library(epicodr)
+
 # Specifiy location where to find data zip file
 zip_file_path <- "data/import/NAME_OF_EXPORT_FILE.zip"
 
