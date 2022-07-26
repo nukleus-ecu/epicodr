@@ -1,0 +1,45 @@
+Type: Package
+Package: primaryCodeR
+Title: Primary Coding for NAPKON data
+Version: 0.1.0
+Authors@R: 
+    c(person("Institut für Klinische Epidemiologie und Biometrie, Universitätsklinikum Würzburg, Germany", 
+             role=c("cph"),
+             email = "ecu@napkon.de"),
+      person(given = "Mirjam",
+             family = "Kohls",
+             role = c("aut"),
+             email = "kohls_m@ukw.de"),
+      person(given = "Olga",
+             family = "Miljukov",
+             role = c("aut"),
+             email = "miljukov_o@ukw.de"),
+      person(given = "Klaus",
+             family = "Kammerer",
+             role = c("ctb", "cre"),
+             email = "kammerer_k@ukw.de",
+             comment = c(ORCID = "0000-0001-8998-0890"))
+      )
+Description: Import, primary coding and export functions for SUEP, HAP, POP data.
+License: MIT + file LICENSE
+URL: https://github.com/nukleus-ecu/primary-codeR
+BugReports: https://github.com/nukleus-ecu/primary-codeR/issues
+Depends: 
+    R (>= 3.4.0)
+Imports:
+    tidyverse (>= 1.3.0),
+    haven,
+    readr,
+    stringr,
+    tibble,
+    dplyr,
+    lubridate,
+    rlang,
+    magrittr,
+    purrr,
+    forcats,
+    tidyr,
+    tidyselect
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.1
