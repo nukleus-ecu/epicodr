@@ -61,9 +61,9 @@ write_tsExport.tsExportdata <- function(object, format = "dta", metadata = FALSE
 write_tsExport.data.frame <- function(df, filename, path = "", format = "dta", ...) {
   name <- names(df)
   # if (format %in% c("dta", "sav")) {
-  name <- gsub("\\.datetime", "_dt", name)
-  name <- gsub("\\.date", "_d", name)
-  name <- gsub("\\.factor", "_cat", name)
+  name <- gsub("\\.datetime", "_dtt", name)
+  name <- gsub("\\.date", "_dt", name)
+  name <- gsub("\\.factor", "_nom", name)
   # }
   names(df) <- name
   
