@@ -718,6 +718,11 @@ factorize_tsExport_table <- function(.data, studydata_name, lookup) {
       .init = .
     )
   
+   # Remove value labels from the original variable, so the numeric values are kept as is when exporting to e.g. spss
+  .data <- .data %>% 
+    mutate(across(where(is.labelled) & !ends_with(".factor"), 
+                  haven::zap_labels)) 
+  
   return(.data)
 }
 
