@@ -6,25 +6,22 @@ Import, primary coding and export functions for SUEP, HAP, POP data
 The latest versions of epicodr can be found here: 
 [Releases](https://github.com/nukleus-ecu/epicodr/releases)
 
-## :hammer: How to use this repository
+## :hammer: How to use this package
 
-Using this repository, you can import data exported from SecuTrial, perform primary coding, as well as export the coded data, e.g. in SPSS format.
+Using this package, you can import NAPKON data exported from SecuTrial by the Transfer-Office, set variable and value labels, format date variables, perform primary coding, as well as export the data, e.g. in SPSS format.
 
 ### Step-by-Step Guide
 
 1. Install a R runtime environment and git on your computer. Provide Internet access.
 2. Create a R file and put the following code inside:
 ```r
-if(!require(installr)) install.packages("installr")
-library(installr)
-install.Rtools()
+# Install package remotes
+if(!require(remotes)) install.packages("remotes")
 
-if(!require(devtools)) install.packages("devtools")
-library(devtools)
-
-# replace version "latest" with a specific version
+# Install package epicodr
+# replace "release" with a specific version, if necessary
 # See section *Versions* for more details
-devtools::install_github("nukleus-ecu/epicodr@*release")
+remotes::install_github("nukleus-ecu/epicodr@*release")
 
 # Load package epicodr
 library(epicodr)
@@ -36,16 +33,18 @@ zip_file_path <- "data/import/NAME_OF_EXPORT_FILE.zip"
 data <- zip_file_path %>% 
   read_tsExport(separator = ";", decimal = ",")
 
-# Run primary coding
+# Execute primary coding on data
 data_primary_coded <- data %>% 
-  # place coding methods accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop()
+  # place coding function accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop()
   primary_coding_suep()
 
-# Note: SPSS only supports levels with <= 120 characters
-# Set affected levels to NULL
+# Note: SPSS only supports levels of variables with <= 120 characters
+# Set affected variables to NULL
+# e.g.
 data_primary_coded$fuv3$disab_ecog.factor <- NULL
 
-# Export data (SPSS format) to export folder
+# Export the prepared data in R to formats of other statistical software e.g. SPSS (sav) to export folder
+# For other formats replace "sav" with (one of "dta", "sas", "sav", "xpt")
 write_tsExport(data_primary_coded, format = "sav", path = "data/export/", metadata = TRUE)
 ```
 3. Run the script.
