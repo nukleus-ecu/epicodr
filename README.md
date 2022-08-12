@@ -1,5 +1,5 @@
 # epicodr <img src="man/figures/logo.png" align="right" width="100" />
-Import, primary coding and export functions for SUEP, HAP, POP data
+Import, primary coding and export functions for data of the National Pandemic Cohort Network [NAPKON](https://www.napkon.de). 
 
 ## :floppy_disk: Versions & Download
 
@@ -8,7 +8,10 @@ The latest versions of epicodr can be found here:
 
 ## :hammer: How to use this package
 
-Using this package, you can import NAPKON data exported from SecuTrial by the Transfer-Office, set variable and value labels, format date variables, perform primary coding, as well as export the data, e.g. in SPSS format.
+Using this package, you can import SÜP, HAP and POP data exported from SecuTrial by the Transfer-Office, set variable and value labels, format date variables, perform primary coding, as well as export the data, e.g. in SPSS format.
+
+### Tutorial
+You can find a tutorial on how to use this package on YouTube at [NUKLEUS ECU](https://www.youtube.com/watch?v=WAY-DGsRYqU).
 
 ### Step-by-Step Guide
 
