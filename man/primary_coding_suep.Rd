@@ -7,7 +7,10 @@
 primary_coding_suep(trial_data)
 }
 \arguments{
-\item{trial_data}{Export from secuTrial}
+\item{trial_data}{A secuTrial data object}
+}
+\value{
+A secuTrial data object with primary coded variables and dataframes
 }
 \description{
 Wrapper function applying the following primary coding steps to trial_data: 

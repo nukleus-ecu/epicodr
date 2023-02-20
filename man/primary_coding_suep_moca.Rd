@@ -7,7 +7,7 @@
 primary_coding_suep_moca(trial_data, pid, visitid)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 
 \item{pid}{column name of patient ID in trial_data}
 
