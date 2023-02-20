@@ -9,7 +9,8 @@ calculate_days_ecu(
   startdate,
   end_form = NULL,
   enddate,
-  primary_form = NA
+  primary_form = NA,
+  pid
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ calculate_days_ecu(
 \item{enddate}{vector of end dates of time span or column name within end_form containing date variable}
 
 \item{primary_form}{"start" if the time span will be merged to start_form. "end" if the time span will be merged to end_form. NA if one is not working across forms}
+
+\item{pid}{column name of patient ID in trial_data}
 }
 \value{
 vector of duration of time span in days
