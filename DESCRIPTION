@@ -1,7 +1,7 @@
 Type: Package
 Package: epicodr
 Title: Primary Coding for NAPKON data
-Version: 0.2.0
+Version: 1.0.0
 Authors@R: 
     c(person("Institut für Klinische Epidemiologie und Biometrie, Universitätsklinikum Würzburg, Germany", 
              role=c("cph"),
@@ -14,6 +14,10 @@ Authors@R:
              family = "Miljukov",
              role = c("aut"),
              email = "miljukov_o@ukw.de"),
+      person(given = "Carolin",
+             family = "Nürnberger",
+             role = c("aut"),
+             email = "nuernberge_c@ukw.de"),
       person(given = "Klaus",
              family = "Kammerer",
              role = c("ctb", "cre"),
@@ -39,7 +43,8 @@ Imports:
     purrr,
     forcats,
     tidyr,
-    tidyselect
+    tidyselect,
+    eq5d
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1

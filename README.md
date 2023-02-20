@@ -59,7 +59,7 @@ write_tsExport(data_primary_coded, format = "sav", path = "data/export/", metada
 1. Install a R runtime environment and git on your computer. Provide Internet access.
 2. Clone this repository: ```git clone https://github.com/nukleus-ecu/epicodr.git```
 3. Export data from secuTrial and place the *.zip file in [data/import/](data/import).
-4. Open and run script [R/run/sample.R](R/run/sample.R) for sample import, primary coding and SPSS export or create a new R script by yourself.
+4. Create a new R script and add previously shown code for sample import, primary coding and SPSS export or create a new R script by yourself.
 5. Data is exported to folder [data/export](data/export).
 
 
@@ -76,45 +76,15 @@ Additionally, there are manuals that include variable categorizations, aids for 
 
 This repository is structured as follows:
 - [R](R) contains all R code
-- [data/import](data/import) is the place to put raw datasets, i.e. secuTrial exports
-- [data/export](data/export) is the place where exported datasets are stored
-- [doc](doc) contains further documentation
-- [lib](lib) contains external libraries
-- [resources](resources) contains static content such as images
-- [tests](tests) contains unit tests
+- [man](man) contains all manuals to ecu-functions
 
 ### :computer: R code structure
 
 The R code is structured as follows:
-- [R/*.R](R) contains platform independent implementations:
-    - [10-preprocess-zip.R](R/10-preprocess-zip.R) contains a function to preprocess the exported zip
-    - [20-import-secutrial.R](R/20-import-secutrial.R) contains secutrial import functions
-    - [30-primary-coding.R](R/30-primary-coding.R) contains platformindependent helper fuctions used in platform specific primary coding scripts
-    - [40-render.R](R/40-render.R) contains a function for rendering reports
-    - [41-render-diagrams.R](R/41-render-diagrams.R) contains a function for rendering diagrams
-    - [52-render-helpers.R](R/52-render-helpers.R) contains a workaround to replace NAs in order to be able to generate tables with createTableOne without loosing rows due to all NAs in a data frame column
-- [R/hap](R/hap) contains HAP specific implementations
-- [R/pop](R/pop) contains POP specific implementations
-- [R/suep](R/suep) contains SÜP specific implementations
-
-#### SÜP
-
-Inside [R/suep](R/suep), the code is structured as follows:
-- [run](R/suep/run) contains all run scripts, e.g. to code and export to SPSS format 
-- [30-primary-coding.R](R/suep/30-primary-coding.R) implements the primary coding of suep
-- [XX-export.R](R/suep/XX-export.R) contains export functions, e.g. in SPSS format
-
-#### HAP
-
-Inside [R/hap](R/hap), the code is structured as follows:
-- [run](R/hap/run) contains all run scripts, e.g. to code and export to SPSS format 
-- [30-primary-coding.R](R/hap/30-primary-coding.R) implements the primary coding of hap
-- [XX-export.R](R/hap/XX-export.R) contains export functions, e.g. in SPSS format
-
-#### POP
-
-Inside [R/pop](R/pop), the code is structured as follows:
-- [run](R/pop/run) contains all run scripts, e.g. to code and export to SPSS format 
-- [30-primary-coding.R](R/pop/30-primary-coding.R) implements the primary coding of hap
-- [XX-export.R](R/pop/XX-export.R) contains export functions, e.g. in SPSS format
-
+- [R](R) contains platform independent and platform specific implementations:
+    - [read-tsExport.R](R/write_tsExport.R) contains import functions
+    - [write-tsExport.R](R/write_tsExport.R) contains export functions, e.g. for export to SPSS (.sav)
+    - [primary-coding.R](R/primary-coding.R) contains platform independent helper functions used in platform specific primary coding scripts
+    - [primary-coding-suep.R](R/primary-coding-suep.R) contains platform specific functions for primary coding for platform SUEP
+    - [primary-coding-hap.R](R/primary-coding-hap.R) contains platform specific functions for primary coding for platform HAP
+    - [primary-coding-pop.R](R/primary-coding-pop.R) contains platform specific functions for primary coding for platform POP
