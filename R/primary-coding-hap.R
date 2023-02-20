@@ -62,7 +62,7 @@ clean_cs <- function(x){
 
 primary_coding_hap_age <- function(trial_data) {
   
-  trial_data[["_demo"]] <- trial_data[["_demo"]] %>%
+  trial_data[["demo"]] <- trial_data[["demo"]] %>%
     # HAP already has an age in years vector, simply copy it
     mutate(ecu_age = .data$demo_0010,
            ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0011/12, .data$ecu_age),
@@ -89,7 +89,7 @@ primary_coding_hap_age <- function(trial_data) {
 
 primary_coding_hap_bmi <- function(trial_data) {
   
-  trial_data[["_demo"]] <- trial_data[["_demo"]] %>%
+  trial_data[["demo"]] <- trial_data[["demo"]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$demo_0031, .data$demo_0041),
            ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi))
   
@@ -116,7 +116,7 @@ primary_coding_hap_bmi <- function(trial_data) {
 
 primary_coding_hap_clinical_params_his <- function(trial_data) {
   
-  trial_data[["_vitalhis"]] <- trial_data[["_vitalhis"]] %>%
+  trial_data[["vitalhis"]] <- trial_data[["vitalhis"]] %>%
     mutate(ecu_vitals_his_bp = categorize_bloodpressure_ecu(.data$vp_0041, .data$vp_0042),
            ecu_vitals_his_bpm = categorize_heartfrequency_ecu(.data$vp_0031),
            ecu_vitals_his_so2 = categorize_oxigensaturation_ecu(.data$vp_0021), 
@@ -149,7 +149,7 @@ primary_coding_hap_clinical_params_his <- function(trial_data) {
 
 primary_coding_hap_clinical_params <- function(trial_data) {
   
-  trial_data[["_vitalparam"]] <- trial_data[["_vitalparam"]] %>%
+  trial_data[["vitalparam"]] <- trial_data[["vitalparam"]] %>%
     mutate(ecu_vitals_bp = categorize_bloodpressure_ecu(.data$vp_0041, .data$vp_0042),
            ecu_vitals_bpm = categorize_heartfrequency_ecu(.data$vp_0031),
            ecu_vitals_so2 = categorize_oxigensaturation_ecu(.data$vp_0021), 
@@ -181,7 +181,7 @@ primary_coding_hap_clinical_params <- function(trial_data) {
 
 primary_coding_hap_barthel_pre <- function(trial_data) {
   
-  trial_data[["_risiko1"]] <- trial_data[["_risiko1"]] %>%
+  trial_data[["risiko1"]] <- trial_data[["risiko1"]] %>%
     mutate(ecu_barthel_cat_pre = categorize_barthel_ecu(.data$risk_0022))
   
   return (trial_data)
@@ -199,7 +199,7 @@ primary_coding_hap_barthel_pre <- function(trial_data) {
 
 primary_coding_hap_barthel_disc <- function(trial_data) {
   
-  trial_data[["_end"]] <- trial_data[["_end"]] %>%
+  trial_data[["end"]] <- trial_data[["end"]] %>%
     mutate(ecu_barthel_cat_disc = categorize_barthel_ecu(.data$out_0062))
   
   return (trial_data)
@@ -217,7 +217,7 @@ primary_coding_hap_barthel_disc <- function(trial_data) {
 #' @export
 
 primary_coding_hap_eq5d5l <- function(trial_data) {
-  trial_data[["_eq5d"]] <- trial_data[["_eq5d"]] %>%
+  trial_data[["eq5d"]] <- trial_data[["eq5d"]] %>%
     mutate (ecu_eq5d5l_index = calculate_eq5d5l_index (.data$eq5d_0020, .data$eq5d_0030, .data$eq5d_0040, .data$eq5d_0050, .data$eq5d_0060))
   
   return(trial_data)
@@ -235,7 +235,7 @@ primary_coding_hap_eq5d5l <- function(trial_data) {
 
 primary_coding_hap_news_first <- function(trial_data) {
   
-  trial_data[["_klinscores"]] <- trial_data[["_klinscores"]] %>%
+  trial_data[["klinscores"]] <- trial_data[["klinscores"]] %>%
     mutate(ecu_news_cat = categorize_news_score_ecu(.data$score_0041))
   
   return(trial_data)
@@ -253,7 +253,7 @@ primary_coding_hap_news_first <- function(trial_data) {
 
 primary_coding_hap_apache2 <- function(trial_data) {
   
-  trial_data[["_klinscores1"]] <- trial_data[["_klinscores1"]] %>%
+  trial_data[["klinscores1"]] <- trial_data[["klinscores1"]] %>%
     mutate(ecu_apache2_cat = categorize_apache2_score_ecu(.data$icusc_0041))
   
   return(trial_data)
@@ -271,7 +271,7 @@ primary_coding_hap_apache2 <- function(trial_data) {
 
 primary_coding_hap_icdsc <- function(trial_data) {
   
-  trial_data[["_haemodyn"]] <- trial_data[["_haemodyn"]] %>%
+  trial_data[["haemodyn"]] <- trial_data[["haemodyn"]] %>%
     mutate(ecu_icdsc_cat = categorize_icdsc_score_ecu(.data$ksc_0041))
   
   return(trial_data)
@@ -289,7 +289,7 @@ primary_coding_hap_icdsc <- function(trial_data) {
 
 primary_coding_hap_dds <- function(trial_data) {
   
-  trial_data[["_haemodyn"]] <- trial_data[["_haemodyn"]] %>%
+  trial_data[["haemodyn"]] <- trial_data[["haemodyn"]] %>%
     mutate(ecu_dds_cat = categorize_dds_score_ecu(.data$ksc_0051))
   
   return(trial_data)
