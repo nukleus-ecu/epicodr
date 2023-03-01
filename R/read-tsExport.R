@@ -116,7 +116,7 @@
 #   list2env(envir = .GlobalEnv)
 # TODO: ...redo until here?
 read_tsExport_table <- function(data_dir, file_name, 
-                                separator = ";", decimal = ".",
+                                separator = ";", decimal = ",",
                                 encoding = "UTF-8",
                                 quote_escape_detect = FALSE,
                                 escape_backslash = TRUE){
@@ -203,7 +203,7 @@ read_tsExport_table <- function(data_dir, file_name,
 #' @importFrom rlang .data
 #' @export 
 read_tsExport_raw <- function(data_dir,
-                              separator = ";", decimal = ".",
+                              separator = ";", decimal = ",",
                               encoding = "UTF-8",
                               quote_escape_detect = TRUE,
                               escape_backslash = TRUE) {
@@ -958,7 +958,7 @@ dates_tsExport <- function(tsExport) {
 #' @return \code{tsExportdata} object - a list with one data.frame for each file 
 #'   on the export and a list containing the export options
 #' @export
-read_tsExport <- function(data_dir, separator = ";", decimal = ".",
+read_tsExport <- function(data_dir, separator = ";", decimal = ",",
                           encoding = "UTF-8",
                           quote_escape_detect = TRUE,
                           escape_backslash = TRUE,
