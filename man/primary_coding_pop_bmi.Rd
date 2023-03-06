@@ -7,7 +7,7 @@
 primary_coding_pop_bmi(trial_data)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 }
 \description{
 adds the following columns to anthropo: 

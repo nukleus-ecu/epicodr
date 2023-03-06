@@ -13,5 +13,5 @@ categorize_icdsc_score_ecu(icdsc_score)
 A factor /w levels "Kein Delir", "V.a. subsyndromales Delir" and "Delir"
 }
 \description{
-Categorize Intensive Care Delirium Screening Checklist (ICDSC)
+Categorize ICDSC in three categories
 }

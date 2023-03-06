@@ -13,5 +13,5 @@ categorize_apache2_score_ecu(apache_score)
 A factorized vector with risk to die during hospitalisation
 }
 \description{
-Categorize Acute Physiology And Chronic Health Evaluation (APACHE) Score
+Categorize APACHE Score in eight categories
 }

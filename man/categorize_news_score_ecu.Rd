@@ -14,5 +14,5 @@ A factorized vector w/ levels "Geringes klinisches Risiko", "Moderates Klinische
 "Gering-Moderates klinisches Risiko (Wert 3 in irgendeiner der Kategorien)"
 }
 \description{
-Categorize National Early Warning Score (NEWS)
+Categorize NEWS in three categories
 }

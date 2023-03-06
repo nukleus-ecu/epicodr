@@ -25,6 +25,8 @@ Answers were coded /w levels "Stimme überhaupt nicht zu", "Stimme eher nicht zu
 A numeric vector with sum score of BRS
 }
 \description{
+Calculate BRS sum score
+
 Patients are asked "Bei den folgenden Fragen geht es um Ihre Widerstandsfähigkeit, Krisen zu bewältigen. 
 Geben Sie bitte an, wie sehr Sie den folgenden Aussagen jeweils zustimmen."
 }

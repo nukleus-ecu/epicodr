@@ -13,5 +13,5 @@ categorize_heartfrequency_ecu(hf)
 factor of heartfrequency categories
 }
 \description{
-Categorize heartfrequency
+Categorizes heartfrequency in three categories
 }

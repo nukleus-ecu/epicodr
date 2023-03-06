@@ -13,5 +13,5 @@ categorize_moca_ecu(moca)
 factor of MoCA categories
 }
 \description{
-Categorize Montreal Cognitive Assessment (MoCA)
+Categorizes MoCA-Score in two categories
 }

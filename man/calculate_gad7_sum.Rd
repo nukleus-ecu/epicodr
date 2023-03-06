@@ -27,5 +27,7 @@ Answers were coded /w levels 0 = "Überhaupt nicht", 1 = "An einzelnen Tagen", 2
 A numeric vector with sum score of GAD-7
 }
 \description{
+Calculate GAD-7 sum score
+
 Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
 }

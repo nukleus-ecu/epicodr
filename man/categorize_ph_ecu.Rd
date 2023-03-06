@@ -13,5 +13,5 @@ categorize_ph_ecu(bga_ph)
 factor of pH categories
 }
 \description{
-Categorize pH of blood gas analysis
+Categorize blood gas analysis in three categories
 }

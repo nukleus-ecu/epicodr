@@ -13,5 +13,5 @@ categorize_resp_rate_ecu(resp_rate)
 factor of breathing categories
 }
 \description{
-Categorize respiration rate
+Categorizes respiration rate in three categories
 }

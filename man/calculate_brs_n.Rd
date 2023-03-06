@@ -23,5 +23,5 @@ calculate_brs_n(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6)
 A numeric vector with number of answered questions of BRS
 }
 \description{
-Calculate Brief Resilience Scale (BRS) number of answered questions
+Count number of anserwed items of BRS
 }

@@ -13,5 +13,5 @@ categorize_dds_score_ecu(dds_score)
 A factor /w levels "Kein Delir" and "Delir"
 }
 \description{
-Categorize Delirium Detection Score (DDS)
+Categorize DDS in delir and no delir
 }

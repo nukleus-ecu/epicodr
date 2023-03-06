@@ -7,7 +7,7 @@
 primary_coding_hap_clinical_params_his(trial_data)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 }
 \description{
 adds the following variables to _vitalhis: 

@@ -7,9 +7,9 @@
 primary_coding_pop_mmrc(trial_data)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variable to surveyfragebogen: 
+adds the following column to surveyfrageboge: 
 ecu_mmrc
 }

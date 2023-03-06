@@ -7,9 +7,9 @@
 primary_coding_pop_pneumo_params(trial_data)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variables to kardio: 
+adds the following columns to kardio: 
 ecu_spo2,
 }

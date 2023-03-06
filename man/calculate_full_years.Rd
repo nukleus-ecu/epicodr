@@ -2,8 +2,7 @@
 % Please edit documentation in R/primary-coding.R
 \name{calculate_full_years}
 \alias{calculate_full_years}
-\title{Primary coding of secutrial datasets of all NAPKON platforms
-Primary coding functions developed for all NAPKON secutrial datasets.}
+\title{Calculate full years from two dates}
 \usage{
 calculate_full_years(from, to)
 }
@@ -17,8 +16,4 @@ time difference between two dates in full years as numeric value
 }
 \description{
 calculates time difference in full years
-}
-\details{
-objective is to achieve a consistent and standardised preparation of variables: Categorization, definition of reference ranges, calculation of scores, etc. 
-Calculate full years from two dates
 }

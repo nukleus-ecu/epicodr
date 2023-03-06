@@ -13,5 +13,5 @@ categorize_facitf_ecu(ecu_facitf_sum)
 A factorized vector w/ levels "Relevant fatigue" and "No fatigue"
 }
 \description{
-Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)
+Categorize FACIT-F sum score in no fatigue and relevant fatigue
 }

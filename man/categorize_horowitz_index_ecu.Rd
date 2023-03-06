@@ -13,5 +13,5 @@ categorize_horowitz_index_ecu(horowitz)
 factor of Horowitz categories
 }
 \description{
-Categorize Horowitz-Index (lung function)
+Categorize Horowitz-Index in four categories
 }

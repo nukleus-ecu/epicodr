@@ -53,6 +53,8 @@ Answers were coded /w levels "Überhaupt nicht", "Ein Wenig", "Mäßig", "Ziemli
 A numeric vector with sum score of FACIT-F
 }
 \description{
+Calculate FACIT-F sum score
+
 Patients are asked "Bitte geben Sie jeweils an, wie sehr jede der folgenden Aussagen im Laufe der letzten 7 Tage auf Sie zugetroffen hat, 
 indem Sie den entsprechenden Punkt auswählen."
 }

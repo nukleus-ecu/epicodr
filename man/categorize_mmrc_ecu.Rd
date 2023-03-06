@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary-coding.R
 \name{categorize_mmrc_ecu}
 \alias{categorize_mmrc_ecu}
-\title{Categorize modified Medical Research Council Dyspnea Scale}
+\title{Categorize modified Medical Research Council Dyspnea Scale (MMRC)}
 \usage{
 categorize_mmrc_ecu(mmrc)
 }
@@ -13,5 +13,5 @@ categorize_mmrc_ecu(mmrc)
 A factorized vector w/ levels "dyspnea" and "no disypnea"
 }
 \description{
-Categorize modified Medical Research Council Dyspnea Scale
+Categorize MMRC in dyspnea and no dispnea
 }

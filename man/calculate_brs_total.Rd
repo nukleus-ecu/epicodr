@@ -15,5 +15,5 @@ calculate_brs_total(ecu_brs_sum, ecu_brs_n)
 A numeric vector with total score of BRS
 }
 \description{
-Calculate Brief Resilience Scale (BRS) total score
+Calculate BRS total score by dividing BRS sum score through number of answered items of BRS
 }

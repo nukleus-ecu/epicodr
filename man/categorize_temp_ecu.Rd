@@ -13,5 +13,5 @@ categorize_temp_ecu(temp)
 factor of body temperature categories
 }
 \description{
-Categorize body temperature
+Categorizes body temperature in seven categories
 }

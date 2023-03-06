@@ -7,9 +7,9 @@
 primary_coding_pop_eq5d5l(trial_data)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variable to erstbefragung: 
+adds the following column to erstbefragung: 
 ecu_eq5d_index
 }

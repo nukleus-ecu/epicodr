@@ -21,5 +21,5 @@ calculate_eq5d5l_index(mo, sc, ua, pd, ad)
 vector with eq5d-5l-index
 }
 \description{
-Calculate EQ5D-5L-Index
+Calculates EQ-5D-5L index following recommendations for Germany
 }

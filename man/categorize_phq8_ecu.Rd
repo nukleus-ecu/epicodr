@@ -13,5 +13,5 @@ categorize_phq8_ecu(ecu_phq8_sum)
 A factorized vector w/ levels "keine Depression" and "Depression"
 }
 \description{
-Categorize Patient Health Questionnaire Depression Scale 8 (PHQ 8)
+Categorize PHQ-8 sum score in depression and no depression
 }

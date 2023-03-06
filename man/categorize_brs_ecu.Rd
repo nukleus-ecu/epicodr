@@ -13,5 +13,5 @@ categorize_brs_ecu(ecu_brs_total)
 A factorized vector /w levels "Low resilience", "Normal resilience" and "High resilience"
 }
 \description{
-Categorize Brief Resilience Scale (BRS)
+Categorize BRS total score in three categories
 }

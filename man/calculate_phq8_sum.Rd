@@ -36,5 +36,7 @@ calculate_phq8_sum(
 A numeric vector with sum score of phq8
 }
 \description{
+Calculate sum score of PHQ-8
+
 Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
 }

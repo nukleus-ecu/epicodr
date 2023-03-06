@@ -13,5 +13,5 @@ categorize_gad7_ecu(ecu_gad7_sum)
 A factorized vector w/ levels "No anxiety", "Mild anxiety", "Moderate anxiety" and "Severe anxiety"
 }
 \description{
-Categorize Generalized Anxiety Disorder 7 (GAD-7) sum score
+Categorize GAD-7 sum score in four categories
 }
