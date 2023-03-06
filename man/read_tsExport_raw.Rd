@@ -7,7 +7,7 @@
 read_tsExport_raw(
   data_dir,
   separator = ";",
-  decimal = ".",
+  decimal = ",",
   encoding = "UTF-8",
   quote_escape_detect = TRUE,
   escape_backslash = TRUE
