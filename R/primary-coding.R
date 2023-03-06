@@ -1,7 +1,10 @@
-#' Primary coding of secutrial datasets of all NAPKON platforms
-#' Primary coding functions developed for all NAPKON secutrial datasets.
-#'
-#' objective is to achieve a consistent and standardised preparation of variables: Categorization, definition of reference ranges, calculation of scores, etc. 
+#################
+# Primary coding functions developed for all NAPKON secutrial datasets
+#
+# script contains function definition which can be sourced for primary coding of secutrial datasets of all NAPKON platforms
+#
+# objective is to achieve a consistent and standardised preparation of variables: Categorization, definition of reference ranges, calculation of scores, etc. 
+#################
 
 
 #' Calculate full years from two dates
@@ -84,8 +87,8 @@ calculate_days_ecu <- function(start_form = NULL, startdate, end_form = NULL, en
     startdate <- enquo(startdate)
     enddate <- enquo(enddate)
     
-    time_span<- select(start_form, !!startdate, start_form$mnppid) %>%
-      left_join(select(end_form, !!enddate, end_form$mnppid), by = pid) %>%
+    time_span<- select(start_form, !!startdate, pid) %>%
+      left_join(select(end_form, !!enddate, pid), by = pid) %>%
       mutate(time_span = time_length(interval(!!startdate, !!enddate), unit = "days")) %>%
       pull(time_span)
   }
@@ -197,6 +200,7 @@ categorize_bmi_ecu <- function(bmi, height_uk.factor=NULL, weight_uk.factor=NULL
 
 #' Categorize barthel index
 #'
+#' @description Categorizes barthel index in four categories
 #' @return factor of barthel index categories
 #' @param barthel vector of Barthel index points
 #' @export 
@@ -215,6 +219,7 @@ categorize_barthel_ecu <- function(barthel){
 
 #' Categorize Montreal Cognitive Assessment (MoCA)
 #'
+#' @description Categorizes MoCA-Score in two categories
 #' @return factor of MoCA categories
 #'
 #' @param moca vector of MoCA points
@@ -230,6 +235,7 @@ categorize_moca_ecu <- function(moca){
 
 #' Calculate EQ5D-5L-Index
 #' 
+#' @description Calculates EQ-5D-5L index following recommendations for Germany
 #' @param mo is a vector for mobility score of eq5d
 #' @param sc is a vector for self-care score of eq5d
 #' @param ua is a vector for usual activity score of eq5d
@@ -248,7 +254,8 @@ calculate_eq5d5l_index <- function (mo, sc, ua, pd, ad) {
 
 
 #' Categorize blood pressure
-#'
+#' 
+#' @description Categorizes blood pressure in seven categories
 #' @return factor of blood pressure categories
 #'
 #' @param sbp vector of systolic blood pressure in mmHg 
@@ -270,7 +277,8 @@ categorize_bloodpressure_ecu <- function(sbp, dbp){
 
 
 #' Categorize heartfrequency
-#'
+#' 
+#' @description Categorizes heartfrequency in three categories
 #' @return factor of heartfrequency categories
 #'
 #' @param hf vector of heartfrequency in bpm
@@ -287,6 +295,7 @@ categorize_heartfrequency_ecu <- function(hf){
 
 #' Categorize oxigen saturation
 #'
+#' @description Categorizes oxigen saturation in four categories
 #' @return factor of oxigen saturation categories
 #'
 #' @param so2 vector of oxigen saturation SpO2 in percent
@@ -303,7 +312,8 @@ categorize_oxigensaturation_ecu <- function(so2){
 
 
 #' Categorize respiration rate
-#'
+#' 
+#' @description Categorizes respiration rate in three categories
 #' @return factor of breathing categories
 #'
 #' @param resp_rate A vector with breaths per minute
@@ -319,7 +329,8 @@ categorize_resp_rate_ecu <-  function(resp_rate){
 
 
 #' Categorize body temperature
-#'
+#' 
+#' @description Categorizes body temperature in seven categories
 #' @return factor of body temperature categories
 #'
 #' @param temp vector of body temperature in degree celsuis
@@ -339,7 +350,8 @@ categorize_temp_ecu <-  function(temp){
 
 
 #' Categorize Glasgow Coma Scale
-#'
+#' 
+#' @description Categorizes GCS in four categories
 #' @return factor of Glasgow Coma Scale categories
 #'
 #' @param gcs vector of Glasgow Coma Scale points
@@ -356,7 +368,8 @@ categorize_gcs_ecu <-  function(gcs){
 
 
 #' Categorize Horowitz-Index (lung function)
-#'
+#' 
+#' @description Categorize Horowitz-Index in four categories
 #' @return factor of Horowitz categories
 #'
 #' @param horowitz A vector with lung function measured in mmHg
@@ -373,7 +386,8 @@ categorize_horowitz_index_ecu <-  function(horowitz){
 
 
 #' Categorize pH of blood gas analysis
-#'
+#' 
+#' @description Categorize blood gas analysis in three categories
 #' @return factor of pH categories
 #'
 #' @param bga_ph vector of pH of blood gas analysis
@@ -388,9 +402,11 @@ categorize_ph_ecu <-  function(bga_ph){
 }
 
 
-#' Categorize modified Medical Research Council Dyspnea Scale
+#' Categorize modified Medical Research Council Dyspnea Scale (MMRC)
 #' 
+#' @description Categorize MMRC in dyspnea and no dispnea
 #' @param mmrc factor of modified medical research council dyspnea scale (mmrc) categories
+#' 
 #' @return A factorized vector w/ levels "dyspnea" and "no disypnea"
 
 categorize_mmrc_ecu <- function (mmrc) {
@@ -402,6 +418,8 @@ categorize_mmrc_ecu <- function (mmrc) {
 
 
 #' Calculate Patient Health Questionnaire Depression Scale 8 (PHQ 8) sum score
+#' 
+#' @description Calculate sum score of PHQ-8
 #' 
 #' Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
 #' @param phq8_1 factor for item "Wenig Interesse oder Freude an Ihren Tätigkeiten."
@@ -425,6 +443,7 @@ calculate_phq8_sum <- function (phq8_1, phq8_2, phq8_3, phq8_4, phq8_5, phq8_6, 
 
 #' Categorize Patient Health Questionnaire Depression Scale 8 (PHQ 8) 
 #' 
+#' @description Categorize PHQ-8 sum score in depression and no depression
 #' @param ecu_phq8_sum numeric vector with sum score of phq8
 #' @return A factorized vector w/ levels "keine Depression" and "Depression"
 #' @export
@@ -439,6 +458,7 @@ categorize_phq8_ecu <- function (ecu_phq8_sum) {
 
 #' Categorize National Early Warning Score (NEWS)
 #' 
+#' @description Categorize NEWS in three categories
 #' @param news_score A numerical vector with NEWS score
 #' @return A factorized vector w/ levels "Geringes klinisches Risiko", "Moderates Klinisches Risiko", "Hohes Klinisches Risiko", 
 #' "Gering-Moderates klinisches Risiko (Wert 3 in irgendeiner der Kategorien)"
@@ -454,6 +474,7 @@ categorize_news_score_ecu <- function(news_score) {
 
 #' Categorize Acute Physiology And Chronic Health Evaluation (APACHE) Score
 #' 
+#' @description Categorize APACHE Score in eight categories
 #' @param apache_score A numerical vector with APACHE score
 #' @return A factorized vector with risk to die during hospitalisation
 #' @export
@@ -474,6 +495,7 @@ categorize_apache2_score_ecu <- function(apache_score) {
 
 #' Categorize Intensive Care Delirium Screening Checklist (ICDSC)
 #' 
+#' @description Categorize ICDSC in three categories
 #' @param icdsc_score A numerical vector with ICDSC score
 #' @return A factor /w levels "Kein Delir", "V.a. subsyndromales Delir" and "Delir"
 #' @export
@@ -489,6 +511,7 @@ categorize_icdsc_score_ecu <- function(icdsc_score) {
 
 #' Categorize Delirium Detection Score (DDS)
 #' 
+#' @description Categorize DDS in delir and no delir
 #' @param dds_score A numerical vector with DDS score
 #' @return A factor /w levels "Kein Delir" and "Delir"
 #' @export
@@ -502,6 +525,8 @@ categorize_dds_score_ecu <- function(dds_score) {
 
 
 #' Calculate Generalized Anxiety Disorder 7 (GAD-7) sum score
+#' 
+#' @description Calculate GAD-7 sum score
 #' 
 #' Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
 #' @param gad7_1 factor for item "Nervosität, Ängstlichkeit oder Anspannung."
@@ -526,6 +551,7 @@ calculate_gad7_sum <- function (gad7_1, gad7_2, gad7_3, gad7_4, gad7_5, gad7_6, 
 
 #' Categorize Generalized Anxiety Disorder 7 (GAD-7) sum score
 #' 
+#' @description Categorize GAD-7 sum score in four categories
 #' @param ecu_gad7_sum numeric vector with sum score of GAD-7
 #' @return A factorized vector w/ levels "No anxiety", "Mild anxiety", "Moderate anxiety" and "Severe anxiety"
 #' @export
@@ -541,6 +567,8 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
 
 
 #' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F) sum score
+#' 
+#' @description Calculate FACIT-F sum score
 #' 
 #' Patients are asked "Bitte geben Sie jeweils an, wie sehr jede der folgenden Aussagen im Laufe der letzten 7 Tage auf Sie zugetroffen hat, 
 #' indem Sie den entsprechenden Punkt auswählen."
@@ -574,6 +602,7 @@ calculate_facitf_sum <- function(facitf_1,facitf_2, facitf_3, facitf_4, facitf_5
 
 #' Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)
 #' 
+#' @description Categorize FACIT-F sum score in no fatigue and relevant fatigue
 #' @param ecu_facitf_sum numeric vector with sum score of FACIT-F
 #' @return A factorized vector w/ levels "Relevant fatigue" and "No fatigue"
 #' @export
@@ -587,6 +616,8 @@ categorize_facitf_ecu <- function (ecu_facitf_sum) {
 
 
 #' Calculate Brief Resilience Scale (BRS) sum score
+#' 
+#' @description Calculate BRS sum score
 #' 
 #' Patients are asked "Bei den folgenden Fragen geht es um Ihre Widerstandsfähigkeit, Krisen zu bewältigen. 
 #' Geben Sie bitte an, wie sehr Sie den folgenden Aussagen jeweils zustimmen."
@@ -610,6 +641,8 @@ calculate_brs_sum <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
 
 
 #' Calculate Brief Resilience Scale (BRS) number of answered questions
+#' 
+#' @description Count number of anserwed items of BRS
 #' 
 #' @param brs_1 factor for item "Ich neige dazu, mich nach schwierigen Zeiten schnell zu erholen."
 #' @param brs_2 factor for item "Es fällt mir schwer, stressige Situationen durchzustehen."
@@ -635,6 +668,7 @@ calculate_brs_n <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
 
 #' Calculate Brief Resilience Scale (BRS) total score
 #' 
+#' @description Calculate BRS total score by dividing BRS sum score through number of answered items of BRS
 #' @param ecu_brs_sum A numeric vector with sum score of BRS
 #' @param ecu_brs_n A numeric vector with number of answered questions of BRS
 #' 
@@ -650,6 +684,7 @@ calculate_brs_total <- function(ecu_brs_sum, ecu_brs_n) {
 
 #' Categorize Brief Resilience Scale (BRS)
 #' 
+#' @description Categorize BRS total score in three categories 
 #' @param ecu_brs_total A numeric vector with total score of BRS
 #' 
 #' @return A factorized vector /w levels "Low resilience", "Normal resilience" and "High resilience"

@@ -43,7 +43,7 @@ clean_cs <- function(x){
 
 # structure of functions with the prefix primary_coding_pop 
 # The functions create one or more new columns (using mutate)
-# the functions return the trial data including new variables
+# the functions return the trial data including new columns
 # in the last step of this script, in the function primary_coding_pop(), all selected primary_coding_pop steps are performed consecutively. 
 # this is the function which will be called in the run script to create trial_data from trial_data_raw
 
@@ -57,7 +57,7 @@ clean_cs <- function(x){
 #' adds the following columns to erstbefragung: 
 #' ecu_age - age in years, ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -79,7 +79,7 @@ primary_coding_pop_age <- function(trial_data) {
 #' adds the following columns to erstbefragung: 
 #' ecu_migration_background 
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -99,7 +99,7 @@ primary_coding_pop_migration <- function(trial_data) {
 #' adds the following columns to anthropo: 
 #' ecu_bmi, ecu_bmi_cat, ecu_adipositas
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @importFrom forcats fct_collapse
 #' @export
@@ -125,7 +125,7 @@ primary_coding_pop_bmi <- function(trial_data) {
 #' adds the following columns to anthropo: 
 #' ecu_temp, ecu_sdp, ecu_dbp, ecu_bp
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -150,10 +150,10 @@ primary_coding_pop_clinical_params <- function(trial_data) {
 
 #' Primary coding cardiological parameters
 #' 
-#' adds the following variables to kardio: 
+#' adds the following columns to kardio: 
 #' ecu_bpm,
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -170,10 +170,10 @@ primary_coding_pop_cardio_params <- function(trial_data) {
 
 #' Primary coding cardiological parameters
 #' 
-#' adds the following variables to kardio: 
+#' adds the following columns to kardio: 
 #' ecu_spo2,
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -196,10 +196,10 @@ primary_coding_pop_pneumo_params <- function(trial_data) {
 
 #' Primary coding EQ5D-5L-Index
 #' 
-#' adds the following variable to erstbefragung: 
+#' adds the following column to erstbefragung: 
 #' ecu_eq5d_index
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom eq5d eq5d
 #' @importFrom rlang .data
 #' @export
@@ -215,10 +215,10 @@ primary_coding_pop_eq5d5l <- function(trial_data) {
 
 #' Primary coding modified Medical Research Council Dyspnea Scale (mMRC)
 #' 
-#' adds the following variable to surveyfragebogen: 
+#' adds the following column to surveyfrageboge: 
 #' ecu_mmrc
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom eq5d eq5d
 #' @importFrom rlang .data
 #' @export
@@ -234,10 +234,10 @@ primary_coding_pop_mmrc <- function(trial_data) {
 
 #' Primary coding Patient Health Questionnaire depession scale (PHQ-8)
 #' 
-#' adds the following variable to surveyfragebogen: 
+#' adds the following column to surveyfrageboge: 
 #' ecu_phq8
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -255,10 +255,10 @@ primary_coding_pop_phq8 <- function(trial_data) {
 
 #' Primary coding Generalized Anxiety Disorder 7 (GAD-7)
 #' 
-#' adds the following variable to surveyfragebogen: 
+#' adds the following column to surveyfrageboge: 
 #' ecu_gad7
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -277,10 +277,10 @@ primary_coding_pop_gad7 <- function(trial_data) {
 
 #' Primary coding Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)
 #' 
-#' adds the following variable to surveyfragebogen: 
+#' adds the following column to surveyfrageboge: 
 #' ecu_facitf
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -299,10 +299,10 @@ primary_coding_pop_facitf <- function(trial_data) {
 
 #' Primary coding Brief Resilience Scale (BRS)
 #' 
-#' adds the following variable to surveyfragebogen: 
+#' adds the following columns to surveyfrageboge: 
 #' ecu_brs_sum, ecu_brs_n, ecu_brs_total, ecu_brs_cat
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -315,6 +315,57 @@ primary_coding_pop_brs <- function(trial_data) {
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
            ecu_brs_total = if (.data$ecu_brs_total == "NaN") {NA} else {.data$ecu_brs_total},
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) %>%
+    ungroup()
+  
+  return(trial_data)
+}
+
+
+#' Pittsburgh Sleep Quality Index
+#' 
+#' add the following columns to surveyfrageboge:
+#' ecu_psqi_comp_1, ecu_psqi_comp_2_sum, ecu_psqi_comp_2, ecu_psqi_comp_3, ecu_psqi_comp_4, ecu_psqi_comp_5_sum, ecu_psqi_comp_5, ecu_psqi_comp_6, 
+#' ecu_psqi_comp_7_sum, ecu_psqi_comp_7, ecu_psqi_global_score
+#' 
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_psqi <- function(trial_data) {
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    rowwise() %>%
+    mutate(ecu_psqi_comp_1 = .data$psqi6,
+           ecu_psqi_comp_2_sum = case_when(.data$psqi2 <= 15 ~ 0,
+                                           .data$psqi2 >= 16 & .data$psqi2 <= 30 ~ 1,
+                                           .data$psqi2 >= 31 & .data$psqi2 <= 60 ~ 2,
+                                           .data$psqi2 > 60 ~ 3) +
+             .data$psqi5a,
+           ecu_psqi_comp_2 = case_when(.data$ecu_psqi_comp_2_sum == 0 ~ 0,
+                                       .data$ecu_psqi_comp_2_sum == 1 | .data$ecu_psqi_comp_2_sum == 2 ~ 1,
+                                       .data$ecu_psqi_comp_2_sum == 3 | .data$ecu_psqi_comp_2_sum == 4 ~ 2,
+                                       .data$ecu_psqi_comp_2_sum >= 5 ~ 3),
+           ecu_psqi_comp_3 = case_when(.data$psqi4 > 7 ~ 0, # > 7 hours
+                                       .data$psqi4 >= 6 & .data$psqi4 <= 7 ~ 1, # 6-7 hours
+                                       .data$psqi4 >= 5 & .data$psqi4 < 6 ~ 2, # 5-6 hours
+                                       .data$psqi4 < 5 ~ 3), # < 5 hours
+           ecu_psqi_comp_4 = case_when(.data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 85 ~ 0,
+                                       .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 75 & .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 84 ~ 1,
+                                       .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 65 & .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 74 ~ 2,
+                                       .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 64 ~ 3),
+           ecu_psqi_comp_5_sum = sum(.data$psqi5b, .data$psqi5c, .data$psqi5d, .data$psqi5e, .data$psqi5f, .data$psqi5g, .data$psqi5h, .data$psqi5i, .data$psqi5j),
+           ecu_psqi_comp_5 = case_when(.data$ecu_psqi_comp_5_sum == 0 ~ 0,
+                                       .data$ecu_psqi_comp_5_sum >= 1 & .data$ecu_psqi_comp_5_sum <= 9 ~ 1,
+                                       .data$ecu_psqi_comp_5_sum >= 10 & .data$ecu_psqi_comp_5_sum <= 18 ~ 2,
+                                       .data$ecu_psqi_comp_5_sum >= 19 ~ 3),
+           ecu_psqi_comp_6 = .data$psqi7,
+           ecu_psqi_comp_7_sum = sum(.data$psqi8, .data$psqi9),
+           ecu_psqi_comp_7 = case_when(.data$ecu_psqi_comp_7_sum == 0 ~ 0,
+                                       .data$ecu_psqi_comp_7_sum == 1 | .data$ecu_psqi_comp_7_sum == 2 ~ 1,
+                                       .data$ecu_psqi_comp_7_sum == 3 | .data$ecu_psqi_comp_7_sum == 4 ~ 2,
+                                       .data$ecu_psqi_comp_7_sum >= 5 ~ 3),
+           ecu_psqi_global_score = sum(.data$ecu_psqi_comp_1, .data$ecu_psqi_comp_2, .data$ecu_psqi_comp_3, .data$ecu_psqi_comp_4, .data$ecu_psqi_comp_5, 
+                                       .data$ecu_psqi_comp_6, .data$ecu_psqi_comp_7)) %>%
     ungroup()
   
   return(trial_data)
@@ -406,6 +457,10 @@ primary_coding_pop <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_pop_brs(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_brs() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_psqi(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_psqi() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")

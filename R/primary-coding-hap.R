@@ -56,7 +56,7 @@ clean_cs <- function(x){
 #'
 #' adds the following columns to _demo: ecu_age - age in years, ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -83,7 +83,7 @@ primary_coding_hap_age <- function(trial_data) {
 #'
 #' adds the following columns to _demo: ecu_bmi, ecu_bmi_cat
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -110,7 +110,7 @@ primary_coding_hap_bmi <- function(trial_data) {
 #' ecu_vitals_his_bp, ecu_vitals_his_bpm, ecu_vitals_his_so2, ecu_vitals_his_resp_rate, ecu_vitals_his_temp,
 #' ecu_vitals_his_gcs, ecu_vitals_his_horowitz_cat, ecu_vitals_his_ph
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -143,7 +143,7 @@ primary_coding_hap_clinical_params_his <- function(trial_data) {
 #' ecu_vitals_bp, ecu_vitals_bpm, ecu_vitals_so2, ecu_vitals_resp_rate, ecu_vitals_temp,
 #' ecu_vitals_gcs, ecu_vitals_ph
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -175,7 +175,7 @@ primary_coding_hap_clinical_params <- function(trial_data) {
 #' adds the following variable to _risiko1:
 #' ecu_barthel_cat_pre
 #' 
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -193,7 +193,7 @@ primary_coding_hap_barthel_pre <- function(trial_data) {
 #' adds the following variable to _end:
 #' ecu_barthel_cat_disc
 #' 
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -211,7 +211,7 @@ primary_coding_hap_barthel_disc <- function(trial_data) {
 #' adds the following variable to _eq5d:
 #' ecu_eq5d_index
 #'
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom eq5d eq5d
 #' @importFrom rlang .data
 #' @export
@@ -229,7 +229,7 @@ primary_coding_hap_eq5d5l <- function(trial_data) {
 #' adds the following variable to _klinscores:
 #' ecu_news_cat
 #' 
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -247,7 +247,7 @@ primary_coding_hap_news_first <- function(trial_data) {
 #' adds the following variable to _klinscores1:
 #' ecu_apache2_cat
 #' 
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -265,7 +265,7 @@ primary_coding_hap_apache2 <- function(trial_data) {
 #' adds the following variable to _haemodyn:
 #' ecu_icdsc_cat
 #' 
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
@@ -283,7 +283,7 @@ primary_coding_hap_icdsc <- function(trial_data) {
 #' adds the following variable to _haemodyn:
 #' ecu_dds_cat
 #' 
-#' @param trial_data SecuTrial Data
+#' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @export
 
