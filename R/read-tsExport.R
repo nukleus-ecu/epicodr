@@ -560,7 +560,7 @@ create_vallab_lookup <- function(cl, study_id) {
 #'   
 #' @return Data.Frame with (value) labelled variables
 #' @import dplyr
-#' @noRd
+#' @keywords internal
 valuelabels_tsExport_table <- function(.data, studydata_name, lookup) {
   
   labelled_attrsave <- function(x, labels = NULL, label = NULL) {
@@ -602,7 +602,7 @@ valuelabels_tsExport_table <- function(.data, studydata_name, lookup) {
 #' @description 
 #' Set value labels for all variables found in the cl.csv file.
 #' 
-#' Add value_labels lookup list to export_options.
+#' Create value_labels lookup list and add it to export_options.
 #' 
 #' @import stringr 
 #' @import dplyr
@@ -614,7 +614,7 @@ valuelabels_tsExport_table <- function(.data, studydata_name, lookup) {
 #' @return \code{tsExportdata} with value labels
 #' 
 #' @seealso valuelabels_tsExport_table
-#' @noRd
+#' @export
 valuelabels_tsExport <- function(tsExport) {
   
   # check if cl table is in the data export
@@ -800,7 +800,7 @@ factorize_tsExport <- function(tsExport) {
 #'   named "is".
 #' @param study_id String. Study ID in secuTrial.
 #' @return named list of study data table names and their date variables
-#' @noRd
+#' @keywords internal
 create_date_lookup <- function(is, study_id) {
   
   lookup_table <- is %>% 
