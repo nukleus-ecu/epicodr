@@ -10,7 +10,7 @@ categorize_phq8_ecu(ecu_phq8_sum)
 \item{ecu_phq8_sum}{numeric vector with sum score of phq8}
 }
 \value{
-A factorized vector w/ levels "keine Depression" and "Depression"
+A factorized vector w/ levels "No depression" and "Depression"
 }
 \description{
 Categorize PHQ-8 sum score in depression and no depression

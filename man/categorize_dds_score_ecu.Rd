@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary-coding.R
 \name{categorize_dds_score_ecu}
 \alias{categorize_dds_score_ecu}
-\title{Categorize Delirium Detection Score (DDS)}
+\title{Categorize delir Detection Score (DDS)}
 \usage{
 categorize_dds_score_ecu(dds_score)
 }
@@ -10,7 +10,7 @@ categorize_dds_score_ecu(dds_score)
 \item{dds_score}{A numerical vector with DDS score}
 }
 \value{
-A factor /w levels "Kein Delir" and "Delir"
+A factor /w levels "No delir" and "Delir"
 }
 \description{
 Categorize DDS in delir and no delir

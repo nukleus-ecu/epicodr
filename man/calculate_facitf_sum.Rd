@@ -21,33 +21,33 @@ calculate_facitf_sum(
 )
 }
 \arguments{
-\item{facitf_1}{factor for item "Ich bin erschöpft."}
+\item{facitf_1}{vector for item "I feel fatigued."}
 
-\item{facitf_2}{factor for item "Ich fühle mich insgesamt schwach."}
+\item{facitf_2}{vector for item "I feel weak all over."}
 
-\item{facitf_3}{factor for item "Ich fühle mich lustlos (ausgelaugt)."}
+\item{facitf_3}{vector for item "I feel listless ("washed out")."}
 
-\item{facitf_4}{factor for item "Ich bin müde."}
+\item{facitf_4}{vector for item "I feel tired."}
 
-\item{facitf_5}{factor for item "Es fällt mir schwer, etwas anzufangen, weil ich müde bin."}
+\item{facitf_5}{vector for item "I have trouble starting things because I am tired."}
 
-\item{facitf_6}{factor for item "Es fällt mir schwer, etwas zu Ende zu führen, weil ich müde bin."}
+\item{facitf_6}{vector for item "I have trouble finishing things because I am tired."}
 
-\item{facitf_7}{factor for item "Ich habe Energie."}
+\item{facitf_7}{vector for item "I have energy."}
 
-\item{facitf_8}{factor for item "Ich bin in der Lage, meinen gewohnten Aktivitäten nachzugehen (Beruf, Einkaufen, Schule, Freizeit, Sport usw.)."}
+\item{facitf_8}{vector for item "I am able to do my usual activities."}
 
-\item{facitf_9}{factor for item "Ich habe das Bedürfnis, tagsüber zu schlafen."}
+\item{facitf_9}{vector for item "I need to sleep during the day."}
 
-\item{facitf_10}{factor for item "Ich bin zu müde, um zu essen."}
+\item{facitf_10}{vector for item "I am too tired to eat."}
 
-\item{facitf_11}{factor for item "Ich brauche Hilfe bei meinen gewohnten Aktivitäten (Beruf, Einkaufen, Schule, Freizeit, Sport usw.)."}
+\item{facitf_11}{vector for item "I need help doing my usual activities."}
 
-\item{facitf_12}{factor for item "Ich bin frustriert, weil ich zu müde bin, die Dinge zu tun, die ich machen möchte."}
+\item{facitf_12}{vector for item "I am frustrated by being too tired to do the things I want to do."}
 
-\item{facitf_13}{factor for item "Ich muss meine sozialen Aktivitäten einschränken, weil ich müde bin."
+\item{facitf_13}{vector for item "I have to limit my social activity because I am tired."
 
-Answers were coded /w levels "Überhaupt nicht", "Ein Wenig", "Mäßig", "Ziemlich" and "Sehr"}
+Answers were coded /w levels "Not at all", "A little bit", "Somewhat", "Quite a bit" and "Very much"}
 }
 \value{
 A numeric vector with sum score of FACIT-F
@@ -55,6 +55,5 @@ A numeric vector with sum score of FACIT-F
 \description{
 Calculate FACIT-F sum score
 
-Patients are asked "Bitte geben Sie jeweils an, wie sehr jede der folgenden Aussagen im Laufe der letzten 7 Tage auf Sie zugetroffen hat, 
-indem Sie den entsprechenden Punkt auswählen."
+Patients are asked "Please indicate how much each of the following statements has applied to you over the last 7 days by selecting the appropriate item."
 }

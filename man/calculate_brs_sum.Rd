@@ -7,19 +7,19 @@
 calculate_brs_sum(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6)
 }
 \arguments{
-\item{brs_1}{factor for item "Ich neige dazu, mich nach schwierigen Zeiten schnell zu erholen."}
+\item{brs_1}{vector for item "I tend to bounce back quickly after hard times.."}
 
-\item{brs_2}{factor for item "Es fällt mir schwer, stressige Situationen durchzustehen."}
+\item{brs_2}{vector for item "I have a hard time making it through stressful events."}
 
-\item{brs_3}{factor for item "Ich brauche nicht viel Zeit, um mich von einem stressigen Ereignis zu erholen."}
+\item{brs_3}{vector for item "It does not take me long to recover from a stressful event."}
 
-\item{brs_4}{factor for item "Es fällt mir schwer, zur Normalität zurückzukehren, wenn etwas Schlimmes passiert ist."}
+\item{brs_4}{vector for item "It is hard for me to snap back when something bad happens."}
 
-\item{brs_5}{factor for item "Normalerweise überstehe ich schwierige Zeiten ohne größere Probleme."}
+\item{brs_5}{vector for item "I usually come through difficult times with little trouble."}
 
-\item{brs_6}{factor for item "Ich brauche tendenziell lange, um über Rückschläge in meinem Leben hinwegzukommen."
+\item{brs_6}{vector for item "I tend to take a long time to get over set-backs in my life."
 
-Answers were coded /w levels "Stimme überhaupt nicht zu", "Stimme eher nicht zu", "Stimme eher zu", "Stimme vollkommen zu"}
+Answers were coded /w levels "Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"}
 }
 \value{
 A numeric vector with sum score of BRS
@@ -27,6 +27,5 @@ A numeric vector with sum score of BRS
 \description{
 Calculate BRS sum score
 
-Patients are asked "Bei den folgenden Fragen geht es um Ihre Widerstandsfähigkeit, Krisen zu bewältigen. 
-Geben Sie bitte an, wie sehr Sie den folgenden Aussagen jeweils zustimmen."
+Patients are asked "The following questions are about your resilience to cope with crises. Please respond to each item by marking one box per row."
 }

@@ -16,21 +16,23 @@ calculate_phq8_sum(
 )
 }
 \arguments{
-\item{phq8_1}{factor for item "Wenig Interesse oder Freude an Ihren Tätigkeiten."}
+\item{phq8_1}{vector for item "Little interest or pleasure in doing things."}
 
-\item{phq8_2}{factor for item "Niedergeschlagenheit, Schwermut oder Hoffnungslosigkeit."}
+\item{phq8_2}{vector for item "Feeling down, depressed, or hopeless."}
 
-\item{phq8_3}{factor for item "Schwierigkeiten, ein- oder durchzuschlafen, oder vermehrter Schlaf."}
+\item{phq8_3}{vector for item "Trouble falling or staying asleep, or sleeping too much."}
 
-\item{phq8_4}{factor for item "Müdigkeit oder Gefühl, keine Energie zu haben."}
+\item{phq8_4}{vector for item "Feeling tired or having little energy."}
 
-\item{phq8_5}{factor for item "Verminderter Appetit oder übermäßiges Bedürfnis zu essen."}
+\item{phq8_5}{vector for item "Poor appetite or overeating"}
 
-\item{phq8_6}{factor for item "Schlechte Meinung von sich selbst; Gefühl, ein Versager zu sein oder die Familie enttäuscht zu haben."}
+\item{phq8_6}{vector for item "Feeling bad about yourself - or that you are a failure or have let yourself or your family down."}
 
-\item{phq8_7}{factor for item "Schwierigkeiten, sich auf etwas zu konzentrieren, z. B. beim Zeitung  lesen oder Fernsehen."}
+\item{phq8_7}{vector for item "Trouble concentrating on things, such as reading the newspaper or watching television."}
 
-\item{phq8_8}{factor for item "Waren Ihre Bewegungen oder Ihre Sprache so verlangsamt, dass es auch anderen auffallen würde? Oder waren Sie im Gegenteil "zappelig" oder ruhelos und hatten dadurch einen stärkeren Bewegungsdrang als sonst?"}
+\item{phq8_8}{vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
+
+#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"}
 }
 \value{
 A numeric vector with sum score of phq8
@@ -38,5 +40,5 @@ A numeric vector with sum score of phq8
 \description{
 Calculate sum score of PHQ-8
 
-Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
+Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
 }

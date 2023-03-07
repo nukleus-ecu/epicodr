@@ -10,7 +10,7 @@ categorize_mmrc_ecu(mmrc)
 \item{mmrc}{factor of modified medical research council dyspnea scale (mmrc) categories}
 }
 \value{
-A factorized vector w/ levels "dyspnea" and "no disypnea"
+A factorized vector w/ levels "Dyspnea" and "No disypnea"
 }
 \description{
 Categorize MMRC in dyspnea and no dispnea

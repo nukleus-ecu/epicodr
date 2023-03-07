@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary-coding.R
 \name{categorize_icdsc_score_ecu}
 \alias{categorize_icdsc_score_ecu}
-\title{Categorize Intensive Care Delirium Screening Checklist (ICDSC)}
+\title{Categorize Intensive Care delir Screening Checklist (ICDSC)}
 \usage{
 categorize_icdsc_score_ecu(icdsc_score)
 }
@@ -10,7 +10,7 @@ categorize_icdsc_score_ecu(icdsc_score)
 \item{icdsc_score}{A numerical vector with ICDSC score}
 }
 \value{
-A factor /w levels "Kein Delir", "V.a. subsyndromales Delir" and "Delir"
+A factor /w levels "No delir", "Subsyndromale delir" and "Delir"
 }
 \description{
 Categorize ICDSC in three categories

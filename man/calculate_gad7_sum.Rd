@@ -7,21 +7,21 @@
 calculate_gad7_sum(gad7_1, gad7_2, gad7_3, gad7_4, gad7_5, gad7_6, gad7_7)
 }
 \arguments{
-\item{gad7_1}{factor for item "Nervosität, Ängstlichkeit oder Anspannung."}
+\item{gad7_1}{vector for item "Feeling nervous, anxious or on edge."}
 
-\item{gad7_2}{factor for item "Nicht in der Lage sein, Sorgen zu stoppen oder zu kontrollieren."}
+\item{gad7_2}{vector for item "Not being able to stop or control worrying."}
 
-\item{gad7_3}{factor for item "Übermäßige Sorgen bezüglich verschiedener Angelegenheiten."}
+\item{gad7_3}{vector for item "Worrying too much about different things."}
 
-\item{gad7_4}{factor for item "Schwierigkeiten zu entspannen."}
+\item{gad7_4}{vector for item "Trouble relaxing."}
 
-\item{gad7_5}{factor for item "Rastlosigkeit, so dass Stillsitzen schwer fällt."}
+\item{gad7_5}{vector for item "Being so restless that it is hard to sit still."}
 
-\item{gad7_6}{factor for item "Schnelle Verärgerung oder Gereiztheit."}
+\item{gad7_6}{vector for item "Becoming easily annoyed or irritable."}
 
-\item{gad7_7}{factor for item "Gefühl der Angst, so als würde etwas Schlimmes passieren."
+\item{gad7_7}{vector for item "Feeling afraid as if something awful might happen."
 
-Answers were coded /w levels 0 = "Überhaupt nicht", 1 = "An einzelnen Tagen", 2 = "An mehr als der Hälfte der Tage" and 3 = "Beinahme jeden Tag"}
+Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"}
 }
 \value{
 A numeric vector with sum score of GAD-7
@@ -29,5 +29,5 @@ A numeric vector with sum score of GAD-7
 \description{
 Calculate GAD-7 sum score
 
-Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
+Patients are asked "Over the last 2 weeks, how often have you been bothered by the following problems?"
 }

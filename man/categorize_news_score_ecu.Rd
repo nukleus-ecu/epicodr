@@ -10,8 +10,7 @@ categorize_news_score_ecu(news_score)
 \item{news_score}{A numerical vector with NEWS score}
 }
 \value{
-A factorized vector w/ levels "Geringes klinisches Risiko", "Moderates Klinisches Risiko", "Hohes Klinisches Risiko", 
-"Gering-Moderates klinisches Risiko (Wert 3 in irgendeiner der Kategorien)"
+A factorized vector w/ levels "Small clinical risk", "Moderate Small clinical risk", "High clinical risk",
 }
 \description{
 Categorize NEWS in three categories

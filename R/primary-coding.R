@@ -378,10 +378,10 @@ categorize_gcs_ecu <-  function(gcs){
 categorize_horowitz_index_ecu <-  function(horowitz){
   factor(
     case_when(
-      horowitz > 300 ~ "Normale Lungenfunktion ",
-      horowitz > 200 & horowitz <= 300 ~ "Leicht eingeschränkte Lungenfunktion",
-      horowitz > 100 & horowitz <= 200 ~ "Moderat eingeschränkte Lungenfunktion",
-      horowitz <= 100 ~ "Stark eingeschränkte Lungenfunktion"))
+      horowitz > 300 ~ "Normal lung function ",
+      horowitz > 200 & horowitz <= 300 ~ "Slightly impaired lung function",
+      horowitz > 100 & horowitz <= 200 ~ "Moderately impaired lung function",
+      horowitz <= 100 ~ "Severely impaired lung function"))
 }
 
 
@@ -407,12 +407,12 @@ categorize_ph_ecu <-  function(bga_ph){
 #' @description Categorize MMRC in dyspnea and no dispnea
 #' @param mmrc factor of modified medical research council dyspnea scale (mmrc) categories
 #' 
-#' @return A factorized vector w/ levels "dyspnea" and "no disypnea"
+#' @return A factorized vector w/ levels "Dyspnea" and "No disypnea"
 
 categorize_mmrc_ecu <- function (mmrc) {
   factor (
-    case_when (mmrc == "Ich bekomme nur Atemnot bei sehr starker Belastung." ~ "Keine Dyspnoe",
-               mmrc != "Ich bekomme nur Atemnot bei sehr starker Belastung." ~ "Dyspnoe")
+    case_when (mmrc == "Ich bekomme nur Atemnot bei sehr starker Belastung." ~ "No Dyspnea",
+               mmrc != "Ich bekomme nur Atemnot bei sehr starker Belastung." ~ "Dyspnea")
   )
 }
 
@@ -421,15 +421,17 @@ categorize_mmrc_ecu <- function (mmrc) {
 #' 
 #' @description Calculate sum score of PHQ-8
 #' 
-#' Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
-#' @param phq8_1 factor for item "Wenig Interesse oder Freude an Ihren Tätigkeiten."
-#' @param phq8_2 factor for item "Niedergeschlagenheit, Schwermut oder Hoffnungslosigkeit."
-#' @param phq8_3 factor for item "Schwierigkeiten, ein- oder durchzuschlafen, oder vermehrter Schlaf."
-#' @param phq8_4 factor for item "Müdigkeit oder Gefühl, keine Energie zu haben."
-#' @param phq8_5 factor for item "Verminderter Appetit oder übermäßiges Bedürfnis zu essen."
-#' @param phq8_6 factor for item "Schlechte Meinung von sich selbst; Gefühl, ein Versager zu sein oder die Familie enttäuscht zu haben."
-#' @param phq8_7 factor for item "Schwierigkeiten, sich auf etwas zu konzentrieren, z. B. beim Zeitung  lesen oder Fernsehen."
-#' @param phq8_8 factor for item "Waren Ihre Bewegungen oder Ihre Sprache so verlangsamt, dass es auch anderen auffallen würde? Oder waren Sie im Gegenteil "zappelig" oder ruhelos und hatten dadurch einen stärkeren Bewegungsdrang als sonst?"
+#' Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
+#' @param phq8_1 vector for item "Little interest or pleasure in doing things."
+#' @param phq8_2 vector for item "Feeling down, depressed, or hopeless."
+#' @param phq8_3 vector for item "Trouble falling or staying asleep, or sleeping too much."
+#' @param phq8_4 vector for item "Feeling tired or having little energy."
+#' @param phq8_5 vector for item "Poor appetite or overeating"
+#' @param phq8_6 vector for item "Feeling bad about yourself - or that you are a failure or have let yourself or your family down."
+#' @param phq8_7 vector for item "Trouble concentrating on things, such as reading the newspaper or watching television."
+#' @param phq8_8 vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
+#' 
+#' #' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
 #' 
 #' @return A numeric vector with sum score of phq8
 #' @export
@@ -445,12 +447,12 @@ calculate_phq8_sum <- function (phq8_1, phq8_2, phq8_3, phq8_4, phq8_5, phq8_6, 
 #' 
 #' @description Categorize PHQ-8 sum score in depression and no depression
 #' @param ecu_phq8_sum numeric vector with sum score of phq8
-#' @return A factorized vector w/ levels "keine Depression" and "Depression"
+#' @return A factorized vector w/ levels "No depression" and "Depression"
 #' @export
 
 categorize_phq8_ecu <- function (ecu_phq8_sum) {
   factor (
-    case_when (ecu_phq8_sum < 10 ~ "Keine Depression",
+    case_when (ecu_phq8_sum < 10 ~ "No depression",
                ecu_phq8_sum >= 10 ~ "Depression")
   )
 }
@@ -460,15 +462,14 @@ categorize_phq8_ecu <- function (ecu_phq8_sum) {
 #' 
 #' @description Categorize NEWS in three categories
 #' @param news_score A numerical vector with NEWS score
-#' @return A factorized vector w/ levels "Geringes klinisches Risiko", "Moderates Klinisches Risiko", "Hohes Klinisches Risiko", 
-#' "Gering-Moderates klinisches Risiko (Wert 3 in irgendeiner der Kategorien)"
+#' @return A factorized vector w/ levels "Small clinical risk", "Moderate Small clinical risk", "High clinical risk", 
 #' @export
 
 categorize_news_score_ecu <- function(news_score) {
   factor(
-    case_when(news_score <= 4 ~ "Geringes klinisches Risiko",
-              news_score == 5 | news_score == 6 ~ "Moderates Klinisches Risiko",
-              news_score >= 7 ~ "Hohes Klinisches Risiko"))
+    case_when(news_score <= 4 ~ "Small clinical risk",
+              news_score == 5 | news_score == 6 ~ "Moderate clinical risk",
+              news_score >= 7 ~ "High clinical risk"))
 }
 
 
@@ -493,32 +494,32 @@ categorize_apache2_score_ecu <- function(apache_score) {
 }
 
 
-#' Categorize Intensive Care Delirium Screening Checklist (ICDSC)
+#' Categorize Intensive Care delir Screening Checklist (ICDSC)
 #' 
 #' @description Categorize ICDSC in three categories
 #' @param icdsc_score A numerical vector with ICDSC score
-#' @return A factor /w levels "Kein Delir", "V.a. subsyndromales Delir" and "Delir"
+#' @return A factor /w levels "No delir", "Subsyndromale delir" and "Delir"
 #' @export
 
 categorize_icdsc_score_ecu <- function(icdsc_score) {
   factor(
-    case_when(icdsc_score == 0 ~ "Kein Delir",
-              icdsc_score >= 1 & icdsc_score <= 3 ~ "V.a. subsyndromales Delir",
+    case_when(icdsc_score == 0 ~ "No delir",
+              icdsc_score >= 1 & icdsc_score <= 3 ~ "Subsyndromale delir",
               icdsc_score >= 4 ~ "Delir")
   )
 }
 
 
-#' Categorize Delirium Detection Score (DDS)
+#' Categorize delir Detection Score (DDS)
 #' 
 #' @description Categorize DDS in delir and no delir
 #' @param dds_score A numerical vector with DDS score
-#' @return A factor /w levels "Kein Delir" and "Delir"
+#' @return A factor /w levels "No delir" and "Delir"
 #' @export
 
 categorize_dds_score_ecu <- function(dds_score) {
   factor(
-    case_when(dds_score <= 7 ~ "Kein Delir",
+    case_when(dds_score <= 7 ~ "No delir",
               dds_score > 7 ~ "Delir")
   )
 }
@@ -528,16 +529,16 @@ categorize_dds_score_ecu <- function(dds_score) {
 #' 
 #' @description Calculate GAD-7 sum score
 #' 
-#' Patients are asked "Wie oft fühlten Sie sich im Verlauf der letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?"
-#' @param gad7_1 factor for item "Nervosität, Ängstlichkeit oder Anspannung."
-#' @param gad7_2 factor for item "Nicht in der Lage sein, Sorgen zu stoppen oder zu kontrollieren."
-#' @param gad7_3 factor for item "Übermäßige Sorgen bezüglich verschiedener Angelegenheiten."
-#' @param gad7_4 factor for item "Schwierigkeiten zu entspannen."
-#' @param gad7_5 factor for item "Rastlosigkeit, so dass Stillsitzen schwer fällt."
-#' @param gad7_6 factor for item "Schnelle Verärgerung oder Gereiztheit."
-#' @param gad7_7 factor for item "Gefühl der Angst, so als würde etwas Schlimmes passieren."
+#' Patients are asked "Over the last 2 weeks, how often have you been bothered by the following problems?"
+#' @param gad7_1 vector for item "Feeling nervous, anxious or on edge."
+#' @param gad7_2 vector for item "Not being able to stop or control worrying."
+#' @param gad7_3 vector for item "Worrying too much about different things."
+#' @param gad7_4 vector for item "Trouble relaxing."
+#' @param gad7_5 vector for item "Being so restless that it is hard to sit still."
+#' @param gad7_6 vector for item "Becoming easily annoyed or irritable."
+#' @param gad7_7 vector for item "Feeling afraid as if something awful might happen."
 #' 
-#' Answers were coded /w levels 0 = "Überhaupt nicht", 1 = "An einzelnen Tagen", 2 = "An mehr als der Hälfte der Tage" and 3 = "Beinahme jeden Tag"
+#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
 #' 
 #' @return A numeric vector with sum score of GAD-7
 #' @export
@@ -570,23 +571,22 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
 #' 
 #' @description Calculate FACIT-F sum score
 #' 
-#' Patients are asked "Bitte geben Sie jeweils an, wie sehr jede der folgenden Aussagen im Laufe der letzten 7 Tage auf Sie zugetroffen hat, 
-#' indem Sie den entsprechenden Punkt auswählen."
-#' @param facitf_1 factor for item "Ich bin erschöpft."
-#' @param facitf_2 factor for item "Ich fühle mich insgesamt schwach."
-#' @param facitf_3 factor for item "Ich fühle mich lustlos (ausgelaugt)."
-#' @param facitf_4 factor for item "Ich bin müde."
-#' @param facitf_5 factor for item "Es fällt mir schwer, etwas anzufangen, weil ich müde bin."
-#' @param facitf_6 factor for item "Es fällt mir schwer, etwas zu Ende zu führen, weil ich müde bin."
-#' @param facitf_7 factor for item "Ich habe Energie."
-#' @param facitf_8 factor for item "Ich bin in der Lage, meinen gewohnten Aktivitäten nachzugehen (Beruf, Einkaufen, Schule, Freizeit, Sport usw.)."
-#' @param facitf_9 factor for item "Ich habe das Bedürfnis, tagsüber zu schlafen."
-#' @param facitf_10 factor for item "Ich bin zu müde, um zu essen."
-#' @param facitf_11 factor for item "Ich brauche Hilfe bei meinen gewohnten Aktivitäten (Beruf, Einkaufen, Schule, Freizeit, Sport usw.)."
-#' @param facitf_12 factor for item "Ich bin frustriert, weil ich zu müde bin, die Dinge zu tun, die ich machen möchte."
-#' @param facitf_13 factor for item "Ich muss meine sozialen Aktivitäten einschränken, weil ich müde bin."
+#' Patients are asked "Please indicate how much each of the following statements has applied to you over the last 7 days by selecting the appropriate item."
+#' @param facitf_1 vector for item "I feel fatigued."
+#' @param facitf_2 vector for item "I feel weak all over."
+#' @param facitf_3 vector for item "I feel listless ("washed out")."
+#' @param facitf_4 vector for item "I feel tired."
+#' @param facitf_5 vector for item "I have trouble starting things because I am tired."
+#' @param facitf_6 vector for item "I have trouble finishing things because I am tired."
+#' @param facitf_7 vector for item "I have energy."
+#' @param facitf_8 vector for item "I am able to do my usual activities."
+#' @param facitf_9 vector for item "I need to sleep during the day."
+#' @param facitf_10 vector for item "I am too tired to eat."
+#' @param facitf_11 vector for item "I need help doing my usual activities."
+#' @param facitf_12 vector for item "I am frustrated by being too tired to do the things I want to do."
+#' @param facitf_13 vector for item "I have to limit my social activity because I am tired."
 #' 
-#' Answers were coded /w levels "Überhaupt nicht", "Ein Wenig", "Mäßig", "Ziemlich" and "Sehr"
+#' Answers were coded /w levels "Not at all", "A little bit", "Somewhat", "Quite a bit" and "Very much"
 #' 
 #' @return A numeric vector with sum score of FACIT-F
 #' @export
@@ -619,16 +619,15 @@ categorize_facitf_ecu <- function (ecu_facitf_sum) {
 #' 
 #' @description Calculate BRS sum score
 #' 
-#' Patients are asked "Bei den folgenden Fragen geht es um Ihre Widerstandsfähigkeit, Krisen zu bewältigen. 
-#' Geben Sie bitte an, wie sehr Sie den folgenden Aussagen jeweils zustimmen."
-#' @param brs_1 factor for item "Ich neige dazu, mich nach schwierigen Zeiten schnell zu erholen."
-#' @param brs_2 factor for item "Es fällt mir schwer, stressige Situationen durchzustehen."
-#' @param brs_3 factor for item "Ich brauche nicht viel Zeit, um mich von einem stressigen Ereignis zu erholen."
-#' @param brs_4 factor for item "Es fällt mir schwer, zur Normalität zurückzukehren, wenn etwas Schlimmes passiert ist."
-#' @param brs_5 factor for item "Normalerweise überstehe ich schwierige Zeiten ohne größere Probleme."
-#' @param brs_6 factor for item "Ich brauche tendenziell lange, um über Rückschläge in meinem Leben hinwegzukommen."
+#' Patients are asked "The following questions are about your resilience to cope with crises. Please respond to each item by marking one box per row."
+#' @param brs_1 vector for item "I tend to bounce back quickly after hard times.."
+#' @param brs_2 vector for item "I have a hard time making it through stressful events."
+#' @param brs_3 vector for item "It does not take me long to recover from a stressful event."
+#' @param brs_4 vector for item "It is hard for me to snap back when something bad happens."
+#' @param brs_5 vector for item "I usually come through difficult times with little trouble."
+#' @param brs_6 vector for item "I tend to take a long time to get over set-backs in my life."
 #' 
-#' Answers were coded /w levels "Stimme überhaupt nicht zu", "Stimme eher nicht zu", "Stimme eher zu", "Stimme vollkommen zu"
+#' Answers were coded /w levels "Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"
 #' 
 #' @return A numeric vector with sum score of BRS
 #' @export
@@ -644,12 +643,12 @@ calculate_brs_sum <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
 #' 
 #' @description Count number of anserwed items of BRS
 #' 
-#' @param brs_1 factor for item "Ich neige dazu, mich nach schwierigen Zeiten schnell zu erholen."
-#' @param brs_2 factor for item "Es fällt mir schwer, stressige Situationen durchzustehen."
-#' @param brs_3 factor for item "Ich brauche nicht viel Zeit, um mich von einem stressigen Ereignis zu erholen."
-#' @param brs_4 factor for item "Es fällt mir schwer, zur Normalität zurückzukehren, wenn etwas Schlimmes passiert ist."
-#' @param brs_5 factor for item "Normalerweise überstehe ich schwierige Zeiten ohne größere Probleme."
-#' @param brs_6 factor for item "Ich brauche tendenziell lange, um über Rückschläge in meinem Leben hinwegzukommen."
+#' @param brs_1 vector for item "I tend to bounce back quickly after hard times.."
+#' @param brs_2 vector for item "I have a hard time making it through stressful events."
+#' @param brs_3 vector for item "It does not take me long to recover from a stressful event."
+#' @param brs_4 vector for item "It is hard for me to snap back when something bad happens."
+#' @param brs_5 vector for item "I usually come through difficult times with little trouble."
+#' @param brs_6 vector for item "I tend to take a long time to get over set-backs in my life."
 #' @return A numeric vector with number of answered questions of BRS
 #' @export
 
