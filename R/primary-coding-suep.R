@@ -386,6 +386,7 @@ primary_coding_suep <- function(trial_data) {
 #' @param visitid column name of visit ID in trial_data
 #' @importFrom rlang :=
 #' @importFrom rlang .data
+#' @import lubridate
 #' @export
 
 build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
@@ -460,9 +461,9 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   oxy_data <- trial_data$fv6 %>%
     left_join(trial_data$eoxy, by = pid) %>%
-    left_join (treatment_update_date, by = pid) %>%
+    left_join(treatment_update_date, by = pid) %>%
     mutate(
-      gec_oxy_end.date = case_when(.data$gec_oxy_end_on.factor =="Andauernd" ~ treatment_update.date,
+      gec_oxy_end.date = case_when(.data$gec_oxy_end_on.factor =="Andauernd" ~ .data$treatment_update.date,
                                    .data$gec_oxy_end_d.factor == "Auf Monat genau" ~ rollforward(.data$gec_oxy_end.date, roll_to_first = FALSE),
                                    .data$gec_oxy_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$gec_oxy_end.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
                                    TRUE ~ .data$gec_oxy_end.date),
@@ -473,8 +474,8 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
       gec_oxy_type.factor = factor(fct_reorder(.data$gec_oxy_type.factor, .data$gec_oxy_type), ordered = TRUE)) %>%
     select(pid, .data$gec_oxy, .data$gec_oxy_type.factor, .data$gec_oxy_start.date, .data$gec_oxy_start_d.factor, .data$gec_oxy_start_uk.factor, 
            .data$gec_oxy_end.date, .data$gec_oxy_end_d.factor, .data$gec_oxy_end_uk.factor, .data$gec_oxy_end_on.factor, .data$treatment_update.date, 
-           .data$ecu_oxy_interval) %>%
-    group_by(!!sym(pid), .data$gec_oxy) # %>%
+           .data$ecu_oxy_interval) #%>%
+    #group_by(!!sym(pid), .data$gec_oxy) # %>%
     # nest(oxy_data = -c(!!sym(pid), .data$gec_oxy)) 
   
   
@@ -482,22 +483,28 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   hospital_data <- trial_data$eward %>%
     bind_rows(trial_data$eresid) %>% 
+    bind_rows(treatment_update_date) %>%
     mutate(
       ecu_ward = coalesce(.data$gec_ward.factor, .data$resid.factor),
       ecu_ward_resid_start.date = coalesce(.data$ward_end.date, .data$resid_start.date), 
-      ecu_ward_resid_start_d.date = coalesce(.data$ward_start_d.factor, .data$resid_start_d.factor), 
+      ecu_ward_resid_start_d.factor = coalesce(.data$ward_start_d.factor, .data$resid_start_d.factor), 
       ecu_ward_resid_start_uk.date = coalesce(.data$ward_start_uk.factor, .data$resid_start_uk.factor), 
+      ecu_ward_resid_start.date = case_when(.data$ecu_ward_resid_start_d.factor == "Auf Monat genau" ~ rollback(.data$ecu_ward_resid_start.date, roll_to_first = TRUE),
+                                            .data$ecu_ward_resid_start_d.factor == "Auf Woche genau" ~ floor_date(.data$ecu_ward_resid_start.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
+                                            TRUE ~ .data$ecu_ward_resid_start.date),
       ecu_ward_resid_end.date = coalesce(.data$ward_end.date, .data$resid_end.date), 
-      ecu_ward_resid_end_d.date = coalesce(.data$ward_end_d.factor, .data$resid_end_d.factor), 
+      ecu_ward_resid_end_d.factor = coalesce(.data$ward_end_d.factor, .data$resid_end_d.factor), 
       ecu_ward_resid_end_uk.date = coalesce(.data$ward_end_uk.factor, .data$resid_end_uk.factor), 
       ecu_ward_resid_end_on.date = coalesce(.data$ward_end_on.factor, .data$resid_end_on.factor), 
-      ecu_ward_resid_end.date = case_when(.data$ecu_ward_resid_end_on.date=="Andauernd" ~ ymd(Sys.Date()),
+      ecu_ward_resid_end.date = case_when(.data$ecu_ward_resid_end_on.date == "Andauernd" ~ .data$treatment_update.date,
+                                          .data$ecu_ward_resid_end_d.factor == "Auf Monat genau" ~ rollforward(.data$ecu_ward_resid_end.date, roll_to_first = FALSE),
+                                          .data$ecu_ward_resid_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$ecu_ward_resid_end.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
                                           TRUE ~ .data$ecu_ward_resid_end.date),
       ecu_hospital_interval = interval(.data$ecu_ward_resid_start.date, .data$ecu_ward_resid_end.date)) %>%
     filter(str_detect(tolower(.data$ecu_ward), "station|krankenhaus|keine informationen") & (.data$ecu_ward_resid_start.date >= ymd(20200101) | is.na(.data$ecu_ward_resid_start.date))) %>% # anything before 2020 must be covid19 unrelated
     full_join(trial_data$fv1, by=pid) %>%
-    select(pid, .data$ward, starts_with("ecu"), .data$gec_resid_disch.factor) %>%
-    group_by(!!sym(pid), .data$ward) # %>%
+    select(pid, .data$ward, starts_with("ecu"), .data$gec_resid_disch.factor) #%>%
+    #group_by(!!sym(pid), .data$ward) # %>%
     # nest(hospital_data = -c(!!sym(pid), .data$ward)) 
   
   
@@ -532,12 +539,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   
   # WHO Scale Data  (one row per pat per visit) ---------------------------------------------------------
-  is_within <- function(date, interval) {
-    if (!is.null(interval)) {
-      return(date %within% interval)
-    }
-  }
-  
+
   who_scale_per_visit_data <- visit_data %>%
     full_join(select(trial_data$fv15, pid, .data$pr_end_date.date, .data$pr_end_reason.factor), by=pid) %>%
     full_join(inclusion_data, by =pid) %>%
@@ -563,7 +565,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
                                        .data$is_oxy_type_severe & .data$is_hospital & .data$ecu_main_diag_covid != "Hauptdiagnose Covid" ~ "Hospitalisiert mit Covid, schwere Phase",
                                        .data$is_hospital & .data$ecu_main_diag_covid == "Hauptdiagnose Covid" ~ "Hospitalisiert wegen Covid, moderate Phase",
                                        .data$is_hospital & .data$ecu_main_diag_covid != "Hauptdiagnose Covid" ~ "Hospitalisiert mit Covid, moderate Phase",
-                                       .data$ward  == 0 | !.data$is_hospital ~ "Ambulant, milde Phase"), # ward == 0 = "Nein"
+                                       .data$ward == 0 | !.data$is_hospital ~ "Ambulant, milde Phase"), # ward == 0 = "Nein"
       ecu_who_scale = case_when(.data$ecu_who_scale.factor == "Keine Informationen verfuegbar" ~ -1,
                                 .data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
                                 .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
