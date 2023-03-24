@@ -10,6 +10,6 @@ primary_coding_hap_news_first(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variable to _klinscores:
+adds the following column to klinscores:
 ecu_news_cat
 }

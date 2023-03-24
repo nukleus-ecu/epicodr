@@ -14,6 +14,6 @@ primary_coding_suep_clinical_params(trial_data, pid, visitid)
 \item{visitid}{column name of visit ID in trial_data}
 }
 \description{
-adds the following variables to stv1: 
+adds the following columns to stv1: 
 ecu_hpb, ecu_hf, ecu_oxy, ecu_temp, ecu_gcs, ecu_ph
 }

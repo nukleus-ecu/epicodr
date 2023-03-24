@@ -14,6 +14,6 @@ primary_coding_suep_eq5d5l(trial_data, pid, visitid)
 \item{visitid}{column name of visit ID in trial_data}
 }
 \description{
-adds the following variable to prom:
+adds the following column to prom:
 ecu_eq5d_index
 }

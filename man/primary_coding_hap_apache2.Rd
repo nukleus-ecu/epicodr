@@ -10,6 +10,6 @@ primary_coding_hap_apache2(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variable to _klinscores1:
+adds the following column to klinscores1:
 ecu_apache2_cat
 }

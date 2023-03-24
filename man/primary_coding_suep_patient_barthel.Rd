@@ -14,6 +14,6 @@ primary_coding_suep_patient_barthel(trial_data, pid, visitid)
 \item{visitid}{column name of visit ID in trial_data}
 }
 \description{
-adds the following variable to fuv1:
+adds the following column to fuv1:
 ecu_patient_barthel_cat
 }

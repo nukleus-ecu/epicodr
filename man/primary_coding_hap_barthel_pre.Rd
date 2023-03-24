@@ -10,6 +10,6 @@ primary_coding_hap_barthel_pre(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variable to _risiko1:
+adds the following column to risiko1:
 ecu_barthel_cat_pre
 }

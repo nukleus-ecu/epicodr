@@ -14,6 +14,6 @@ primary_coding_suep_moca(trial_data, pid, visitid)
 \item{visitid}{column name of visit ID in trial_data}
 }
 \description{
-adds the following variable to fuv3:
+adds the following column to fuv3:
 ecu_moca_cat
 }

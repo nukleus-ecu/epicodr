@@ -14,6 +14,6 @@ primary_coding_suep_baseline_barthel(trial_data, pid, visitid)
 \item{visitid}{column name of visit ID in trial_data}
 }
 \description{
-adds the following variable to bv1:
+adds the following column to bv1:
 ecu_bl_barthel_cat
 }

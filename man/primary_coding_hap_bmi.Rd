@@ -10,5 +10,6 @@ primary_coding_hap_bmi(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following columns to _demo: ecu_bmi, ecu_bmi_cat
+adds the following columns to demo: 
+ecu_bmi, ecu_bmi_cat
 }

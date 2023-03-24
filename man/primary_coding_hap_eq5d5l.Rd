@@ -10,6 +10,6 @@ primary_coding_hap_eq5d5l(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variable to _eq5d:
+adds the following column to eq5d:
 ecu_eq5d_index
 }

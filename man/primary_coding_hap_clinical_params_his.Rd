@@ -10,7 +10,7 @@ primary_coding_hap_clinical_params_his(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following variables to _vitalhis: 
+adds the following columns to vitalhis: 
 ecu_vitals_his_bp, ecu_vitals_his_bpm, ecu_vitals_his_so2, ecu_vitals_his_resp_rate, ecu_vitals_his_temp,
 ecu_vitals_his_gcs, ecu_vitals_his_horowitz_cat, ecu_vitals_his_ph
 }
