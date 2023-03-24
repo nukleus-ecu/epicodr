@@ -54,7 +54,8 @@ clean_cs <- function(x){
 
 #' Primary coding age
 #'
-#' adds the following columns to _demo: ecu_age - age in years, ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
+#' adds the following columns to demo: 
+#' ecu_age - age in years, ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -81,7 +82,8 @@ primary_coding_hap_age <- function(trial_data) {
 
 #' Primary coding Body Mass Index (BMI)
 #'
-#' adds the following columns to _demo: ecu_bmi, ecu_bmi_cat
+#' adds the following columns to demo: 
+#' ecu_bmi, ecu_bmi_cat
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -106,7 +108,7 @@ primary_coding_hap_bmi <- function(trial_data) {
 
 #' Primary coding clinical parameters (historic)
 #' 
-#' adds the following variables to _vitalhis: 
+#' adds the following columns to vitalhis: 
 #' ecu_vitals_his_bp, ecu_vitals_his_bpm, ecu_vitals_his_so2, ecu_vitals_his_resp_rate, ecu_vitals_his_temp,
 #' ecu_vitals_his_gcs, ecu_vitals_his_horowitz_cat, ecu_vitals_his_ph
 #'
@@ -139,7 +141,7 @@ primary_coding_hap_clinical_params_his <- function(trial_data) {
 
 #' Primary coding clinical parameters
 #' 
-#' adds the following variables to _vitalparam: 
+#' adds the following columns to vitalparam: 
 #' ecu_vitals_bp, ecu_vitals_bpm, ecu_vitals_so2, ecu_vitals_resp_rate, ecu_vitals_temp,
 #' ecu_vitals_gcs, ecu_vitals_ph
 #'
@@ -165,14 +167,14 @@ primary_coding_hap_clinical_params <- function(trial_data) {
 # Scores =======================================================================
 
 # the following scores are categorized according to primary coding:
-# Barthel Index, MoCa, EQ5D-5L, NEWS, APACHE-2, ICDSC, DDS, WHO-Scale, PCS-Score
+# Barthel Index, EQ5D-5L, MoCA, NEWS, APACHE-2, ICDSC, DDS, WHO-Scale
 
 # ============================================================================ #
 
 
 #' Primary coding Barthel index prior to infection (baseline)
 #' 
-#' adds the following variable to _risiko1:
+#' adds the following column to risiko1:
 #' ecu_barthel_cat_pre
 #' 
 #' @param trial_data A secuTrial data object
@@ -190,7 +192,7 @@ primary_coding_hap_barthel_pre <- function(trial_data) {
 
 #' Primary coding Barthel index at discharge
 #' 
-#' adds the following variable to _end:
+#' adds the following column to end:
 #' ecu_barthel_cat_disc
 #' 
 #' @param trial_data A secuTrial data object
@@ -208,7 +210,7 @@ primary_coding_hap_barthel_disc <- function(trial_data) {
 
 #' Primary coding EQ5D-5L-Index
 #' 
-#' adds the following variable to _eq5d:
+#' adds the following column to eq5d:
 #' ecu_eq5d_index
 #'
 #' @param trial_data A secuTrial data object
@@ -217,6 +219,7 @@ primary_coding_hap_barthel_disc <- function(trial_data) {
 #' @export
 
 primary_coding_hap_eq5d5l <- function(trial_data) {
+  
   trial_data[["eq5d"]] <- trial_data[["eq5d"]] %>%
     mutate (ecu_eq5d5l_index = calculate_eq5d5l_index (.data$eq5d_0020, .data$eq5d_0030, .data$eq5d_0040, .data$eq5d_0050, .data$eq5d_0060))
   
@@ -224,9 +227,46 @@ primary_coding_hap_eq5d5l <- function(trial_data) {
 }
 
 
+#' Primary cpding for Montreal Cognitive Assessment (MoCA)
+#' 
+#' adds the following varible to moca
+#' ecu_moca_total_score, ecu_moca_cat
+#' 
+#' @param trial_data A secuTrial data object
+#' @export
+
+primary_coding_hap_moca <- function(trial_data) {
+  
+  trial_data[["moca"]] <- trial_data[["moca"]] %>%
+    rowwise() %>%
+    mutate(ecu_moca_total_score = sum(ifelse(.data$moca_0021 == 1, .data$moca_0022, 0),
+                                      ifelse(.data$moca_0023 == 1, .data$moca_0024, 0), 
+                                      ifelse(.data$moca_0025 == 1, .data$moca_0026, 0),
+                                      .data$moca_0032, 
+                                      ifelse(.data$moca_0051 == 1, .data$moca_0052, 0),
+                                      ifelse(.data$moca_0053 == 1, .data$moca_0054, 0),
+                                      ifelse(.data$moca_0055 == 1, .data$moca_0056, 0),
+                                      ifelse(.data$moca_0057 == 1, .data$moca_0058, 0),
+                                      ifelse(.data$moca_0061 == 1, .data$moca_0062, 0),
+                                      ifelse(.data$moca_0063 == 1, .data$moca_0064, 0),
+                                      ifelse(is.na(.data$moca_0072), .data$moca_0071, 0), 
+                                      ifelse(.data$moca_0081 == 1, .data$moca_0082, 0),
+                                      ifelse(.data$moca_0091 == 1, .data$moca_0092, 0),
+                                      ifelse(.data$moca_0097 == 1, .data$moca_0098, 0),
+                                      ifelse(.data$moca_0093 == 1, .data$moca_0094, 0),
+                                      ifelse(.data$moca_0095 == 1, .data$moca_0096, 0),
+                                      ifelse(.data$moca_0099 == 1, .data$moca_0100, 0),
+                                      ifelse(.data$moca_0101 == 1, .data$moca_0102, 0),
+                                      ifelse(.data$moca_0110 >= 0, .data$moca_0110, 0)),
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score))
+  
+  return(trial_data)
+}
+
+
 #' Primary coding for National Early Warning Score (NEWS)
 #' 
-#' adds the following variable to _klinscores:
+#' adds the following column to klinscores:
 #' ecu_news_cat
 #' 
 #' @param trial_data A secuTrial data object
@@ -244,7 +284,7 @@ primary_coding_hap_news_first <- function(trial_data) {
 
 #' Primary coding for Acute Physiology And Chronic Health Evaluation (APACHE) Score
 #' 
-#' adds the following variable to _klinscores1:
+#' adds the following column to klinscores1:
 #' ecu_apache2_cat
 #' 
 #' @param trial_data A secuTrial data object
@@ -262,7 +302,7 @@ primary_coding_hap_apache2 <- function(trial_data) {
 
 #' Primary coding for Intensive Care Delirium Screening Checklist (ICDSC)
 #' 
-#' adds the following variable to _haemodyn:
+#' adds the following column to haemodyn:
 #' ecu_icdsc_cat
 #' 
 #' @param trial_data A secuTrial data object
@@ -280,7 +320,7 @@ primary_coding_hap_icdsc <- function(trial_data) {
 
 #' Primary coding for Delirium Detection Score (DDS)
 #' 
-#' adds the following variable to _haemodyn:
+#' adds the following column to haemodyn:
 #' ecu_dds_cat
 #' 
 #' @param trial_data A secuTrial data object
@@ -295,6 +335,26 @@ primary_coding_hap_dds <- function(trial_data) {
   return(trial_data)
 }
 
+
+#' Primary coding WHO-Scale
+#' 
+#' adds the following columns to eosfci
+#' ecu_who_scale.factor, ecu_who_scale
+#' 
+#' adds the following columns to osfci
+#' ecu_who_scale_max.factor, ecu_who_scale_max
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_hap_who_scale <- function(trial_data, pid) {
+  
+  trial_data <- build_who_scale_hap(trial_data, pid)
+  
+  return(trial_data)
+}
 
 
 # HAP Wrapper primary coding ==================================================
@@ -358,6 +418,10 @@ primary_coding_hap <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_hap_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_hap_moca(trial_data)},
+           error = function(e) {
+             warning("primary_coding_hap_moca() did not work. This is likely due to missing variables.")
+             print(e)})
   tryCatch(expr = {trial_data <- primary_coding_hap_news_first(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_news_first() did not work. This is likely due to missing variables.")
@@ -374,6 +438,10 @@ primary_coding_hap <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_hap_dds() did not work. This is likely due to missing variables.")
              print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data, pid)},
+           error = function(e) {
+             warning("primary_coding_hap_who_scale() did not work. This is likely due to missing variables.")
+             print(e)})
   
   catw("Primary Coding done")
   
@@ -382,3 +450,62 @@ primary_coding_hap <- function(trial_data) {
 
 
 # HAP helper functions for primary coding ==================================================
+
+## WHO-Scale ===================================================================
+
+#' Calculate and categorize WHO-Scale
+#' 
+#' adds the following columns to eosfci
+#' ecu_who_scale.factor, ecu_who_scale
+#' 
+#' adds the following columns to osfci
+#' ecu_who_scale_max.factor, ecu_who_scale_max
+#' 
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+build_who_scale_hap <- function(trial_data, pid) {
+  
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$visit_02), "mnpvislabel", "visit_name")
+  
+  main_diag <- trial_data[["visit_02"]] %>%
+    filter(!!sym(visit_label_var_name) == "Screening / V1") %>%
+    group_by(!!sym(pid)) %>%
+    slice_max(.data$ea_0010) %>%
+    select(!!sym(pid), .data$ea_0010)
+  
+  trial_data[["eosfci"]] <- trial_data[["eosfci"]] %>%
+    left_join(main_diag) %>%
+    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verfuegbar", 
+                                            .data$osfci_0021 == 0 ~ "Kontrollgruppe, ohne Sars-Infektion",
+                                            .data$osfci_0021 == 1 | .data$osfci_0021 == 2 ~ "Ambulant, milde Phase",
+                                            (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase",
+                                            (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
+                                            (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase",
+                                            (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
+                                            .data$osfci_0021 == 8 ~ "Verstorben"),
+           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Keine Informationen verfuegbar" ~ -1, 
+                                                .data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                                .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
+                                                .data$ecu_who_scale.factor == "Verstorben" ~ 6))) #%>%
+    #select(-(.data$ea_0010))
+  
+  who_scale_max <- trial_data[["eosfci"]] %>%
+    select(!!sym(pid), starts_with("ecu")) %>%
+    group_by(!!sym(pid)) %>%
+    slice_max(.data$ecu_who_scale) %>%
+    distinct() %>%
+    rename(ecu_who_scale_max.factor = .data$ecu_who_scale.factor,
+           ecu_who_scale_max = .data$ecu_who_scale)
+  
+  trial_data[["osfci"]] <- trial_data[["osfci"]] %>%
+    left_join(who_scale_max, by = pid) 
+  
+  return(trial_data)
+}
