@@ -213,6 +213,27 @@ primary_coding_pop_eq5d5l <- function(trial_data) {
 }
 
 
+#' Primary coding Montreal Cognitive Assessment (MoCA) 
+#' 
+#' adds the following column to neuro
+#' ecu_moca_total_score, ecu_moca_cat
+#' 
+#' @param trial_data A secuTrial data object
+#' @export
+ 
+primary_coding_pop_moca <- function(trial_data) {
+  
+  trial_data[["neuro"]] <- trial_data[["neuro"]] %>%
+    rowwise() %>%
+    mutate(ecu_moca_total_score = sum(.data$moca_tmt, .data$moca_figure, .data$moca_clock, .data$moca_naming, .data$moca_attention, .data$moca_speech, 
+                                      .data$moca_abstract, .data$moca_recall_number, .data$moca_orientation, .data$moca_education),
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)
+    )
+  
+  return(trial_data)
+}
+
+
 #' Primary coding modified Medical Research Council Dyspnea Scale (mMRC)
 #' 
 #' adds the following column to surveyfrageboge: 
@@ -437,6 +458,10 @@ primary_coding_pop <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_pop_eq5d5l(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_eq5d5l() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_moca(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_moca() did not work. This is likely due to missing variables.")
              print(e)})
   tryCatch(expr = {trial_data <- primary_coding_pop_mmrc(trial_data)},
            error = function(e) {
