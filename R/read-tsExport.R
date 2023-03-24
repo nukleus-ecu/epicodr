@@ -116,7 +116,7 @@
 #   list2env(envir = .GlobalEnv)
 # TODO: ...redo until here?
 read_tsExport_table <- function(data_dir, file_name, 
-                                separator = ";", decimal = ".",
+                                separator = ";", decimal = ",",
                                 encoding = "UTF-8",
                                 quote_escape_detect = FALSE,
                                 escape_backslash = TRUE){
@@ -203,7 +203,7 @@ read_tsExport_table <- function(data_dir, file_name,
 #' @importFrom rlang .data
 #' @export 
 read_tsExport_raw <- function(data_dir,
-                              separator = ";", decimal = ".",
+                              separator = ";", decimal = ",",
                               encoding = "UTF-8",
                               quote_escape_detect = TRUE,
                               escape_backslash = TRUE) {
@@ -281,19 +281,21 @@ read_tsExport_raw <- function(data_dir,
   
   export_options$study_id <- get_study_id(tsExport)
   
-  # If "fs" is available retrieve form order from fs.csv formtablename 
+  # If "is" is available retrieve form order from is.csv formtablename 
   # column and with the help of study_id, else use alphabetical order of 
   # studydata_names.
+  # Note: The form order in is.csv seems to be more matching the structure of
+  # the secutrial Datensatztabelle than the order in fs.csv
   
-  get_form_order <- function(fs, study_id) {
-    fs %>%
+  get_form_order <- function(is, study_id) {
+    is %>%
       distinct(.data$formtablename) %>%
       pull(.data$formtablename) %>%
       str_remove(str_c("mnp", study_id, "[^a-zA-Z]?"))
   }
   
-  if("fs" %in% names(tsExport)) {
-    export_options$form_order <- get_form_order(tsExport$fs, export_options$study_id)
+  if("is" %in% names(tsExport)) {
+    export_options$form_order <- get_form_order(tsExport$is, export_options$study_id)
   } else {
     export_options$form_order <- sort(tsExport$export_options$studydata_names)
   }
@@ -362,11 +364,13 @@ print.tsExportdata <- function(x, ...) {
 create_varlab_lookup <- function(is, study_id) {
   
   lookup_table <- is %>% 
+    mutate(order = row_number()) %>%
     filter(!is.na(.data$ffcolname)) %>%
     # keep only label information for the current project version
     group_by(.data$formtablename, .data$ffcolname) %>%
     slice_min(.data$fgid) %>%
     ungroup() %>%
+    arrange(order) %>%
     # compute studydata_name from formtablename
     mutate(studydata_name = str_remove(
       .data$formtablename, (str_c("mnp", study_id, "[^a-zA-Z]?")))) %>%
@@ -382,13 +386,8 @@ create_varlab_lookup <- function(is, study_id) {
     group_by(.data$studydata_name) %>%
     nest() %>%
     deframe() %>%
-    map(~ {.x %>% 
-        group_by(.data$varname) %>%
-        nest() %>%
-        deframe()}) %>%
-    map(~ .x %>%
-          map(~ {flatten(flatten(.x))}))
-  
+    map(~ {.x$attr %>% set_names(.x$varname)})
+
   return(lookup_list)
 }
 
@@ -461,7 +460,7 @@ label_tsExport <- function(tsExport) {
   
   # Clean varlab_lookup from form entries, that are not in form_names &
   # sort it by formorder
-  xx <- varlab_lookup %>%
+  varlab_lookup <- varlab_lookup %>%
     keep(names(.) %in% tsExport$export_options$studydata_names) %>%
     .[order(match(names(.), tsExport$export_options$form_order))]
 
@@ -530,12 +529,7 @@ create_vallab_lookup <- function(cl, study_id) {
     group_by(.data$studydata_name) %>%
     nest() %>%
     deframe() %>%
-    map(~ {.x %>% 
-        group_by(.data$varname) %>%
-        nest() %>%
-        deframe()}) %>%
-    map(~ .x %>%
-          map(~ {flatten(flatten(.x))}))
+    map(~ {.x$vallabs %>% set_names(.x$varname)})
   
   return(lookup_list)
 }
@@ -627,11 +621,12 @@ valuelabels_tsExport <- function(tsExport) {
     tsExport$cl, tsExport$export_options$study_id)
   
   # Clean vallab_lookup from form entries, that are not in form_names &
-  # sort it by formorder
+  # sort it by formorder & variable order in tables
   vallab_lookup <- vallab_lookup %>%
     keep(names(.) %in% tsExport$export_options$studydata_names) %>%
-    .[order(match(names(.), tsExport$export_options$form_order))]
-  
+    .[order(match(names(.), tsExport$export_options$form_order))] %>%
+    imap(~ .[order(match(names(.), names(tsExport[[.y]])))])
+
   tsExport$export_options$vallab_lookup <- vallab_lookup
   
   # label study data tables
@@ -676,7 +671,7 @@ factorize_tsExport_table <- function(.data, studydata_name, lookup) {
     attr %in% names(attributes(x))
   }
   
-  # check if table is already labeled. If not, do so.
+  # check if table is already labelled. If not, do so.
   is.labelled.data.frame <- function(.data) {
     .data %>%
       map(~ {haven::is.labelled(.x) & has_attribute(.x, "labels")}) %>%
@@ -685,7 +680,7 @@ factorize_tsExport_table <- function(.data, studydata_name, lookup) {
   }
   
   if(!is.labelled.data.frame(.data)) {
-    #  print("Make it so!")
+    # print("Make it so!")
     .data <- valuelabels_tsExport_table(.data, studydata_name, lookup)
   }
   
@@ -718,9 +713,9 @@ factorize_tsExport_table <- function(.data, studydata_name, lookup) {
       .init = .
     )
   
-   # Remove value labels from the original variable, so the numeric values are kept as is when exporting to e.g. spss
+  # Remove value labels from the original variable, so the numeric values are kept as is when exporting to e.g. spss
   .data <- .data %>% 
-    mutate(across(where(is.labelled) & !ends_with(".factor"), 
+    mutate(across(where(haven::is.labelled) & !ends_with(".factor"), 
                   haven::zap_labels)) 
   
   return(.data)
@@ -758,10 +753,11 @@ factorize_tsExport <- function(tsExport) {
       tsExport$cl, tsExport$export_options$study_id)
     
     # Clean vallab_lookup from form entries, that are not in form_names &
-    # sort it by formorder
+    # sort it by formorder & variable order in table
     vallab_lookup <- vallab_lookup %>%
       keep(names(.) %in% tsExport$export_options$studydata_names) %>%
-      .[order(match(names(.), tsExport$export_options$form_order))]
+      .[order(match(names(.), tsExport$export_options$form_order))] %>%
+      imap(~ .[order(match(names(.), names(tsExport[[.y]])))])
     
     tsExport$export_options$vallab_lookup <- vallab_lookup
   } else {
@@ -816,19 +812,16 @@ create_date_lookup <- function(is, study_id) {
     mutate(unit = str_remove_all(.data$unit, "</?[:alpha:]+>|\\[|\\]")) %>%
     select(.data$studydata_name, varname = .data$ffcolname, type = .data$itemtype)
   
+  
   lookup_list <- lookup_table %>%
-    select(.data$studydata_name, .data$varname, .data$type) %>%
+    select(.data$studydata_name, .data$varname, .data$type) %>% 
+    mutate(attr = pmap(list(type = .data$type), list)) %>% 
     group_by(.data$studydata_name) %>%
     nest() %>%
     deframe() %>%
-    map(~ {.x %>% 
-        group_by(.data$varname) %>%
-        nest() %>%
-        deframe()}) %>%
-    map(~ .x %>%
-          map(~ {flatten(flatten(.x))}))
+    map(~ {.x$attr %>% set_names(.x$varname)})
   
-  return(lookup_list)
+   return(lookup_list)
 }
 
 
@@ -958,7 +951,7 @@ dates_tsExport <- function(tsExport) {
 #' @return \code{tsExportdata} object - a list with one data.frame for each file 
 #'   on the export and a list containing the export options
 #' @export
-read_tsExport <- function(data_dir, separator = ";", decimal = ".",
+read_tsExport <- function(data_dir, separator = ";", decimal = ",",
                           encoding = "UTF-8",
                           quote_escape_detect = TRUE,
                           escape_backslash = TRUE,
