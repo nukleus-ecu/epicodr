@@ -307,10 +307,11 @@ primary_coding_suep_recode_brs <- function(trial_data) {
 #' ecu_brs_sum, ecu_brs_n, ecu_brs_total, ecu_brs_cat
 #'
 #' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_suep_brs <- function(trial_data, pid, visitid) {
+primary_coding_suep_brs <- function(trial_data, visitid) {
   
   formname_to_add_vars <- "promext"
   
@@ -417,7 +418,7 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_recode_brs() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_suep_brs(trial_data, pid, visitid)},
+  tryCatch(expr = {trial_data <- primary_coding_suep_brs(trial_data, visitid)},
            error = function(e) {
              warning("primary_coding_suep_brs() did not work. This is likely due to missing variables.")
              print(e)})

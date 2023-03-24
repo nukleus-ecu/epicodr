@@ -4,10 +4,12 @@
 \alias{primary_coding_suep_brs}
 \title{Primary coding Brief Resilience Scale (BRS)}
 \usage{
-primary_coding_suep_brs(trial_data, pid, visitid)
+primary_coding_suep_brs(trial_data, visitid)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
+
+\item{visitid}{column name of visit ID in trial_data}
 }
 \description{
 adds the following columns to promext: 
