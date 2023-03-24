@@ -228,7 +228,7 @@ categorize_barthel_ecu <- function(barthel){
 categorize_moca_ecu <- function(moca){
   factor(
     case_when(moca >= 26 ~ "Normale kognitive Funktion", 
-              moca <26 ~ "Eingeschraenkte kognitive Funktion")
+              moca < 26 ~ "Eingeschraenkte kognitive Funktion")
   )
 }
 
@@ -633,7 +633,11 @@ categorize_facitf_ecu <- function (ecu_facitf_sum) {
 #' @export
 
 calculate_brs_sum <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
-  ecu_brs_sum <- sum(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6, na.rm = TRUE)
+  ecu_brs_sum <- sum(ifelse(brs_1 >= 1, brs_1, NA), ifelse(brs_2 >= 1, brs_2, NA), ifelse(brs_3 >= 1, brs_3, NA), ifelse(brs_4 >= 1, brs_4, NA), 
+                     ifelse(brs_5 >= 1, brs_5, NA), ifelse(brs_6 >= 1, brs_6, NA), na.rm = TRUE)
+  ecu_brs_sum <- case_when(is.na(brs_1) & is.na(brs_2) & is.na(brs_3) & is.na(brs_4) & is.na(brs_5) & is.na(brs_6) ~ NA_integer_,
+                           brs_1 == "-1" & brs_2 == "-1" & brs_3 == "-1" & brs_4 == "-1" & brs_5 == "-1" & brs_6 == "-1" ~ NA_integer_,
+                           TRUE ~ ecu_brs_sum)
   
   return(ecu_brs_sum)
 }
@@ -654,13 +658,15 @@ calculate_brs_sum <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
 
 calculate_brs_n <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
   
-  ecu_brs_n <- 0 + 
-    case_when(!is.na(brs_1) ~ 1, is.na(brs_1) ~ 0) +
-    case_when(!is.na(brs_2) ~ 1, is.na(brs_2) ~ 0) +
-    case_when(!is.na(brs_3) ~ 1, is.na(brs_3) ~ 0) +
-    case_when(!is.na(brs_4) ~ 1, is.na(brs_4) ~ 0) +
-    case_when(!is.na(brs_5) ~ 1, is.na(brs_5) ~ 0) +
-    case_when(!is.na(brs_6) ~ 1, is.na(brs_6) ~ 0) 
+  ecu_brs_n <- sum(ifelse(!is.na(brs_1), 1, 0),
+                   ifelse(!is.na(brs_2), 1, 0),
+                   ifelse(!is.na(brs_3), 1, 0),
+                   ifelse(!is.na(brs_4), 1, 0),
+                   ifelse(!is.na(brs_5), 1, 0),
+                   ifelse(!is.na(brs_6), 1, 0))
+
+  ecu_brs_n <- ifelse(ecu_brs_n == 0, NA_integer_, ecu_brs_n)
+  
   return(ecu_brs_n)
 }
 

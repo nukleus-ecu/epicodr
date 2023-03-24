@@ -15,5 +15,8 @@ primary_coding_suep_who_scale(trial_data, pid, visitid)
 }
 \description{
 adds the following dataframe to trial_data: 
- who_scale_per_visit_data
+ ecu_who_scale_per_visit_data
+ 
+adds the following columns to scv:
+ ecu_who_scale_max, ecu_who_scale_max.factor, ecu_who_scale_with_diag_max, ecu_who_scale_with_diag_max.factor
 }
