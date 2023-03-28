@@ -1,0 +1,6 @@
+^.*\.Rproj$         # Designates the directory as an RStudio Project
+^\.Rproj\.user$     # Used by RStudio for temporary files
+^data-raw$          # Code used to create data included in the package
+^LICENSE\.md$       # Full text of the license
+^\.github$          # Issue templates, etc.
+^CONTRIBUTING\.md$  # Contributing guidelines
