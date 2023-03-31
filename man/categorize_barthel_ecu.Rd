@@ -13,5 +13,5 @@ categorize_barthel_ecu(barthel)
 factor of barthel index categories
 }
 \description{
-Categorize barthel index
+Categorizes barthel index in four categories
 }

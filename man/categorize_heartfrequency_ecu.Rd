@@ -9,6 +9,9 @@ categorize_heartfrequency_ecu(hf)
 \arguments{
 \item{hf}{vector of heartfrequency in bpm}
 }
+\value{
+factor of heartfrequency categories
+}
 \description{
-returns factor of heartfrequency categories
+Categorizes heartfrequency in three categories
 }

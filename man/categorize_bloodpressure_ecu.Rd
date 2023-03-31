@@ -15,5 +15,5 @@ categorize_bloodpressure_ecu(sbp, dbp)
 factor of blood pressure categories
 }
 \description{
-Categorize blood pressure
+Categorizes blood pressure in seven categories
 }

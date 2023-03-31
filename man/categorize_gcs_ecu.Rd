@@ -13,5 +13,5 @@ categorize_gcs_ecu(gcs)
 factor of Glasgow Coma Scale categories
 }
 \description{
-Categorize Glasgow Coma Scale
+Categorizes GCS in four categories
 }

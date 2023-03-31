@@ -7,13 +7,13 @@
 primary_coding_suep_clinical_params(trial_data, pid, visitid)
 }
 \arguments{
-\item{trial_data}{SecuTrial Data}
+\item{trial_data}{A secuTrial data object}
 
 \item{pid}{column name of patient ID in trial_data}
 
 \item{visitid}{column name of visit ID in trial_data}
 }
 \description{
-adds the following variables to stv1: 
+adds the following columns to stv1: 
 ecu_hpb, ecu_hf, ecu_oxy, ecu_temp, ecu_gcs, ecu_ph
 }

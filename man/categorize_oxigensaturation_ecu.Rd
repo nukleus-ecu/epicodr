@@ -13,5 +13,5 @@ categorize_oxigensaturation_ecu(so2)
 factor of oxigen saturation categories
 }
 \description{
-Categorize oxigen saturation
+Categorizes oxigen saturation in four categories
 }
