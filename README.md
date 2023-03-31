@@ -40,15 +40,28 @@ data <- zip_file_path %>%
 data_primary_coded <- data %>% 
   # place coding function accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop()
   primary_coding_suep()
-
-# Note: SPSS only supports levels of variables with <= 120 characters
-# Set affected variables to NULL
-# e.g.
-data_primary_coded$fuv3$disab_ecog.factor <- NULL
+  
+# Prepare data for SPSS export (remove .factor variables, add value labels, 
+# optionally remove original date variables and set default missing values)
+# - Set rm_stdates = FALSE if you want to keep original secutrial date variables
+# - set_missings = TRUE, assign general missing values for the whole data set. 
+#   Type "missing_labels_default" into console (without quotes) in order to 
+#    check default values that are set to missing.
+# - Additional Options: 
+#   - keep_date_vars: character vector of date variable names that should be 
+#     kept when rm_stdates = TRUE. Default: "birthdate_score"
+#   - missing_labels: character vector that defines variable labels that should 
+#     be set as missing value. Default: missing_labels_default
+#   - missing_values: numeric vector that defines variable values that should be 
+#     set as missing value. Default: NULL
+data_spss_export_prepared <- prepare_spss_export(data_primary_coded, 
+                                                 rm_stdates = TRUE, 
+												 set_missings = TRUE)
 
 # Export the prepared data in R to formats of other statistical software e.g. SPSS (sav) to export folder
-# For other formats replace "sav" with (one of "dta", "sas", "sav", "xpt")
-write_tsExport(data_primary_coded, format = "sav", path = "data/export/", metadata = TRUE)
+# For other formats replace 'data_spss_export_prepared' with 'data_primary_coded' and "sav" with (one of "dta", "sas", "sav", "xpt")
+write_tsExport(data_spss_export_prepared, format = "sav", path = "data/export/", metadata = TRUE)
+
 ```
 3. Run the script.
 4. Data is exported to folder [data/export](data/export).
