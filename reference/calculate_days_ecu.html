@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">epicodr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -55,7 +55,8 @@
 <span>  <span class="va">startdate</span>,</span>
 <span>  end_form <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">enddate</span>,</span>
-<span>  primary_form <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  primary_form <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">pid</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -80,6 +81,10 @@
 <dt>primary_form</dt>
 <dd><p>"start" if the time span will be merged to start_form. "end" if the time span will be merged to end_form. NA if one is not working across forms</p></dd>
 
+
+<dt>pid</dt>
+<dd><p>column name of patient ID in trial_data</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -100,7 +105,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mirjam Kohls, Olga Miljukov, Klaus Kammerer.</p>
+  <p></p><p>Developed by Mirjam Kohls, Olga Miljukov, Carolin Nürnberger, Miriam Rainers, Klaus Kammerer.</p>
 </div>
 
 <div class="pkgdown">

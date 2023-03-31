@@ -22,13 +22,43 @@
     <loc>/pull_request_template.html</loc>
   </url>
   <url>
+    <loc>/reference/build_who_scale_hap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_who_scale_suep_df.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_bmi.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_brs_n.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_brs_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_brs_total.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_days_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_eq5d5l_index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_facitf_sum.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_full_years.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_gad7_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_phq8_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_apache2_score_ecu.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_barthel_ecu.html</loc>
@@ -40,13 +70,37 @@
     <loc>/reference/categorize_bmi_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/categorize_brs_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_dds_score_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_facitf_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_gad7_ecu.html</loc>
+  </url>
+  <url>
     <loc>/reference/categorize_gcs_ecu.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_heartfrequency_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/categorize_horowitz_index_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_icdsc_score_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_mmrc_ecu.html</loc>
+  </url>
+  <url>
     <loc>/reference/categorize_moca_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_news_score_ecu.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_oxigensaturation_ecu.html</loc>
@@ -55,10 +109,28 @@
     <loc>/reference/categorize_ph_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/categorize_phq8_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_resp_rate_ecu.html</loc>
+  </url>
+  <url>
     <loc>/reference/categorize_temp_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/create_date_lookup.html</loc>
+  </url>
+  <url>
+    <loc>/reference/create_missing_lookup.html</loc>
+  </url>
+  <url>
     <loc>/reference/dates_tsExport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/defactorize_tsExport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/defactorize_tsExport_table.html</loc>
   </url>
   <url>
     <loc>/reference/ecu_age_cat_3.html</loc>
@@ -70,13 +142,112 @@
     <loc>/reference/factorize_tsExport.html</loc>
   </url>
   <url>
+    <loc>/reference/get_ecu_background_pop.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
     <loc>/reference/label_tsExport.html</loc>
   </url>
   <url>
+    <loc>/reference/missing_labels_default.html</loc>
+  </url>
+  <url>
+    <loc>/reference/missing_values_default.html</loc>
+  </url>
+  <url>
     <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prepare_spss_export.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_age.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_apache2.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_barthel_disc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_barthel_pre.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_bmi.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_clinical_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_clinical_params_his.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_dds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_eq5d5l.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_icdsc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_moca.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_news_first.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_who_scale.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_age.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_bmi.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_brs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_cardio_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_clinical_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_eq5d5l.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_facitf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_gad7.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_migration.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_mmrc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_moca.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_phq8.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_pneumo_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_psqi.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep.html</loc>
@@ -91,7 +262,13 @@
     <loc>/reference/primary_coding_suep_bmi.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_suep_brs.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_suep_clinical_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d5l.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_moca.html</loc>
@@ -100,10 +277,46 @@
     <loc>/reference/primary_coding_suep_patient_barthel.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_suep_recode_brs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_who_scale.html</loc>
+  </url>
+  <url>
     <loc>/reference/read_tsExport.html</loc>
   </url>
   <url>
     <loc>/reference/read_tsExport_raw.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_brs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/remove_st_dates_tsExport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/remove_st_dates_tsExport_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/spss_labelled_tsExport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/spss_labelled_tsExport_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/spss_missings_tsExport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/spss_missings_tsExport_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summarize_who_scale.html</loc>
+  </url>
+  <url>
+    <loc>/reference/valuelabels_tsExport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/valuelabels_tsExport_table.html</loc>
   </url>
   <url>
     <loc>/reference/write_tsExport.html</loc>

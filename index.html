@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">epicodr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -119,15 +119,27 @@
 <span><span class="va">data_primary_coded</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="co"># place coding function accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop()</span></span>
 <span>  <span class="fu"><a href="reference/primary_coding_suep.html">primary_coding_suep</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Note: SPSS only supports levels of variables with &lt;= 120 characters</span></span>
-<span><span class="co"># Set affected variables to NULL</span></span>
-<span><span class="co"># e.g.</span></span>
-<span><span class="va">data_primary_coded</span><span class="op">$</span><span class="va">fuv3</span><span class="op">$</span><span class="va">disab_ecog.factor</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span>  </span>
+<span><span class="co"># Prepare data for SPSS export (remove .factor variables, add value labels, </span></span>
+<span><span class="co"># optionally remove original date variables and set default missing values)</span></span>
+<span><span class="co"># - Set rm_stdates = FALSE if you want to keep original secutrial date variables</span></span>
+<span><span class="co"># - set_missings = TRUE, assign general missing values for the whole data set. </span></span>
+<span><span class="co">#   Type "missing_labels_default" into console (without quotes) in order to </span></span>
+<span><span class="co">#    check default values that are set to missing.</span></span>
+<span><span class="co"># - Additional Options: </span></span>
+<span><span class="co">#   - keep_date_vars: character vector of date variable names that should be </span></span>
+<span><span class="co">#     kept when rm_stdates = TRUE. Default: "birthdate_score"</span></span>
+<span><span class="co">#   - missing_labels: character vector that defines variable labels that should </span></span>
+<span><span class="co">#     be set as missing value. Default: missing_labels_default</span></span>
+<span><span class="co">#   - missing_values: numeric vector that defines variable values that should be </span></span>
+<span><span class="co">#     set as missing value. Default: NULL</span></span>
+<span><span class="va">data_spss_export_prepared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prepare_spss_export.html">prepare_spss_export</a></span><span class="op">(</span><span class="va">data_primary_coded</span>, </span>
+<span>                                                 rm_stdates <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                                                 set_missings <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Export the prepared data in R to formats of other statistical software e.g. SPSS (sav) to export folder</span></span>
-<span><span class="co"># For other formats replace "sav" with (one of "dta", "sas", "sav", "xpt")</span></span>
-<span><span class="fu"><a href="reference/write_tsExport.html">write_tsExport</a></span><span class="op">(</span><span class="va">data_primary_coded</span>, format <span class="op">=</span> <span class="st">"sav"</span>, path <span class="op">=</span> <span class="st">"data/export/"</span>, metadata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># For other formats replace 'data_spss_export_prepared' with 'data_primary_coded' and "sav" with (one of "dta", "sas", "sav", "xpt")</span></span>
+<span><span class="fu"><a href="reference/write_tsExport.html">write_tsExport</a></span><span class="op">(</span><span class="va">data_spss_export_prepared</span>, format <span class="op">=</span> <span class="st">"sav"</span>, path <span class="op">=</span> <span class="st">"data/export/"</span>, metadata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Run the script.</li>
 <li>Data is exported to folder <a href="data/export">data/export</a>.</li>
@@ -141,7 +153,7 @@
 <li>Clone this repository: <code>git clone https://github.com/nukleus-ecu/epicodr.git</code>
 </li>
 <li>Export data from secuTrial and place the *.zip file in <a href="data/import">data/import/</a>.</li>
-<li>Open and run script <a href="R/run/sample.R">R/run/sample.R</a> for sample import, primary coding and SPSS export or create a new R script by yourself.</li>
+<li>Create a new R script and add previously shown code for sample import, primary coding and SPSS export or create a new R script by yourself.</li>
 <li>Data is exported to folder <a href="data/export">data/export</a>.</li>
 </ol>
 </div>
@@ -157,27 +169,12 @@
 <div class="section level2">
 <h2 id="repository-structure">Repository structure<a class="anchor" aria-label="anchor" href="#repository-structure"></a>
 </h2>
-<p>This repository is structured as follows: - <a href="R">R</a> contains all R code - <a href="data/import">data/import</a> is the place to put raw datasets, i.e. secuTrial exports - <a href="data/export">data/export</a> is the place where exported datasets are stored - <a href="doc">doc</a> contains further documentation - <a href="lib">lib</a> contains external libraries - <a href="resources">resources</a> contains static content such as images - <a href="tests">tests</a> contains unit tests</p>
+<p>This repository is structured as follows: - <a href="R">R</a> contains all R code - <a href="man">man</a> contains all manuals to ecu-functions</p>
 <div class="section level3">
 <h3 id="computer-r-code-structure">
 <span class="emoji" data-emoji="computer">💻</span> R code structure<a class="anchor" aria-label="anchor" href="#computer-r-code-structure"></a>
 </h3>
-<p>The R code is structured as follows: - <a href="R">R/*.R</a> contains platform independent implementations: - <a href="R/10-preprocess-zip.R">10-preprocess-zip.R</a> contains a function to preprocess the exported zip - <a href="R/20-import-secutrial.R">20-import-secutrial.R</a> contains secutrial import functions - <a href="R/30-primary-coding.R">30-primary-coding.R</a> contains platformindependent helper fuctions used in platform specific primary coding scripts - <a href="R/40-render.R">40-render.R</a> contains a function for rendering reports - <a href="R/41-render-diagrams.R">41-render-diagrams.R</a> contains a function for rendering diagrams - <a href="R/52-render-helpers.R">52-render-helpers.R</a> contains a workaround to replace NAs in order to be able to generate tables with createTableOne without loosing rows due to all NAs in a data frame column - <a href="R/hap">R/hap</a> contains HAP specific implementations - <a href="R/pop">R/pop</a> contains POP specific implementations - <a href="R/suep">R/suep</a> contains SÜP specific implementations</p>
-<div class="section level4">
-<h4 id="süp">SÜP<a class="anchor" aria-label="anchor" href="#s%C3%BCp"></a>
-</h4>
-<p>Inside <a href="R/suep">R/suep</a>, the code is structured as follows: - <a href="R/suep/run">run</a> contains all run scripts, e.g. to code and export to SPSS format - <a href="R/suep/30-primary-coding.R">30-primary-coding.R</a> implements the primary coding of suep - <a href="R/suep/XX-export.R">XX-export.R</a> contains export functions, e.g. in SPSS format</p>
-</div>
-<div class="section level4">
-<h4 id="hap">HAP<a class="anchor" aria-label="anchor" href="#hap"></a>
-</h4>
-<p>Inside <a href="R/hap">R/hap</a>, the code is structured as follows: - <a href="R/hap/run">run</a> contains all run scripts, e.g. to code and export to SPSS format - <a href="R/hap/30-primary-coding.R">30-primary-coding.R</a> implements the primary coding of hap - <a href="R/hap/XX-export.R">XX-export.R</a> contains export functions, e.g. in SPSS format</p>
-</div>
-<div class="section level4">
-<h4 id="pop">POP<a class="anchor" aria-label="anchor" href="#pop"></a>
-</h4>
-<p>Inside <a href="R/pop">R/pop</a>, the code is structured as follows: - <a href="R/pop/run">run</a> contains all run scripts, e.g. to code and export to SPSS format - <a href="R/pop/30-primary-coding.R">30-primary-coding.R</a> implements the primary coding of hap - <a href="R/pop/XX-export.R">XX-export.R</a> contains export functions, e.g. in SPSS format</p>
-</div>
+<p>The R code is structured as follows: - <a href="R">R</a> contains platform independent and platform specific implementations: - <a href="R/write_tsExport.R">read-tsExport.R</a> contains import functions - <a href="R/write_tsExport.R">write-tsExport.R</a> contains export functions, e.g. for export to SPSS (.sav) - <a href="R/primary-coding.R">primary-coding.R</a> contains platform independent helper functions used in platform specific primary coding scripts - <a href="R/primary-coding-suep.R">primary-coding-suep.R</a> contains platform specific functions for primary coding for platform SUEP - <a href="R/primary-coding-hap.R">primary-coding-hap.R</a> contains platform specific functions for primary coding for platform HAP - <a href="R/primary-coding-pop.R">primary-coding-pop.R</a> contains platform specific functions for primary coding for platform POP</p>
 </div>
 </div>
 </div>
@@ -219,6 +216,8 @@
 <ul class="list-unstyled">
 <li>Mirjam Kohls <br><small class="roles"> Author </small>  </li>
 <li>Olga Miljukov <br><small class="roles"> Author </small>  </li>
+<li>Carolin Nürnberger <br><small class="roles"> Author </small>  </li>
+<li>Miriam Rainers <br><small class="roles"> Author </small>  </li>
 <li>Klaus Kammerer <br><small class="roles"> Contributor, maintainer </small> <a href="https://orcid.org/0000-0001-8998-0890" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
@@ -232,7 +231,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Mirjam Kohls, Olga Miljukov, Klaus Kammerer.</p>
+<p>Developed by Mirjam Kohls, Olga Miljukov, Carolin Nürnberger, Miriam Rainers, Klaus Kammerer.</p>
 </div>
 
 <div class="pkgdown">
