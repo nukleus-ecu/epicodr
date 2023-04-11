@@ -228,7 +228,8 @@ primary_coding_pop_moca <- function(trial_data) {
     mutate(ecu_moca_total_score = sum(.data$moca_tmt, .data$moca_figure, .data$moca_clock, .data$moca_naming, .data$moca_attention, .data$moca_speech, 
                                       .data$moca_abstract, .data$moca_recall_number, .data$moca_orientation, .data$moca_education),
            ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)
-    )
+    ) %>%
+    ungroup()
   
   return(trial_data)
 }

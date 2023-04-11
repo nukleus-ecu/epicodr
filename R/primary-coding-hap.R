@@ -258,7 +258,8 @@ primary_coding_hap_moca <- function(trial_data) {
                                       ifelse(.data$moca_0099 == 1, .data$moca_0100, 0),
                                       ifelse(.data$moca_0101 == 1, .data$moca_0102, 0),
                                       ifelse(.data$moca_0110 >= 0, .data$moca_0110, 0)),
-           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score))
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) %>%
+    ungroup()
   
   return(trial_data)
 }
