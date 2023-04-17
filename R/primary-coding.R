@@ -178,7 +178,7 @@ categorize_bmi_ecu <- function(bmi, height_uk.factor=NULL, weight_uk.factor=NULL
   #}
   
   breaks_polytom <- c(1,18.5,25,30,35,40,Inf)
-  labels_polytom <- c("Untergewicht", "Normalgewicht", "Uebergewicht",
+  labels_polytom <- c("Untergewicht", "Normalgewicht", "Übergewicht",
                       "Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III")
   
   
@@ -208,10 +208,10 @@ categorize_bmi_ecu <- function(bmi, height_uk.factor=NULL, weight_uk.factor=NULL
 categorize_barthel_ecu <- function(barthel){
   factor(
     case_when(
-      barthel >= 0 &  barthel <= 30 ~ "Weitgehend pflegeabhaengig",
-      barthel >= 35 &  barthel <= 80 ~ "Hilfsbeduerftig", 
-      barthel >= 85 &  barthel <= 95 ~ "Punktuell hilfsbeduerftig",
-      barthel >= 95 &  barthel <= 100 ~ "Selbststaendig"
+      barthel >= 0 &  barthel <= 30 ~ "Weitgehend pflegeabhängig",
+      barthel >= 35 &  barthel <= 80 ~ "Hilfsbedürftig", 
+      barthel >= 85 &  barthel <= 95 ~ "Punktuell hilfsbedürftig",
+      barthel >= 95 &  barthel <= 100 ~ "Selbstständig"
     )
   )
 }
@@ -228,7 +228,7 @@ categorize_barthel_ecu <- function(barthel){
 categorize_moca_ecu <- function(moca){
   factor(
     case_when(moca >= 26 ~ "Normale kognitive Funktion", 
-              moca < 26 ~ "Eingeschraenkte kognitive Funktion")
+              moca < 26 ~ "Eingeschränkte kognitive Funktion")
   )
 }
 
@@ -305,7 +305,7 @@ categorize_oxigensaturation_ecu <- function(so2){
   factor(
     case_when(so2 < 85  ~ "Hochgradige Hypoxygenation", 
               so2 < 90  ~ "Mittelgradige Hypoxygenation",
-              so2 < 95  ~ "Maessige Hypoxygenation", 
+              so2 < 95  ~ "Mässige Hypoxygenation", 
               so2 <= 100  ~ "Normbereich")
   )
 }
@@ -341,9 +341,9 @@ categorize_temp_ecu <-  function(temp){
     case_when(
       temp < 36.3 ~ "Erniedrigte Temperatur", 
       temp < 37.5 ~ "Normale Temperatur", 
-      temp < 38.1 ~ "Erhoehte Temperatur",
+      temp < 38.1 ~ "Erhöhte Temperatur",
       temp < 38.6 ~ "Leichtes Fieber",
-      temp < 39.1 ~ "Maessiges Fieber",
+      temp < 39.1 ~ "Mässiges Fieber",
       temp < 40 ~ "Hohes Fieber",
       temp < 42.5 ~ "Sehr hohes Fieber"))
 }
@@ -360,10 +360,10 @@ categorize_temp_ecu <-  function(temp){
 categorize_gcs_ecu <-  function(gcs){
   factor(
     case_when(
-      gcs <= 8 ~ "Schwere Hirnschaedigung", 
-      gcs <= 12 ~ "Mittelschwere Hirnschaedigung", 
-      gcs <= 15 ~ "Leichte Hirnschaedigung", 
-      gcs > 15 ~ "Keine Hirnschaedigung"))
+      gcs <= 8 ~ "Schwere Hirnschädigung", 
+      gcs <= 12 ~ "Mittelschwere Hirnschädigung", 
+      gcs <= 15 ~ "Leichte Hirnschädigung", 
+      gcs > 15 ~ "Keine Hirnschädigung"))
 }
 
 
