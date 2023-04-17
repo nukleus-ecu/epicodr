@@ -4,10 +4,12 @@
 \alias{primary_coding_hap_icdsc}
 \title{Primary coding for Intensive Care Delirium Screening Checklist (ICDSC)}
 \usage{
-primary_coding_hap_icdsc(trial_data)
+primary_coding_hap_icdsc(trial_data, table_names)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
+
+\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following column to haemodyn:

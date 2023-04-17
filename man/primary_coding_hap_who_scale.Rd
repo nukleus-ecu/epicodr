@@ -4,12 +4,14 @@
 \alias{primary_coding_hap_who_scale}
 \title{Primary coding WHO-Scale}
 \usage{
-primary_coding_hap_who_scale(trial_data, pid)
+primary_coding_hap_who_scale(trial_data, pid, table_names)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
 
 \item{pid}{column name of patient ID in trial_data}
+
+\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following columns to eosfci

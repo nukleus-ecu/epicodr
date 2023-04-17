@@ -4,10 +4,12 @@
 \alias{primary_coding_hap_eq5d5l}
 \title{Primary coding EQ5D-5L-Index}
 \usage{
-primary_coding_hap_eq5d5l(trial_data)
+primary_coding_hap_eq5d5l(trial_data, table_names)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
+
+\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following column to eq5d:

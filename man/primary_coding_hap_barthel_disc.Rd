@@ -4,10 +4,12 @@
 \alias{primary_coding_hap_barthel_disc}
 \title{Primary coding Barthel index at discharge}
 \usage{
-primary_coding_hap_barthel_disc(trial_data)
+primary_coding_hap_barthel_disc(trial_data, table_names)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
+
+\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following column to end:
