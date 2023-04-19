@@ -109,7 +109,7 @@ primary_coding_pop_bmi <- function(trial_data) {
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$gec_weight, .data$gec_height),
            ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi, .data$gec_height_unk.factor, .data$gec_weight_unk.factor),
-           ecu_bmi_cat2 = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
+           ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
                                                                               Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
                                                                               Nein = c("Untergewicht", "Normalgewicht", "Uebergewicht"))),
            ecu_waist = .data$ecu_bmi_cat2)
