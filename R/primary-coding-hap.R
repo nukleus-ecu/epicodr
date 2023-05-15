@@ -496,7 +496,7 @@ build_who_scale_hap <- function(trial_data, pid, table_names) {
   
   trial_data[[grep("^_?e_?osfci$", table_names)]] <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     left_join(main_diag) %>%
-    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verfügbar", 
+    mutate(ecu_who_scale_with_diag.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verfügbar", 
                                             .data$osfci_0021 == 0 ~ "Kontrollgruppe, ohne Sars-Infektion",
                                             .data$osfci_0021 == 1 | .data$osfci_0021 == 2 ~ "Ambulant, milde Phase",
                                             (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase",
@@ -504,15 +504,32 @@ build_who_scale_hap <- function(trial_data, pid, table_names) {
                                             (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase",
                                             (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
                                             .data$osfci_0021 == 8 ~ "Verstorben"),
-           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Keine Informationen verfügbar" ~ -1, 
-                                                .data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
-                                                .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
-                                                .data$ecu_who_scale.factor == "Verstorben" ~ 6))) #%>%
-    #select(-(.data$ea_0010))
+           ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verfügbar" ~ -1, 
+                                                .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                                .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
+                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
+                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
+                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
+                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
+                                                .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6)),
+           ecu_who_scale.factor = case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verfügbar" ~ "Keine Informationen verfügbar", 
+                                            .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ "Kontrollgruppe, ohne Sars-Infektion",
+                                            .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ "Ambulant, milde Phase",
+                                            .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" | 
+                                              .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ "Hospitalisiert, moderate Phase",
+                                            .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" |
+                                              .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ "Hospitalisiert, schwere Phase",
+                                            .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ "Verstorben"),
+           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verfügbar" ~ -1, 
+                                                .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                                .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
+                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" | 
+                                                  .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 2,
+                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" |
+                                                  .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 3,
+                                                .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 4)))
+  
+  #select(-(.data$ea_0010))
   
   who_scale_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     select(!!sym(pid), starts_with("ecu")) %>%
@@ -523,8 +540,19 @@ build_who_scale_hap <- function(trial_data, pid, table_names) {
            ecu_who_scale_max = .data$ecu_who_scale) %>%
     ungroup()
   
+  who_scale_with_diag_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
+    select(!!sym(pid), starts_with("ecu")) %>%
+    group_by(!!sym(pid)) %>%
+    slice_max(.data$ecu_who_scale_with_diag) %>%
+    distinct() %>%
+    rename(ecu_who_scale_max_with_diag.factor = .data$ecu_who_scale_with_diag.factor,
+           ecu_who_scale_max_with_diag = .data$ecu_who_scale_with_diag) %>%
+    ungroup()
+
+  
   trial_data[[grep("^_?osfci$", table_names)]] <-  trial_data[[grep("^_?osfci$", table_names)]] %>%
-    left_join(who_scale_max, by = pid) 
+    left_join(who_scale_max, by = pid) %>%
+    left_join(who_scale_with_diag_max, by = pid)
   
   return(trial_data)
 }
