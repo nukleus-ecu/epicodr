@@ -64,9 +64,8 @@ clean_cs <- function(x){
 primary_coding_pop_age <- function(trial_data) {
   
   trial_data[["erstbefragung"]] <- trial_data[["erstbefragung"]] %>%
-    mutate(ecu_age = calculate_full_years(.data$gec_birthdate.date, .data$doa.date),
-           ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
-           ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age))
+    mutate(ecu_age_cat_dec = ecu_age_cat_dec(.data$gec_demo_age),
+           ecu_age_cat_3 = ecu_age_cat_3(.data$gec_demo_age))
   
   return(trial_data)
 }
@@ -97,7 +96,7 @@ primary_coding_pop_migration <- function(trial_data) {
 #' Primary coding Body Mass Index (BMI)
 #'
 #' adds the following columns to anthropo: 
-#' ecu_bmi, ecu_bmi_cat, ecu_adipositas
+#' ecu_bmi, ecu_bmi_cat, ecu_adipositas, ecu_waist
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -108,7 +107,7 @@ primary_coding_pop_bmi <- function(trial_data) {
   
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$gec_weight, .data$gec_height),
-           ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi, .data$gec_height_unk.factor, .data$gec_weight_unk.factor),
+           ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
            ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
                                                                               Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
                                                                               Nein = c("Untergewicht", "Normalgewicht", "Uebergewicht"))),
@@ -343,7 +342,7 @@ primary_coding_pop_brs <- function(trial_data) {
 }
 
 
-#' Pittsburgh Sleep Quality Index
+#' Pittsburgh Sleep Quality Index (PSQI)
 #' 
 #' add the following columns to surveyfrageboge:
 #' ecu_psqi_comp_1, ecu_psqi_comp_2_sum, ecu_psqi_comp_2, ecu_psqi_comp_3, ecu_psqi_comp_4, ecu_psqi_comp_5_sum, ecu_psqi_comp_5, ecu_psqi_comp_6, 
