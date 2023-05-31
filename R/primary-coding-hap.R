@@ -496,38 +496,34 @@ build_who_scale_hap <- function(trial_data, pid, table_names) {
   
   trial_data[[grep("^_?e_?osfci$", table_names)]] <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     left_join(main_diag) %>%
-    mutate(ecu_who_scale_with_diag.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verfügbar", 
+    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verf\u00fcgbar", 
                                             .data$osfci_0021 == 0 ~ "Kontrollgruppe, ohne Sars-Infektion",
                                             .data$osfci_0021 == 1 | .data$osfci_0021 == 2 ~ "Ambulant, milde Phase",
-                                            (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase",
-                                            (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
-                                            (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase",
-                                            (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
+                                            .data$osfci_0021 == 3 | .data$osfci_0021 == 4 ~ "Hospitalisiert, moderate Phase",
+                                            .data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7 ~ "Hospitalisiert, schwere Phase",
                                             .data$osfci_0021 == 8 ~ "Verstorben"),
-           ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verfügbar" ~ -1, 
-                                                .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
-                                                .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
-                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
-                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
-                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
-                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
-                                                .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6)),
-           ecu_who_scale.factor = case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verfügbar" ~ "Keine Informationen verfügbar", 
-                                            .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ "Kontrollgruppe, ohne Sars-Infektion",
-                                            .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ "Ambulant, milde Phase",
-                                            .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" | 
-                                              .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ "Hospitalisiert, moderate Phase",
-                                            .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" |
-                                              .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ "Hospitalisiert, schwere Phase",
-                                            .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ "Verstorben"),
-           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verfügbar" ~ -1, 
+           ecu_who_scale.factor = case_when(ecu_who_scale.factor = "Hospitalisiert, moderate Phase" & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase", 
+                                            ecu_who_scale.factor = "Hospitalisiert, moderate Phase" & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
+                                            ecu_who_scale.factor = "Hospitalisiert, schwere Phase" & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase", 
+                                            ecu_who_scale.factor = "Hospitalisiert, schwere Phase" & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
+                                            TRUE ~ ecu_who_scale.factor),
+           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verf\u00fcgbar" ~ -1, 
                                                 .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
                                                 .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
                                                 .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" | 
                                                   .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 2,
                                                 .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" |
                                                   .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 3,
-                                                .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 4)))
+                                                .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 4)),
+           ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verf\u00fcgbar" ~ -1, 
+                                                          .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                                          .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
+                                                          .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6)))
+  
   
   #select(-(.data$ea_0010))
   
