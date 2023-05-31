@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary-coding-pop.R
 \name{primary_coding_pop_psqi}
 \alias{primary_coding_pop_psqi}
-\title{Pittsburgh Sleep Quality Index}
+\title{Pittsburgh Sleep Quality Index (PSQI)}
 \usage{
 primary_coding_pop_psqi(trial_data)
 }

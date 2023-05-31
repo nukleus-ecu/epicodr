@@ -11,5 +11,5 @@ primary_coding_pop_bmi(trial_data)
 }
 \description{
 adds the following columns to anthropo: 
-ecu_bmi, ecu_bmi_cat, ecu_adipositas
+ecu_bmi, ecu_bmi_cat, ecu_adipositas, ecu_waist
 }
