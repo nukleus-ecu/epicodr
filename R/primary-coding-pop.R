@@ -392,6 +392,84 @@ primary_coding_pop_psqi <- function(trial_data) {
   return(trial_data)
 }
 
+#' Kansas City Cardiomyopathy Questionnaire (KCCQ)
+#'
+#' adds the following variables to surveyfrageboge:
+#' ecu_kccq_phys_sum, ecu_kccq_phys_score, ecu_kccq_sy_ch, ecu_kccq_sy_ch_score, ecu_kccq_3_score,
+#' ecu_kccq_5_score, ecu_kccq_7_score, ecu_kccq_9_score, ecu_kccy_sy_freq_score, ecu_kccq_sy_sev_sum,
+#' ecu_kccq_sy_sev_score, ecu_kccq_sy_sev_sum, ecu_kccq_sy_sev_score, ecu_kccq_sy_sum, ecu_kccq_sy_score,
+#' ecu_kccq_se_sum, ecu_kccq_se_score, ecu_kccq_qol_sum, ecu_kccq_qol_score, ecu_kccq_sl_sum,
+#' ecu_kccq_sl_score, ecu_kccq_total
+#' 
+#' @description calculates Kansas City Cardiomyopathy Questionnaire (KCCQ) total score
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_kccq <- function(trial_data){
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    rowwise() %>%
+    mutate(
+      # build score for physical limitations (questions 1a to 1f)
+      ## recode when question can not be answered
+      kccq_1_1 = ifelse(.data$kccq_1_1 == 9, NA_real_, .data$kccq_1_1),
+      kccq_1_2 = ifelse(.data$kccq_1_2 == 9, NA_real_, .data$kccq_1_2),
+      kccq_1_3 = ifelse(.data$kccq_1_3 == 9, NA_real_, .data$kccq_1_3),
+      kccq_1_4 = ifelse(.data$kccq_1_4 == 9, NA_real_, .data$kccq_1_4),
+      kccq_1_5 = ifelse(.data$kccq_1_5 == 9, NA_real_, .data$kccq_1_5),
+      kccq_1_6 = ifelse(.data$kccq_1_6 == 9, NA_real_, .data$kccq_1_6),
+      ## build scores
+      ecu_kccq_phys_sum = round(mean(c(.data$kccq_1_1, .data$kccq_1_2, .data$kccq_1_3, .data$kccq_1_4, .data$kccq_1_5, .data$kccq_1_6), na.rm = TRUE), digits = 2),
+      ecu_kccq_phys_score = ((.data$ecu_kccq_phys_sum - 1)/4)*100,
+      # build score for symptom changes (question 2)
+      ecu_kccq_sy_ch = round(ifelse(.data$kccq_2 == 6, 3, .data$kccq_2), digits = 2),
+      ecu_kccq_sy_ch_score = round(((.data$ecu_kccq_sy_ch - 1)/4)*100, digits = 2),
+      # build score for symptom frequency (questions 3, 5, 7 and 9)
+      ## recode when no symptoms occured
+      kccq_3 = ifelse(.data$kccq_3 == 5, NA_real_, .data$kccq_3),
+      kccq_5 = ifelse(.data$kccq_5 == 7, NA_real_, .data$kccq_5),
+      kccq_7 = ifelse(.data$kccq_7 == 7, NA_real_, .data$kccq_7),
+      kccq_9 = ifelse(.data$kccq_9 == 5, NA_real_, .data$kccq_9),
+      ## build scores
+      ecu_kccq_3_score = round(((.data$kccq_3 - 1)/4)*100, digits = 2),
+      ecu_kccq_5_score = round(((.data$kccq_5 - 1)/6)*100, digits = 2),
+      ecu_kccq_7_score = round(((.data$kccq_7 - 1)/6)*100, digits = 2),
+      ecu_kccq_9_score = round(((.data$kccq_9 - 1)/4)*100, digits = 2),
+      ecu_kccq_sy_freq_score = round(mean(c(.data$ecu_kccq_3_score, .data$ecu_kccq_5_score, .data$ecu_kccq_7_score, .data$ecu_kccq_9_score), na.rm = TRUE), digits = 2),
+      # build score for symptom severity (questions 4, 6 and 8)
+      ## recode when there were no limitations
+      kccq_4 = ifelse(.data$kccq_4 == 6, 5, .data$kccq_4),
+      kccq_6 = ifelse(.data$kccq_6 == 6, 5, .data$kccq_6),
+      kccq_8 = ifelse(.data$kccq_8 == 6, 5, .data$kccq_8),
+      ## build score
+      ecu_kccq_sy_sev_sum = round(mean(c(.data$kccq_4, .data$kccq_6, .data$kccq_8), na.rm = TRUE), digits = 2),
+      ecu_kccq_sy_sev_score = round(((.data$ecu_kccq_sy_sev_sum - 1)/4)*100,digits = 2),
+      # build score for symptom frequency and symptom severity
+      ecu_kccq_sy_sum = round(mean(c(.data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score), na.rm = TRUE), digits = 2),
+      ecu_kccq_sy_score = round(.data$ecu_kccq_sy_sum / 2, digits = 2),
+      # build score for self-efficacy (questions 10 and 11)
+      ecu_kccq_se_sum = round(mean(c(.data$kccq_10, .data$kccq_11), na.rm = TRUE), digits = 2),
+      ecu_kccq_se_score = round(((.data$ecu_kccq_se_sum - 1)/4)*100, digits = 2),
+      # build score for quality of life (questions 12, 13, 14)
+      ecu_kccq_qol_sum = round(mean(c(.data$kccq_12, .data$kccq_13, .data$kccq_14), na.rm = TRUE), digits = 2),
+      ecu_kccq_qol_score = round(((.data$ecu_kccq_qol_sum - 1)/4)*100, digits = 2),
+      # build score for social limitations (questions 15a to 15d)
+      ## recode when question can not be answered
+      kccq_15_1 = ifelse(.data$kccq_15_1 == 9, NA_real_, .data$kccq_15_1),
+      kccq_15_2 = ifelse(.data$kccq_15_2 == 9, NA_real_, .data$kccq_15_2),
+      kccq_15_3 = ifelse(.data$kccq_15_3 == 9, NA_real_, .data$kccq_15_3),
+      kccq_15_4 = ifelse(.data$kccq_15_4 == 9, NA_real_, .data$kccq_15_4),
+      ## build scores
+      ecu_kccq_sl_sum = round(mean(c(.data$kccq_15_1, .data$kccq_15_2, .data$kccq_15_3, .data$kccq_15_4), na.rm = TRUE), digits = 2),
+      ecu_kccq_sl_score = round(((.data$ecu_kccq_sl_sum - 1)/4)*100, digits = 2),
+      # build total score
+      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2))
+  
+  return(trial_data)
+  
+}
+
 
 # POP Wrapper primary coding ==================================================
 
