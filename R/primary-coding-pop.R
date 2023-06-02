@@ -420,8 +420,8 @@ primary_coding_pop_kccq <- function(trial_data){
       kccq_1_5 = ifelse(.data$kccq_1_5 == 9, NA_real_, .data$kccq_1_5),
       kccq_1_6 = ifelse(.data$kccq_1_6 == 9, NA_real_, .data$kccq_1_6),
       ## build scores
-      ecu_kccq_phys_sum = round(mean(c(.data$kccq_1_1, .data$kccq_1_2, .data$kccq_1_3, .data$kccq_1_4, .data$kccq_1_5, .data$kccq_1_6), na.rm = TRUE), digits = 2),
-      ecu_kccq_phys_score = ((.data$ecu_kccq_phys_sum - 1)/4)*100,
+      ecu_kccq_phys_mean = round(mean(c(.data$kccq_1_1, .data$kccq_1_2, .data$kccq_1_3, .data$kccq_1_4, .data$kccq_1_5, .data$kccq_1_6), na.rm = TRUE), digits = 2),
+      ecu_kccq_phys_score = ((.data$ecu_kccq_phys_mean - 1)/4)*100,
       # build score for symptom changes (question 2)
       ecu_kccq_sy_ch = round(ifelse(.data$kccq_2 == 6, 3, .data$kccq_2), digits = 2),
       ecu_kccq_sy_ch_score = round(((.data$ecu_kccq_sy_ch - 1)/4)*100, digits = 2),
@@ -443,17 +443,17 @@ primary_coding_pop_kccq <- function(trial_data){
       kccq_6 = ifelse(.data$kccq_6 == 6, 5, .data$kccq_6),
       kccq_8 = ifelse(.data$kccq_8 == 6, 5, .data$kccq_8),
       ## build score
-      ecu_kccq_sy_sev_sum = round(mean(c(.data$kccq_4, .data$kccq_6, .data$kccq_8), na.rm = TRUE), digits = 2),
-      ecu_kccq_sy_sev_score = round(((.data$ecu_kccq_sy_sev_sum - 1)/4)*100,digits = 2),
+      ecu_kccq_sy_sev_mean = round(mean(c(.data$kccq_4, .data$kccq_6, .data$kccq_8), na.rm = TRUE), digits = 2),
+      ecu_kccq_sy_sev_score = round(((.data$ecu_kccq_sy_sev_mean - 1)/4)*100,digits = 2),
       # build score for symptom frequency and symptom severity
-      ecu_kccq_sy_sum = round(mean(c(.data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score), na.rm = TRUE), digits = 2),
-      ecu_kccq_sy_score = round(.data$ecu_kccq_sy_sum / 2, digits = 2),
+      ecu_kccq_sy_mean = round(mean(c(.data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score), na.rm = TRUE), digits = 2),
+      ecu_kccq_sy_score = round(.data$ecu_kccq_sy_mean / 2, digits = 2),
       # build score for self-efficacy (questions 10 and 11)
-      ecu_kccq_se_sum = round(mean(c(.data$kccq_10, .data$kccq_11), na.rm = TRUE), digits = 2),
-      ecu_kccq_se_score = round(((.data$ecu_kccq_se_sum - 1)/4)*100, digits = 2),
+      ecu_kccq_se_mean = round(mean(c(.data$kccq_10, .data$kccq_11), na.rm = TRUE), digits = 2),
+      ecu_kccq_se_score = round(((.data$ecu_kccq_se_mean - 1)/4)*100, digits = 2),
       # build score for quality of life (questions 12, 13, 14)
-      ecu_kccq_qol_sum = round(mean(c(.data$kccq_12, .data$kccq_13, .data$kccq_14), na.rm = TRUE), digits = 2),
-      ecu_kccq_qol_score = round(((.data$ecu_kccq_qol_sum - 1)/4)*100, digits = 2),
+      ecu_kccq_qol_mean = round(mean(c(.data$kccq_12, .data$kccq_13, .data$kccq_14), na.rm = TRUE), digits = 2),
+      ecu_kccq_qol_score = round(((.data$ecu_kccq_qol_mean - 1)/4)*100, digits = 2),
       # build score for social limitations (questions 15a to 15d)
       ## recode when question can not be answered
       kccq_15_1 = ifelse(.data$kccq_15_1 == 9, NA_real_, .data$kccq_15_1),
@@ -461,10 +461,11 @@ primary_coding_pop_kccq <- function(trial_data){
       kccq_15_3 = ifelse(.data$kccq_15_3 == 9, NA_real_, .data$kccq_15_3),
       kccq_15_4 = ifelse(.data$kccq_15_4 == 9, NA_real_, .data$kccq_15_4),
       ## build scores
-      ecu_kccq_sl_sum = round(mean(c(.data$kccq_15_1, .data$kccq_15_2, .data$kccq_15_3, .data$kccq_15_4), na.rm = TRUE), digits = 2),
-      ecu_kccq_sl_score = round(((.data$ecu_kccq_sl_sum - 1)/4)*100, digits = 2),
+      ecu_kccq_sl_mean = round(mean(c(.data$kccq_15_1, .data$kccq_15_2, .data$kccq_15_3, .data$kccq_15_4), na.rm = TRUE), digits = 2),
+      ecu_kccq_sl_score = round(((.data$ecu_kccq_sl_mean - 1)/4)*100, digits = 2),
       # build total score
-      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2))
+      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2)) %>%
+    ungroup()
   
   return(trial_data)
   
