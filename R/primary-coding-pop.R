@@ -489,7 +489,8 @@ primary_coding_pop_kccq <- function(trial_data){
       ecu_kccq_sl_mean = round(mean(c(.data$kccq_15_1, .data$kccq_15_2, .data$kccq_15_3, .data$kccq_15_4), na.rm = TRUE), digits = 2),
       ecu_kccq_sl_score = round(((.data$ecu_kccq_sl_mean - 1)/4)*100, digits = 2),
       # build total score
-      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2))
+      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2)) %>%
+    ungroup()
   
   return(trial_data)
   
