@@ -96,7 +96,7 @@ primary_coding_pop_migration <- function(trial_data) {
 #' Primary coding Body Mass Index (BMI)
 #'
 #' adds the following columns to anthropo: 
-#' ecu_bmi, ecu_bmi_cat, ecu_adipositas, ecu_waist
+#' ecu_bmi, ecu_bmi_cat, ecu_adipositas
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -110,10 +110,35 @@ primary_coding_pop_bmi <- function(trial_data) {
            ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
            ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
                                                                               Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
-                                                                              Nein = c("Untergewicht", "Normalgewicht", "Uebergewicht"))),
-           ecu_waist = .data$ecu_bmi_cat2)
+                                                                              Nein = c("Untergewicht", "Normalgewicht", "\u0700bergewicht"))))
   
   return (trial_data)
+}
+
+
+## Abdominal overweight ========================================================
+
+#' Primary coding Body Mass Index (BMI)
+#'
+#' adds the following columns to anthropo: 
+#' ecu_waist
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_abd_overw <- function(trial_data, pid) {
+  
+  trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
+    left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor) %>% filter(!is.na(.data$gec_gender)), by = pid) %>%
+    mutate(ecu_waist = case_when(.data$gec_gender.factor == "Weiblich" & .data$taillumfang <= 88 ~ "No abdominal overweight",
+                                 .data$gec_gender.factor == "Weiblich" & .data$taillumfang > 88 ~ "Abdominal overweight",
+                                 .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang <= 102 ~ "No abdominal overweight",
+                                 .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang > 102 ~ "Abdominal overweight")) %>%
+    select(-contains("gec_gender"))
+  
+  return(trial_data)
 }
 
 
@@ -199,7 +224,7 @@ primary_coding_pop_pneumo_params <- function(trial_data) {
 #' ecu_eq5d_index
 #'
 #' @param trial_data A secuTrial data object
-#' @importFrom eq5d eq5d
+#' @import eq5d
 #' @importFrom rlang .data
 #' @export
 
@@ -334,7 +359,6 @@ primary_coding_pop_brs <- function(trial_data) {
     mutate(ecu_brs_sum = calculate_brs_sum(.data$brs1, .data$brs2, .data$brs3, .data$brs4, .data$brs5, .data$brs6),
            ecu_brs_n = calculate_brs_n(.data$brs1, .data$brs2, .data$brs3, .data$brs4, .data$brs5, .data$brs6),
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
-           ecu_brs_total = if (.data$ecu_brs_total == "NaN") {NA} else {.data$ecu_brs_total},
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) %>%
     ungroup()
   
@@ -391,6 +415,7 @@ primary_coding_pop_psqi <- function(trial_data) {
   
   return(trial_data)
 }
+
 
 #' Kansas City Cardiomyopathy Questionnaire (KCCQ)
 #'
@@ -464,7 +489,66 @@ primary_coding_pop_kccq <- function(trial_data){
       ecu_kccq_sl_mean = round(mean(c(.data$kccq_15_1, .data$kccq_15_2, .data$kccq_15_3, .data$kccq_15_4), na.rm = TRUE), digits = 2),
       ecu_kccq_sl_score = round(((.data$ecu_kccq_sl_mean - 1)/4)*100, digits = 2),
       # build total score
-      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2)) %>%
+      ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2))
+  
+  return(trial_data)
+  
+}
+
+
+#' Primary coding Six Item Loneliness Scale (6 ILS)
+#' 
+#' adds the following column to surveyfrageboge: 
+#' ecu_six_ils1,ecu_six_ils2, ecu_six_ils3, ecu_six_ils4, ecu_six_ils5, ecu_six_ils6, ecu_six_ils_total, ecu_six_ils_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_6ils <- function(trial_data) {
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    rowwise() %>%
+    mutate(ecu_six_ils1 = recode_6ils(.data$six_ils1.factor, version = "neg"),
+           ecu_six_ils2 = recode_6ils(.data$six_ils2.factor, version = "pos"),
+           ecu_six_ils3 = recode_6ils(.data$six_ils3.factor, version = "pos"),
+           ecu_six_ils4 = recode_6ils(.data$six_ils4.factor, version = "neg"),
+           ecu_six_ils5 = recode_6ils(.data$six_ils5.factor, version = "pos"),
+           ecu_six_ils6 = recode_6ils(.data$six_ils6.factor, version = "neg"),
+           ecu_six_ils_total = calculate_6ils_total(.data$ecu_six_ils1, .data$ecu_six_ils2, .data$ecu_six_ils3, .data$ecu_six_ils4, .data$ecu_six_ils5, .data$ecu_six_ils6),
+           ecu_six_ils_cat = categorize_6ils_ecu(.data$ecu_six_ils_total)) %>%
+    ungroup()
+  
+  return(trial_data)
+}
+
+
+#' Primary coding Perceived Stress Scale (PSS)
+#' 
+#' adds the following column to surveyfrageboge: 
+#' ecu_pss1,ecu_pss2, ecu_pss3, ecu_pss4, ecu_pss5, ecu_pss6, ecu_pss_total, ecu_pss_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_pss <- function(trial_data) {
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    rowwise() %>%
+    mutate(ecu_pss1 = recode_pss(.data$pss01.factor, version = 1),
+           ecu_pss2 = recode_pss(.data$pss02.factor, version = 1),
+           ecu_pss3 = recode_pss(.data$pss03.factor, version = 1),
+           ecu_pss4 = recode_pss(.data$pss04.factor, version = 2),
+           ecu_pss5 = recode_pss(.data$pss05.factor, version = 2),
+           ecu_pss6 = recode_pss(.data$pss06.factor, version = 1),
+           ecu_pss7 = recode_pss(.data$pss07.factor, version = 2),
+           ecu_pss8 = recode_pss(.data$pss08.factor, version = 2),
+           ecu_pss9 = recode_pss(.data$pss09.factor, version = 1),
+           ecu_pss10 = recode_pss(.data$pss10.factor, version = 1),
+           ecu_pss_total = calculate_pss_total(.data$ecu_pss1,.data$ecu_pss2, .data$ecu_pss3, .data$ecu_pss4, .data$ecu_pss5, .data$ecu_pss6, 
+                                               .data$ecu_pss7, .data$ecu_pss8, .data$ecu_pss9, .data$ecu_pss10),
+           ecu_pss_cat = categorize_pss_ecu(.data$ecu_pss_total)) %>%
     ungroup()
   
   return(trial_data)
@@ -513,6 +597,10 @@ primary_coding_pop <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_pop_bmi(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_bmi() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_abd_overw(trial_data, pid)},
+           error = function(e) {
+             warning("primary_coding_pop_abd_overw() did not work. This is likely due to missing variables.")
              print(e)})
   
   # Clinical parameters
@@ -565,6 +653,14 @@ primary_coding_pop <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_pop_psqi(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_psqi() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_6ils(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_6ils() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_pss(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_pss() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
