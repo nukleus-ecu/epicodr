@@ -247,7 +247,7 @@ categorize_moca_ecu <- function(moca){
 
 calculate_eq5d5l_index <- function (mo, sc, ua, pd, ad) {
   ecu_eq5d_score <- paste (mo, sc, ua, pd, ad, sep="")
-  ecu_eq5d5l_index <- eq5d(scores = ecu_eq5d_score, type = "VT", version = "5L", country = "Germany", ignore.invalid = TRUE)
+  ecu_eq5d5l_index <- eq5d::eq5d(scores = ecu_eq5d_score, type = "VT", version = "5L", country = "Germany", ignore.invalid = TRUE)
   
   return (ecu_eq5d5l_index)
 }
@@ -703,3 +703,147 @@ categorize_brs_ecu <- function(ecu_brs_total) {
   )
 }
 
+
+#' Recode Perceived Stress Scale (PSS) items
+#' 
+#' @description recodes the PSS items depending on positive or negative wording
+#' item 1, 2, 3, 6, 9 and 10 need levels from 0 = "Never" to 4 = "Very often" 
+#' item 2, 4, 7 and 8 need levels from 4 = "Never" to 0 = "Very often"
+#' function recodes items to needed levels
+#' 
+#' @param pss.factor A factor containing the factorized PSS item that needs recoding
+#' @param version a vector indication whether item wording was positive or negative
+#' @export
+
+recode_pss <- function(pss.factor, version) {
+  
+  if (version == 1) {case_when(pss.factor == "Nie" ~ 0,
+                               pss.factor == "Fast nie" ~ 1,
+                               pss.factor == "Manchmal" ~ 2, 
+                               pss.factor == "Ziemlich oft" ~ 3,
+                               pss.factor == "Sehr oft" ~ 4)} else 
+                                 
+                                 if (version == 2) {case_when(pss.factor == "Nie" ~ 4,
+                                                              pss.factor == "Fast nie" ~ 3,
+                                                              pss.factor == "Manchmal" ~ 2, 
+                                                              pss.factor == "Ziemlich oft" ~ 1,
+                                                              pss.factor == "Sehr oft" ~ 0)}
+  
+}
+
+
+#' Calculate Perceived Stress Scale (PSS) sum score
+#' 
+#' @description Calculate sum score of PSS
+#' 
+#' @param pss1 vector for item "In the last month, how often have you been upset because of something that happened unexpectedly?"
+#' @param pss2 vector for item "In the last month, how often have you felt that you were unable to control the important things in your life?"
+#' @param pss3 vector for item "In the last month, how often have you felt nervous and stressed?"
+#' @param pss4 vector for item "In the last month, how often have you felt confident about your ability to handle your personal problems?"
+#' @param pss5 vector for item "In the last month, how often have you felt that things were going your way?"
+#' @param pss6 vector for item "In the last month, how often have you found that you could not cope with all the things that you had to do?"
+#' @param pss7 vector for item "In the last month, how often have you been able to control irritations in your life?"
+#' @param pss8 vector for item "In the last month, how often have you felt that you were on top of things?"
+#' @param pss9 vector for item "In the last month, how often have you been angered because of things that happened that were outside of your control?"
+#' @param pss10 vector for item "In the last month, how often have you felt difficulties were piling up so high that you could not overcome them?"
+#'
+#' Items 4, 5, 7 and 8 need to be recoded first
+#' 
+#' @return A numeric vector with sum score of PSS
+#' @export
+
+calculate_pss_total <- function(pss1, pss2, pss3, pss4, pss5, pss6, pss7, pss8, pss9, pss10) {
+  
+  ecu_pss_total <- sum(pss1, pss2, pss3, pss4, pss5, pss6, pss7, pss8, pss9, pss10)
+  
+  return(ecu_pss_total)
+  
+}
+
+
+#' Categorize Perceived Stress Scale (PSS) 
+#' 
+#' @description Categorize PSS
+#' 
+#' @param ecu_pss_total A numerical vector with PSS sum score
+#' 
+#' @return A factor /w levels "Low perceived stress", "Moderate perceived stress" and "High perceived stress"
+#' @export
+
+categorize_pss_ecu <- function(ecu_pss_total) {
+  
+  ecu_pss_cat <- case_when(ecu_pss_total <= 13 ~ "Low perceived stress",
+                           ecu_pss_total >= 14 & ecu_pss_total <= 26 ~ "Moderate perceived stress",
+                           ecu_pss_total >= 27 ~ "High perceived stress")
+  
+  return(ecu_pss_cat)
+  
+}
+
+
+#' Recode Six Item Loneliness Scale (6 ILS) items
+#' 
+#' @description recodes the 6 ILS items depending on positive or negative wording
+#' items need to be dichotomized
+#' for items 1, 4 and 6, levels 0 = "Not applicable at all" or "Rather does not apply" and 1 = "Rather applies" or "Applies completely" are needed
+#' for items 2, 3 and 5, levels 1 = "Not applicable at all" or "Rather does not apply" and 0 = "Rather applies" or "Applies completely" are needed
+#' function recodes items to needed levels
+#' 
+#' @param six_ils.factor A factor containing the factorized 6 ILS item that needs recoding
+#' @param version a vector indication whether item wording was positive or negative
+#' @export
+
+
+recode_6ils <- function(six_ils.factor, version) {
+  
+  if (version == "neg") {case_when(six_ils.factor == "Trifft gar nicht zu" | six_ils.factor == "Trifft eher nicht zu" ~ 0,
+                                   six_ils.factor == "Trifft eher zu" | six_ils.factor == "Triift ganz zu" ~ 1)} else 
+                                     if (version == "pos") {case_when(six_ils.factor == "Trifft gar nicht zu" | six_ils.factor == "Trifft eher nicht zu" ~ 1,
+                                                                      six_ils.factor == "Trifft eher zu" | six_ils.factor == "Triift ganz zu" ~ 0)}
+  
+}
+
+
+#' Calculate Six Item Loneliness Scale (6 ILS) sum score
+#' 
+#' @description Calculate sum score of 6 ILS
+#' 
+#' @param six_ils1 vector for item "I miss having a really close friend."
+#' @param six_ils2 vector for item "There are plenty of people I can lean on when I have problems ."
+#' @param six_ils3 vector for item "There are many people I can trust completely."
+#' @param six_ils4 vector for item "I miss the pleasure of the company of others."
+#' @param six_ils5 vector for item "There are enough people I feel close to."
+#' @param six_ils6 vector for item "'I often feel rejected."
+#' 
+#' Items 1, 4 and 6 need to be recoded first
+#' 
+#' @return A numeric vector with sum score of 6 ILS
+#' @export
+
+
+calculate_6ils_total <- function(six_ils1, six_ils2, six_ils3, six_ils4, six_ils5, six_ils6) {
+  
+  ecu_6ils_total <- sum(six_ils1, six_ils2, six_ils3, six_ils4, six_ils5, six_ils6)
+  
+  return(ecu_6ils_total)
+  
+}
+
+
+#' Categorize Six Item Loneliness Scale (6 ILS) 
+#' 
+#' @description Categorize 6 ILS
+#' 
+#' @param ecu_6ils_total A numerical vector with 6 ILS sum score
+#' 
+#' @return A factor /w levels "Not lonely" and "Lonely"
+#' @export
+
+categorize_6ils_ecu <- function(ecu_6ils_total) {
+  
+  ecu_6ils_cat <- case_when(ecu_6ils_total <= 1 ~ "Not lonely",
+                            ecu_6ils_total >= 2 ~ "Lonely")
+  
+  return(ecu_6ils_cat)
+  
+}
