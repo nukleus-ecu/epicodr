@@ -345,6 +345,52 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
 }
 
 
+#' Primary coding Chandler Fatigue Scale (CFS/SEID)
+#' 
+#' adds the following columns to promext:
+#' ecu_cfs_seid_1,ecu_cfs_seid_2, ecu_cfs_seid_3, ecu_cfs_seid_4, ecu_cfs_seid_5, ecu_cfs_seid_6, ecu_cfs_seid_7, ecu_cfs_seid_8, ecu_cfs_seid_9,
+#' ecu_cfs_seid_10, ecu_cfs_seid_11, ecu_cfs_seid_sum, ecu_cfs_seid_cat
+#' 
+#' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    rowwise() %>%
+    mutate(
+      ecu_cfs_seid_1 = recode_cfs_seid(.data$cfs_seid_1), 
+      ecu_cfs_seid_2 = recode_cfs_seid(.data$cfs_seid_2), 
+      ecu_cfs_seid_3 = recode_cfs_seid(.data$cfs_seid_3),
+      ecu_cfs_seid_4 = recode_cfs_seid(.data$cfs_seid_4), 
+      ecu_cfs_seid_5 = recode_cfs_seid(.data$cfs_seid_5), 
+      ecu_cfs_seid_6 = recode_cfs_seid(.data$cfs_seid_6), 
+      ecu_cfs_seid_7 = recode_cfs_seid(.data$cfs_seid_7), 
+      ecu_cfs_seid_8 = recode_cfs_seid(.data$cfs_seid_8), 
+      ecu_cfs_seid_9 = recode_cfs_seid(.data$cfs_seid_9), 
+      ecu_cfs_seid_10 = recode_cfs_seid(.data$cfs_seid_10), 
+      ecu_cfs_seid_11 = recode_cfs_seid(.data$cfs_seid_11), 
+      ecu_cfs_seid_sum = calculate_cfs_seid_sum(.data$ecu_cfs_seid_1, .data$ecu_cfs_seid_2, .data$ecu_cfs_seid_3, .data$ecu_cfs_seid_4, 
+                                                .data$ecu_cfs_seid_5, .data$ecu_cfs_seid_6, .data$ecu_cfs_seid_7, .data$ecu_cfs_seid_8, 
+                                                .data$ecu_cfs_seid_9, .data$ecu_cfs_seid_10, .data$ecu_cfs_seid_11),
+      ecu_cfs_seid_cat = categorize_cfs_seid(.data$ecu_cfs_seid_sum)
+    ) %>%
+    ungroup() %>%
+    select(matches(visitid), starts_with("ecu_cfs_seid"))
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by = visitid)
+  
+  return(trial_data)
+  
+}
+
+
 #' Primary coding WHO-Scale
 #' 
 #' adds the following dataframe to trial_data: 
@@ -393,6 +439,7 @@ primary_coding_suep <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
+  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   # Demographics
   tryCatch(expr = {trial_data <- primary_coding_suep_age(trial_data, pid, visitid)},
@@ -435,13 +482,17 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_brs() did not work. This is likely due to missing variables.")
              print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_cfs_seid(trial_data)},
+           error = function(e) {
+             warning("primary_coding_suep_cfs_seid() did not work. This is likely due to missing variables.")
+             print(e)})
   
   #WHO-Scale
   tryCatch(expr = {trial_data <- primary_coding_suep_who_scale(trial_data, pid, visitid)},
            error = function(e) {
              warning("primary_coding_suep_who_scale() did not work. This is likely due to missing variables.")
              print(e)})
-  
+
   catw("Primary Coding done")
   
   return(trial_data)
@@ -475,6 +526,85 @@ recode_brs <- function(brs) {
 }
 
 
+#' Recode Chandler Fatigue Scale (CFS/SEID) items
+#' 
+#' @description recodes the Chandler Fatigue Scale (CFS/SEID) items into a dichotomous variable
+#' 
+#' @param cfs Item of Chandler Fatigue Scale (CFS/SEID) that needs to be recoded
+#' @return A vector with the correctly coded CFS/SEID item
+#' @export
+
+recode_cfs_seid <- function(cfs) {
+  
+  cfs_rec <- case_when(cfs == -1 ~ -1, 
+                       cfs <= 2 ~ 0,
+                       cfs > 2 ~ 1)
+  return(cfs_rec)
+  
+}
+
+
+## Chandler Fatigue Scale (CFS/SEID) ==========================================
+
+#' Calculate Chandler Fatigue Scale (CFS/SEID) sum score
+#' 
+#' @description Calculate sum score of CFS/SEID
+#' 
+#' items need to be recoded first
+#' 
+#' @param cfs_1 vector for item "Is fatigue a problem for you?"
+#' @param cfs_2 vector for item "Do you need to rest frequently?."
+#' @param cfs_3 vector for item "Do you feel tired or sleepy?"
+#' @param cfs_4 vector for item "Do you have difficulty getting things done?"
+#' @param cfs_5 vector for item "Do you lack energy?"
+#' @param cfs_6 vector for item "Do you have less strength in your muscles?"
+#' @param cfs_7 vector for item "Do you feel weak?"
+#' @param cfs_8 vector for item "Do you find it difficult to concentrate?"
+#' @param cfs_9 vector for item "Do you have slips of the tongue when you speak?"
+#' @param cfs_10 vector for item "Do you find it difficult to think clearly?"
+#' @param cfs_11 vector for item "How is your memory?"
+#' 
+#' @return A numeric vector with sum score of CFS/SEID
+#' @export
+
+calculate_cfs_seid_sum <- function(cfs_1, cfs_2, cfs_3, cfs_4, cfs_5, cfs_6, cfs_7, cfs_8, cfs_9, cfs_10, cfs_11) {
+  
+  ecu_cfs_seid_sum <- sum(ifelse(cfs_1 == -1, 0, cfs_1), 
+                          ifelse(cfs_2 == -1, 0, cfs_2), 
+                          ifelse(cfs_3 == -1, 0, cfs_3), 
+                          ifelse(cfs_4 == -1, 0, cfs_4), 
+                          ifelse(cfs_5 == -1, 0, cfs_5), 
+                          ifelse(cfs_6 == -1, 0, cfs_6), 
+                          ifelse(cfs_7 == -1, 0, cfs_7), 
+                          ifelse(cfs_8 == -1, 0, cfs_8), 
+                          ifelse(cfs_9 == -1, 0, cfs_9), 
+                          ifelse(cfs_10 == -1, 0, cfs_10), 
+                          ifelse(cfs_11 == -1, 0, cfs_11))
+  
+  return(ecu_cfs_seid_sum)
+  
+}
+
+
+#' Categorize Chandler Fatigue Scale (CFS/SEID)
+#' 
+#' @description Categorize CFS/SEID
+#' 
+#' @param ecu_cfs_seid_sum A numerical vector with CFS/SEID sum score
+#' 
+#' @return A factor /w levels "No Fatigue" and "Fatigue"
+#' @export
+
+categorize_cfs_seid <- function(ecu_cfs_seid_sum) {
+  
+  ecu_cfs_seid_cat <- case_when(ecu_cfs_seid_sum <= 3 ~ "No fatigue",
+                                ecu_cfs_seid_sum >= 4 ~ "Fatigue")
+  
+  return(ecu_cfs_seid_cat)
+  
+}
+
+
 ## WHO-Scale per visit =========================================================
 
 #' Calculate and categorize WHO-Scale
@@ -494,18 +624,18 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   # Visit Dates (one row per pat per visit) ------------------------------------
   
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   visit_data <- trial_data$scv %>%
-    full_join (trial_data$m2, by=c(pid, visit_label_var_name, docid)) %>%
-    full_join (trial_data$m, by=c(pid, visit_label_var_name, docid)) %>%
+    full_join (trial_data$m2, by=c(pid, mnpvislabel, docid)) %>%
+    full_join (trial_data$m, by=c(pid, mnpvislabel, docid)) %>%
     filter(.data$pr_visit_mode.factor != "Zus\u00e4tzliche Dokumentationsvisite" | is.na(.data$pr_visit_mode.factor)) %>%
     mutate(visit_date = coalesce(.data$gec_pr_docudate_1.date, .data$pr_docudate.date, .data$pr_incl_date.date)) %>%
     arrange(.data$visit_date) %>%
     group_by(!!sym(pid)) %>%
-    mutate(!!sym(visit_label_var_name) := str_replace(!!sym(visit_label_var_name), "#", as.character(row_number()))) %>%
+    mutate(!!sym(mnpvislabel) := str_replace(!!sym(mnpvislabel), "#", as.character(row_number()))) %>%
     ungroup() %>%
-    select(pid, visit_label_var_name, .data$visit_date)
+    select(pid, mnpvislabel, .data$visit_date)
   
   
   # Inclusion groups (one row per pat) -----------------------------------------
@@ -554,9 +684,9 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   # Date of last Treatment Update ----------------------------------------------
   
   treatment_update_date <- trial_data$fuv3 %>%
-    left_join (trial_data$vp %>% select (.data$mnpvisid, visit_label_var_name), by = c("mnpvisid", visit_label_var_name)) %>%
+    left_join (trial_data$vp %>% select (.data$mnpvisid, mnpvislabel), by = c("mnpvisid", mnpvislabel)) %>%
     filter (.data$pr_check_treat.factor == "Ja") %>% #only treatment_update == YES
-    rename (treatment_update_visit = visit_label_var_name,
+    rename (treatment_update_visit = mnpvislabel,
             treatment_update.datetime = .data$fuv3_date.date) %>%
     group_by (!!sym(pid)) %>%
     slice_max (.data$treatment_update.datetime, with_ties = FALSE) %>%
@@ -658,14 +788,14 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
     full_join(death_data, by=pid) %>%
     full_join(oxy_data, by=pid) %>%
     full_join(hospital_data, by=pid) %>%
-    group_by(!!sym(pid),!!sym(visit_label_var_name)) %>%
+    group_by(!!sym(pid),!!sym(mnpvislabel)) %>%
     mutate(
       is_hospital = case_when(.data$visit_date %within% .data$ecu_hospital_interval ~ 1,
                               .data$ward.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                              TRUE ~ 0),
+                              !(.data$visit_date %within% .data$ecu_hospital_interval) ~ 0),
       is_oxy = case_when(.data$visit_date %within% .data$ecu_oxy_interval ~ 1,
                          .data$gec_oxy.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                         TRUE ~ 0),
+                         !(.data$visit_date %within% .data$ecu_oxy_interval) ~ 0),
       oxy_hospital_interval_overlap = int_overlaps(.data$ecu_oxy_interval, .data$ecu_hospital_interval),
       is_oxy_type_severe = case_when(oxy_hospital_interval_overlap == TRUE & .data$gec_oxy_type >= "2" ~ TRUE,
                                      TRUE ~ FALSE)
@@ -689,7 +819,8 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
                                                  ecu_who_scale.factor == "Hospitalisiert, moderate Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Andere" ~ "Hospitalisiert mit Covid, moderate Phase",
                                                  ecu_who_scale.factor == "Hospitalisiert, schwere Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Covid" ~ "Hospitalisiert wegen Covid, schwere Phase",
                                                  ecu_who_scale.factor == "Hospitalisiert, schwere Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Andere" ~ "Hospitalisiert mit Covid, schwere Phase",
-                                                 is.na(.data$ecu_main_diag_covid) | .data$ecu_main_diag_covid == "Keine Informationen verf\u00fcgbar" ~ "Keine Informationen verf\u00fcgbar",
+                                                 is.na(.data$ecu_main_diag_covid) ~ NA,
+                                                 .data$ecu_main_diag_covid == "Keine Informationen verf\u00fcgbar" ~ "Keine Informationen verf\u00fcgbar",
                                                  TRUE ~ ecu_who_scale.factor),
       ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
                                                      .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
@@ -743,3 +874,5 @@ summarize_who_scale <- function(trial_data, pid) {
   
   return(trial_data)
 }
+
+
