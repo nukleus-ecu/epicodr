@@ -10,7 +10,8 @@ read_tsExport_raw(
   decimal = ",",
   encoding = "UTF-8",
   quote_escape_detect = TRUE,
-  escape_backslash = TRUE
+  escape_backslash = TRUE,
+  ...
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ might be slower.}
 
 \item{escape_backslash}{Boolean.Are Quotes in strings escaped by a
 backslash? (The default with (german) secuTrial Exports).}
+
+\item{...}{further parameters}
 }
 \value{
 \code{tsExportdata} Object containing a list of export data 

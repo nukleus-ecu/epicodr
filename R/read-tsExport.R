@@ -69,6 +69,7 @@
 #' @param escape_backslash Boolean.Are Quotes in strings escaped by a
 #'   backslash? (The default with (german) secuTrial Exports).
 #' @param encoding Character. Encoding
+#' @param ... further parameters
 #' 
 #' 
 #' @return The function returns a tibble for the data in file_name.
@@ -119,7 +120,7 @@ read_tsExport_table <- function(data_dir, file_name,
                                 separator = ";", decimal = ",",
                                 encoding = "UTF-8",
                                 quote_escape_detect = FALSE,
-                                escape_backslash = TRUE){
+                                escape_backslash = TRUE, ...){
   
   is_zip <- grepl(".zip$", data_dir)
   
@@ -162,7 +163,7 @@ read_tsExport_table <- function(data_dir, file_name,
   .data <- read_delim(data_file, delim = separator, locale = readrformat, 
                       escape_backslash = escape_backslash, 
                       escape_double = !escape_backslash, 
-                      guess_max = 10000)
+                      guess_max = 10000, ...)
 
   # undo warning suppression
   if (file_name == "cl.csv") options(warn = defaultW)
@@ -195,6 +196,7 @@ read_tsExport_table <- function(data_dir, file_name,
 #' @param escape_backslash Boolean.Are Quotes in strings escaped by a
 #'   backslash? (The default with (german) secuTrial Exports).
 #' @param encoding Character. Encoding
+#' @param ... further parameters
 #'   
 #' @return \code{tsExportdata} Object containing a list of export data 
 #'   information and data.frames with all the data loaded from the 
@@ -206,7 +208,8 @@ read_tsExport_raw <- function(data_dir,
                               separator = ";", decimal = ",",
                               encoding = "UTF-8",
                               quote_escape_detect = TRUE,
-                              escape_backslash = TRUE) {
+                              escape_backslash = TRUE,
+                              ...) {
   
   # create some of the export options you will also find in the 
   # secuTrialdata class.
@@ -253,7 +256,7 @@ read_tsExport_raw <- function(data_dir,
     map(~ {
       print(paste("Read:", .x))
       read_tsExport_table(data_dir, .x, separator, decimal, 
-                          encoding, quote_escape_detect, escape_backslash)}) %>%
+                          encoding, quote_escape_detect, escape_backslash, ...)}) %>%
     setNames(data_names)
   
 
@@ -947,6 +950,7 @@ dates_tsExport <- function(tsExport) {
 #' @param escape_backslash Boolean.Are Quotes in strings escaped by a
 #'   backslash? (The default with (german) secuTrial Exports).
 #' @param encoding Character. Encoding
+#' @param ... further parameters
 #'
 #' @return \code{tsExportdata} object - a list with one data.frame for each file 
 #'   on the export and a list containing the export options
@@ -955,7 +959,8 @@ read_tsExport <- function(data_dir, separator = ";", decimal = ",",
                           encoding = "UTF-8",
                           quote_escape_detect = TRUE,
                           escape_backslash = TRUE,
-                          labels = TRUE, factor = TRUE, dates = TRUE) {
+                          labels = TRUE, factor = TRUE, dates = TRUE,
+                          ...) {
   
   # check for file existence
   if (! file.exists(data_dir)) {
@@ -966,7 +971,7 @@ read_tsExport <- function(data_dir, separator = ";", decimal = ",",
   tryCatch(
     expr = {
       tsExport <- read_tsExport_raw(data_dir, separator, decimal, encoding,
-                                    quote_escape_detect, escape_backslash)
+                                    quote_escape_detect, escape_backslash, ...)
       message("Read export successfully.")
     },
     error = function(e) {

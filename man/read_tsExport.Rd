@@ -13,7 +13,8 @@ read_tsExport(
   escape_backslash = TRUE,
   labels = TRUE,
   factor = TRUE,
-  dates = TRUE
+  dates = TRUE,
+  ...
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ backslash? (The default with (german) secuTrial Exports).}
 (ignored when reference values are not in a separate table)}
 
 \item{dates}{logical - convert date variables}
+
+\item{...}{further parameters}
 }
 \value{
 \code{tsExportdata} object - a list with one data.frame for each file 
