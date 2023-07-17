@@ -4,14 +4,12 @@
 \alias{build_who_scale_hap}
 \title{Calculate and categorize WHO-Scale}
 \usage{
-build_who_scale_hap(trial_data, pid, table_names)
+build_who_scale_hap(trial_data, pid)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
 
 \item{pid}{column name of patient ID in trial_data}
-
-\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following columns to eosfci

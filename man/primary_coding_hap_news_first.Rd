@@ -4,12 +4,10 @@
 \alias{primary_coding_hap_news_first}
 \title{Primary coding for National Early Warning Score (NEWS)}
 \usage{
-primary_coding_hap_news_first(trial_data, table_names)
+primary_coding_hap_news_first(trial_data)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
-
-\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following column to klinscores:

@@ -58,11 +58,12 @@ clean_cs <- function(x){
 #' ecu_age - age in years, ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
 #'
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_age <- function(trial_data, table_names) {
+primary_coding_hap_age <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
     # HAP already has an age in years vector, simply copy it
@@ -87,11 +88,12 @@ primary_coding_hap_age <- function(trial_data, table_names) {
 #' ecu_bmi, ecu_bmi_cat
 #'
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_bmi <- function(trial_data, table_names) {
+primary_coding_hap_bmi <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$demo_0031, .data$demo_0041),
@@ -115,11 +117,12 @@ primary_coding_hap_bmi <- function(trial_data, table_names) {
 #' ecu_vitals_his_gcs, ecu_vitals_his_horowitz_cat, ecu_vitals_his_ph
 #'
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_clinical_params_his <- function(trial_data, table_names) {
+primary_coding_hap_clinical_params_his <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?vitalhis$", table_names)]] <- trial_data[[grep("^_?vitalhis$", table_names)]] %>%
     mutate(ecu_vitals_his_bp = categorize_bloodpressure_ecu(.data$vp_0041, .data$vp_0042),
@@ -149,11 +152,12 @@ primary_coding_hap_clinical_params_his <- function(trial_data, table_names) {
 #' ecu_vitals_gcs, ecu_vitals_ph
 #'
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_clinical_params <- function(trial_data, table_names) {
+primary_coding_hap_clinical_params <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?vitalparam$", table_names)]] <- trial_data[[grep("^_?vitalparam$", table_names)]] %>%
     mutate(ecu_vitals_bp = categorize_bloodpressure_ecu(.data$vp_0041, .data$vp_0042),
@@ -182,11 +186,12 @@ primary_coding_hap_clinical_params <- function(trial_data, table_names) {
 #' ecu_barthel_cat_pre
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_barthel_pre <- function(trial_data, table_names) {
+primary_coding_hap_barthel_pre <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?risiko1$", table_names)]] <- trial_data[[grep("^_?risiko1$", table_names)]] %>%
     mutate(ecu_barthel_cat_pre = categorize_barthel_ecu(.data$risk_0022))
@@ -201,11 +206,12 @@ primary_coding_hap_barthel_pre <- function(trial_data, table_names) {
 #' ecu_barthel_cat_disc
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_barthel_disc <- function(trial_data, table_names) {
+primary_coding_hap_barthel_disc <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?end$", table_names)]] <- trial_data[[grep("^_?end$", table_names)]] %>%
     mutate(ecu_barthel_cat_disc = categorize_barthel_ecu(.data$out_0062))
@@ -220,12 +226,13 @@ primary_coding_hap_barthel_disc <- function(trial_data, table_names) {
 #' ecu_eq5d_index
 #'
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom eq5d eq5d
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_eq5d5l <- function(trial_data, table_names) {
+primary_coding_hap_eq5d5l <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?eq5d$", table_names)]] <- trial_data[[grep("^_?eq5d$", table_names)]] %>%
     mutate (ecu_eq5d5l_index = calculate_eq5d5l_index (.data$eq5d_0020, .data$eq5d_0030, .data$eq5d_0040, .data$eq5d_0050, .data$eq5d_0060))
@@ -240,10 +247,11 @@ primary_coding_hap_eq5d5l <- function(trial_data, table_names) {
 #' ecu_moca_total_score, ecu_moca_cat
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @export
 
-primary_coding_hap_moca <- function(trial_data, table_names) {
+primary_coding_hap_moca <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?moca$", table_names)]] <- trial_data[[grep("^_?moca$", table_names)]]%>%
     rowwise() %>%
@@ -279,11 +287,12 @@ primary_coding_hap_moca <- function(trial_data, table_names) {
 #' ecu_news_cat
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_news_first <- function(trial_data, table_names) {
+primary_coding_hap_news_first <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?klinscores$", table_names)]] <- trial_data[[grep("^_?klinscores$", table_names)]]%>%
     mutate(ecu_news_cat = categorize_news_score_ecu(.data$score_0041))
@@ -298,11 +307,12 @@ primary_coding_hap_news_first <- function(trial_data, table_names) {
 #' ecu_apache2_cat
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_apache2 <- function(trial_data, table_names) {
+primary_coding_hap_apache2 <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?klinscores1$", table_names)]] <- trial_data[[grep("^_?klinscores1$", table_names)]]%>%
     mutate(ecu_apache2_cat = categorize_apache2_score_ecu(.data$icusc_0041))
@@ -317,11 +327,12 @@ primary_coding_hap_apache2 <- function(trial_data, table_names) {
 #' ecu_icdsc_cat
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_icdsc <- function(trial_data, table_names) {
+primary_coding_hap_icdsc <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?haemodyn$", table_names)]] <- trial_data[[grep("^_?haemodyn$", table_names)]] %>%
     mutate(ecu_icdsc_cat = categorize_icdsc_score_ecu(.data$ksc_0041))
@@ -336,11 +347,12 @@ primary_coding_hap_icdsc <- function(trial_data, table_names) {
 #' ecu_dds_cat
 #' 
 #' @param trial_data A secuTrial data object
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_dds <- function(trial_data, table_names) {
+primary_coding_hap_dds <- function(trial_data) {
+  
+  table_names <- names(trial_data)
   
   trial_data[[grep("^_?haemodyn$", table_names)]] <- trial_data[[grep("^_?haemodyn$", table_names)]] %>%
     mutate(ecu_dds_cat = categorize_dds_score_ecu(.data$ksc_0051))
@@ -359,13 +371,14 @@ primary_coding_hap_dds <- function(trial_data, table_names) {
 #'
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_who_scale <- function(trial_data, pid, table_names) {
+primary_coding_hap_who_scale <- function(trial_data, pid) {
   
-  trial_data <- build_who_scale_hap(trial_data, pid, table_names)
+  table_names <- names(trial_data)
+  
+  trial_data <- build_who_scale_hap(trial_data, pid)
   
   return(trial_data)
 }
@@ -395,66 +408,66 @@ primary_coding_hap <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
   table_names <- names(trial_data)
   
   # Demographics
   
-  tryCatch(expr = {trial_data <- primary_coding_hap_age(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_age(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_age() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_bmi(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_bmi(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_bmi() did not work. This is likely due to missing variables.")
              print(e)})
   
   # Clinical parameters
-  tryCatch(expr = {trial_data <- primary_coding_hap_clinical_params_his(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_clinical_params_his(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_clinical_params_his() did not work. This is likely due to missing variables.")
              print(e)})
   
-  tryCatch(expr = {trial_data <- primary_coding_hap_clinical_params(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_clinical_params(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_clinical_params() did not work. This is likely due to missing variables.")
              print(e)})
   
   # Scores
-  tryCatch(expr= {trial_data <- primary_coding_hap_barthel_pre(trial_data, table_names)},
+  tryCatch(expr= {trial_data <- primary_coding_hap_barthel_pre(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_barthel_pre() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_barthel_disc(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_barthel_disc(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_barthel_disc() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_eq5d5l(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_eq5d5l(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_moca(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_moca(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_moca() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_news_first(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_news_first(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_news_first() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_apache2(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_apache2(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_apache2() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_icdsc(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_icdsc(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_icdsc() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_dds(trial_data, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_dds(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_dds() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data, pid, table_names)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data, pid)},
            error = function(e) {
              warning("primary_coding_hap_who_scale() did not work. This is likely due to missing variables.")
              print(e)})
@@ -479,12 +492,12 @@ primary_coding_hap <- function(trial_data) {
 #' 
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
-#' @param table_names A vector containing table names of data export
 #' @importFrom rlang .data
 #' @export
 
-build_who_scale_hap <- function(trial_data, pid, table_names) {
+build_who_scale_hap <- function(trial_data, pid) {
   
+  table_names <- names(trial_data)
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
   main_diag <-  trial_data[[grep("^_?visit_02$", table_names)]] %>%
@@ -495,28 +508,25 @@ build_who_scale_hap <- function(trial_data, pid, table_names) {
     ungroup()
   
   trial_data[[grep("^_?e_?osfci$", table_names)]] <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
-    left_join(main_diag) %>%
-    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verf\u00fcgbar", 
+    left_join(main_diag, by = pid) %>%
+    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) ~ NA, 
                                             .data$osfci_0021 == 0 ~ "Kontrollgruppe, ohne Sars-Infektion",
                                             .data$osfci_0021 == 1 | .data$osfci_0021 == 2 ~ "Ambulant, milde Phase",
                                             .data$osfci_0021 == 3 | .data$osfci_0021 == 4 ~ "Hospitalisiert, moderate Phase",
                                             .data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7 ~ "Hospitalisiert, schwere Phase",
                                             .data$osfci_0021 == 8 ~ "Verstorben"),
-           ecu_who_scale.factor = case_when(ecu_who_scale.factor = "Hospitalisiert, moderate Phase" & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase", 
-                                            ecu_who_scale.factor = "Hospitalisiert, moderate Phase" & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
-                                            ecu_who_scale.factor = "Hospitalisiert, schwere Phase" & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase", 
-                                            ecu_who_scale.factor = "Hospitalisiert, schwere Phase" & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
-                                            TRUE ~ ecu_who_scale.factor),
-           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verf\u00fcgbar" ~ -1, 
-                                                .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
-                                                .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
-                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" | 
-                                                  .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 2,
-                                                .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" |
-                                                  .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 3,
-                                                .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 4)),
-           ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verf\u00fcgbar" ~ -1, 
-                                                          .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                                .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" ~ 2,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" ~ 3,
+                                                .data$ecu_who_scale.factor == "Verstorben" ~ 4)),
+           ecu_who_scale_with_diag.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ NA, 
+                                                      ecu_who_scale == 2 & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase", 
+                                                      ecu_who_scale == 2 & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
+                                                      ecu_who_scale == 3 & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase", 
+                                                      ecu_who_scale == 3 & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
+                                                      TRUE ~ ecu_who_scale.factor),
+           ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
                                                           .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
                                                           .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
                                                           .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,

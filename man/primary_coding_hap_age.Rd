@@ -4,12 +4,10 @@
 \alias{primary_coding_hap_age}
 \title{Primary coding age}
 \usage{
-primary_coding_hap_age(trial_data, table_names)
+primary_coding_hap_age(trial_data)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
-
-\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following columns to demo: 

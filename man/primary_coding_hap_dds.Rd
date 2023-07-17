@@ -4,12 +4,10 @@
 \alias{primary_coding_hap_dds}
 \title{Primary coding for Delirium Detection Score (DDS)}
 \usage{
-primary_coding_hap_dds(trial_data, table_names)
+primary_coding_hap_dds(trial_data)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
-
-\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following column to haemodyn:

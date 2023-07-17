@@ -4,12 +4,10 @@
 \alias{primary_coding_hap_apache2}
 \title{Primary coding for Acute Physiology And Chronic Health Evaluation (APACHE) Score}
 \usage{
-primary_coding_hap_apache2(trial_data, table_names)
+primary_coding_hap_apache2(trial_data)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
-
-\item{table_names}{A vector containing table names of data export}
 }
 \description{
 adds the following column to klinscores1:
