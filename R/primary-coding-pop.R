@@ -107,10 +107,10 @@ primary_coding_pop_bmi <- function(trial_data) {
   
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$gec_weight, .data$gec_height),
-           ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
+           ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi, .data$gec_height_unk.factor, .data$gec_weight_unk.factor),
            ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
-                                                                              Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
-                                                                              Nein = c("Untergewicht", "Normalgewicht", "\u0700bergewicht"))))
+                                                                                    Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
+                                                                                    Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
   
   return (trial_data)
 }
@@ -130,8 +130,12 @@ primary_coding_pop_bmi <- function(trial_data) {
 
 primary_coding_pop_abd_overw <- function(trial_data, pid) {
   
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
+  
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
-    left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor) %>% filter(!is.na(.data$gec_gender)), by = pid) %>%
+    mutate(visit_name_temp = str_remove(visit_label_var_name, "-EB|-VO")) %>%
+    left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor, visit_label_var_name) %>%
+                mutate(visit_name_temp = str_remove(visit_label_var_name, "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
     mutate(ecu_waist = case_when(.data$gec_gender.factor == "Weiblich" & .data$taillumfang <= 88 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "Weiblich" & .data$taillumfang > 88 ~ "Abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang <= 102 ~ "No abdominal overweight",

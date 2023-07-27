@@ -482,7 +482,7 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_brs() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_suep_cfs_seid(trial_data)},
+  tryCatch(expr = {trial_data <- primary_coding_suep_cfs_seid(trial_data, visitid)},
            error = function(e) {
              warning("primary_coding_suep_cfs_seid() did not work. This is likely due to missing variables.")
              print(e)})
@@ -684,7 +684,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   # Date of last Treatment Update ----------------------------------------------
   
   treatment_update_date <- trial_data$fuv3 %>%
-    left_join (trial_data$vp %>% select (.data$mnpvisid, mnpvislabel), by = c("mnpvisid", mnpvislabel)) %>%
+    left_join (trial_data$vp %>% select (.data$mnpvisid, mnpvislabel), by = "mnpvisid") %>%
     filter (.data$pr_check_treat.factor == "Ja") %>% #only treatment_update == YES
     rename (treatment_update_visit = mnpvislabel,
             treatment_update.datetime = .data$fuv3_date.date) %>%
@@ -741,11 +741,9 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
       ecu_hospital_interval = interval(.data$ecu_ward_resid_start.date, .data$ecu_ward_resid_end.date)) %>%
     filter(str_detect(tolower(.data$ecu_ward), "station|krankenhaus|keine informationen") & (.data$ecu_ward_resid_start.date >= ymd(20200101) | is.na(.data$ecu_ward_resid_start.date))) %>% # anything before 2020 must be covid19 unrelated
     full_join(trial_data$fv1, by=pid) %>%
-    select(pid, .data$ward.factor, starts_with("ecu"), .data$gec_resid_disch.factor) #%>%
-  #group_by(!!sym(pid), .data$ward.factor) # %>%
-  # nest(hospital_data = -c(!!sym(pid), .data$ward.factor)) 
+    select(pid, .data$ward.factor, starts_with("ecu"), .data$gec_resid_disch.factor)
   
-  
+
   # Death (one row per pat) ----------------------------------------------------
   
   eresid_death <- trial_data$eresid %>%
@@ -792,10 +790,10 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
     mutate(
       is_hospital = case_when(.data$visit_date %within% .data$ecu_hospital_interval ~ 1,
                               .data$ward.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                              !(.data$visit_date %within% .data$ecu_hospital_interval) ~ 0),
+                              !(.data$visit_date %within% .data$ecu_hospital_interval) | .data$ward.factor == "Nein" ~ 0),
       is_oxy = case_when(.data$visit_date %within% .data$ecu_oxy_interval ~ 1,
                          .data$gec_oxy.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                         !(.data$visit_date %within% .data$ecu_oxy_interval) ~ 0),
+                         !(.data$visit_date %within% .data$ecu_oxy_interval) | .data$gec_oxy.factor == "Nein" ~ 0),
       oxy_hospital_interval_overlap = int_overlaps(.data$ecu_oxy_interval, .data$ecu_hospital_interval),
       is_oxy_type_severe = case_when(oxy_hospital_interval_overlap == TRUE & .data$gec_oxy_type >= "2" ~ TRUE,
                                      TRUE ~ FALSE)

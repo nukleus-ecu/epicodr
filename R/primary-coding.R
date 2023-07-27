@@ -178,7 +178,7 @@ categorize_bmi_ecu <- function(bmi, height_uk.factor=NULL, weight_uk.factor=NULL
   #}
   
   breaks_polytom <- c(1,18.5,25,30,35,40,Inf)
-  labels_polytom <- c("Untergewicht", "Normalgewicht", "\u00fcbergewicht",
+  labels_polytom <- c("Untergewicht", "Normalgewicht", "\u00dcbergewicht",
                       "Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III")
   
   
@@ -799,7 +799,7 @@ recode_6ils <- function(six_ils.factor, version) {
   if (version == "neg") {case_when(six_ils.factor == "Trifft gar nicht zu" | six_ils.factor == "Trifft eher nicht zu" ~ 0,
                                    six_ils.factor == "Trifft eher zu" | six_ils.factor == "Triift ganz zu" ~ 1)} else 
                                      if (version == "pos") {case_when(six_ils.factor == "Trifft gar nicht zu" | six_ils.factor == "Trifft eher nicht zu" ~ 1,
-                                                                      six_ils.factor == "Trifft eher zu" | six_ils.factor == "Triift ganz zu" ~ 0)}
+                                                                      six_ils.factor == "Trifft eher zu" | six_ils.factor == "Trifft ganz zu" ~ 0)}
   
 }
 

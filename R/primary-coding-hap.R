@@ -408,9 +408,10 @@ primary_coding_hap <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
   table_names <- names(trial_data)
+  
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
   # Demographics
   
