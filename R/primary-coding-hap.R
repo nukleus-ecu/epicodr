@@ -63,7 +63,9 @@ clean_cs <- function(x){
 
 primary_coding_hap_age <- function(trial_data) {
   
-  trial_data[["demo"]] <- trial_data[["demo"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
     # HAP already has an age in years vector, simply copy it
     mutate(ecu_age = .data$demo_0010,
            ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0011/12, .data$ecu_age),
@@ -91,7 +93,9 @@ primary_coding_hap_age <- function(trial_data) {
 
 primary_coding_hap_bmi <- function(trial_data) {
   
-  trial_data[["demo"]] <- trial_data[["demo"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$demo_0031, .data$demo_0041),
            ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi))
   
@@ -118,7 +122,9 @@ primary_coding_hap_bmi <- function(trial_data) {
 
 primary_coding_hap_clinical_params_his <- function(trial_data) {
   
-  trial_data[["vitalhis"]] <- trial_data[["vitalhis"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vitalhis$", table_names)]] <- trial_data[[grep("^_?vitalhis$", table_names)]] %>%
     mutate(ecu_vitals_his_bp = categorize_bloodpressure_ecu(.data$vp_0041, .data$vp_0042),
            ecu_vitals_his_bpm = categorize_heartfrequency_ecu(.data$vp_0031),
            ecu_vitals_his_so2 = categorize_oxigensaturation_ecu(.data$vp_0021), 
@@ -151,7 +157,9 @@ primary_coding_hap_clinical_params_his <- function(trial_data) {
 
 primary_coding_hap_clinical_params <- function(trial_data) {
   
-  trial_data[["vitalparam"]] <- trial_data[["vitalparam"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vitalparam$", table_names)]] <- trial_data[[grep("^_?vitalparam$", table_names)]] %>%
     mutate(ecu_vitals_bp = categorize_bloodpressure_ecu(.data$vp_0041, .data$vp_0042),
            ecu_vitals_bpm = categorize_heartfrequency_ecu(.data$vp_0031),
            ecu_vitals_so2 = categorize_oxigensaturation_ecu(.data$vp_0021), 
@@ -183,7 +191,9 @@ primary_coding_hap_clinical_params <- function(trial_data) {
 
 primary_coding_hap_barthel_pre <- function(trial_data) {
   
-  trial_data[["risiko1"]] <- trial_data[["risiko1"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?risiko1$", table_names)]] <- trial_data[[grep("^_?risiko1$", table_names)]] %>%
     mutate(ecu_barthel_cat_pre = categorize_barthel_ecu(.data$risk_0022))
   
   return (trial_data)
@@ -201,7 +211,9 @@ primary_coding_hap_barthel_pre <- function(trial_data) {
 
 primary_coding_hap_barthel_disc <- function(trial_data) {
   
-  trial_data[["end"]] <- trial_data[["end"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?end$", table_names)]] <- trial_data[[grep("^_?end$", table_names)]] %>%
     mutate(ecu_barthel_cat_disc = categorize_barthel_ecu(.data$out_0062))
   
   return (trial_data)
@@ -220,7 +232,9 @@ primary_coding_hap_barthel_disc <- function(trial_data) {
 
 primary_coding_hap_eq5d5l <- function(trial_data) {
   
-  trial_data[["eq5d"]] <- trial_data[["eq5d"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?eq5d$", table_names)]] <- trial_data[[grep("^_?eq5d$", table_names)]] %>%
     mutate (ecu_eq5d5l_index = calculate_eq5d5l_index (.data$eq5d_0020, .data$eq5d_0030, .data$eq5d_0040, .data$eq5d_0050, .data$eq5d_0060))
   
   return(trial_data)
@@ -237,7 +251,9 @@ primary_coding_hap_eq5d5l <- function(trial_data) {
 
 primary_coding_hap_moca <- function(trial_data) {
   
-  trial_data[["moca"]] <- trial_data[["moca"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?moca$", table_names)]] <- trial_data[[grep("^_?moca$", table_names)]]%>%
     rowwise() %>%
     mutate(ecu_moca_total_score = sum(ifelse(.data$moca_0021 == 1, .data$moca_0022, 0),
                                       ifelse(.data$moca_0023 == 1, .data$moca_0024, 0), 
@@ -258,7 +274,8 @@ primary_coding_hap_moca <- function(trial_data) {
                                       ifelse(.data$moca_0099 == 1, .data$moca_0100, 0),
                                       ifelse(.data$moca_0101 == 1, .data$moca_0102, 0),
                                       ifelse(.data$moca_0110 >= 0, .data$moca_0110, 0)),
-           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score))
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) %>%
+    ungroup()
   
   return(trial_data)
 }
@@ -275,7 +292,9 @@ primary_coding_hap_moca <- function(trial_data) {
 
 primary_coding_hap_news_first <- function(trial_data) {
   
-  trial_data[["klinscores"]] <- trial_data[["klinscores"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?klinscores$", table_names)]] <- trial_data[[grep("^_?klinscores$", table_names)]]%>%
     mutate(ecu_news_cat = categorize_news_score_ecu(.data$score_0041))
   
   return(trial_data)
@@ -293,7 +312,9 @@ primary_coding_hap_news_first <- function(trial_data) {
 
 primary_coding_hap_apache2 <- function(trial_data) {
   
-  trial_data[["klinscores1"]] <- trial_data[["klinscores1"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?klinscores1$", table_names)]] <- trial_data[[grep("^_?klinscores1$", table_names)]]%>%
     mutate(ecu_apache2_cat = categorize_apache2_score_ecu(.data$icusc_0041))
   
   return(trial_data)
@@ -311,7 +332,9 @@ primary_coding_hap_apache2 <- function(trial_data) {
 
 primary_coding_hap_icdsc <- function(trial_data) {
   
-  trial_data[["haemodyn"]] <- trial_data[["haemodyn"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?haemodyn$", table_names)]] <- trial_data[[grep("^_?haemodyn$", table_names)]] %>%
     mutate(ecu_icdsc_cat = categorize_icdsc_score_ecu(.data$ksc_0041))
   
   return(trial_data)
@@ -329,7 +352,9 @@ primary_coding_hap_icdsc <- function(trial_data) {
 
 primary_coding_hap_dds <- function(trial_data) {
   
-  trial_data[["haemodyn"]] <- trial_data[["haemodyn"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?haemodyn$", table_names)]] <- trial_data[[grep("^_?haemodyn$", table_names)]] %>%
     mutate(ecu_dds_cat = categorize_dds_score_ecu(.data$ksc_0051))
   
   return(trial_data)
@@ -350,6 +375,8 @@ primary_coding_hap_dds <- function(trial_data) {
 #' @export
 
 primary_coding_hap_who_scale <- function(trial_data, pid) {
+  
+  table_names <- names(trial_data)
   
   trial_data <- build_who_scale_hap(trial_data, pid)
   
@@ -381,7 +408,10 @@ primary_coding_hap <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  
+  table_names <- names(trial_data)
+  
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
   # Demographics
   
@@ -468,44 +498,68 @@ primary_coding_hap <- function(trial_data) {
 
 build_who_scale_hap <- function(trial_data, pid) {
   
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$visit_02), "mnpvislabel", "visit_name")
+  table_names <- names(trial_data)
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
-  main_diag <- trial_data[["visit_02"]] %>%
+  main_diag <-  trial_data[[grep("^_?visit_02$", table_names)]] %>%
     filter(!!sym(visit_label_var_name) == "Screening / V1") %>%
     group_by(!!sym(pid)) %>%
     slice_max(.data$ea_0010) %>%
-    select(!!sym(pid), .data$ea_0010)
+    select(!!sym(pid), .data$ea_0010) %>%
+    ungroup()
   
-  trial_data[["eosfci"]] <- trial_data[["eosfci"]] %>%
-    left_join(main_diag) %>%
-    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ "Keine Informationen verfuegbar", 
+  trial_data[[grep("^_?e_?osfci$", table_names)]] <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
+    left_join(main_diag, by = pid) %>%
+    mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) ~ NA, 
                                             .data$osfci_0021 == 0 ~ "Kontrollgruppe, ohne Sars-Infektion",
                                             .data$osfci_0021 == 1 | .data$osfci_0021 == 2 ~ "Ambulant, milde Phase",
-                                            (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase",
-                                            (.data$osfci_0021 == 3 | .data$osfci_0021 == 4) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
-                                            (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase",
-                                            (.data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7) & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
+                                            .data$osfci_0021 == 3 | .data$osfci_0021 == 4 ~ "Hospitalisiert, moderate Phase",
+                                            .data$osfci_0021 == 5 | .data$osfci_0021 == 6 | .data$osfci_0021 == 7 ~ "Hospitalisiert, schwere Phase",
                                             .data$osfci_0021 == 8 ~ "Verstorben"),
-           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Keine Informationen verfuegbar" ~ -1, 
-                                                .data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+           ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
                                                 .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
-                                                .data$ecu_who_scale.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
-                                                .data$ecu_who_scale.factor == "Verstorben" ~ 6))) #%>%
-    #select(-(.data$ea_0010))
+                                                .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" ~ 2,
+                                                .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" ~ 3,
+                                                .data$ecu_who_scale.factor == "Verstorben" ~ 4)),
+           ecu_who_scale_with_diag.factor = case_when(is.na(.data$osfci_0021) | is.na(.data$ea_0010) ~ NA, 
+                                                      ecu_who_scale == 2 & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, moderate Phase", 
+                                                      ecu_who_scale == 2 & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, moderate Phase",
+                                                      ecu_who_scale == 3 & .data$ea_0010 == 1 ~ "Hospitalisiert wegen Covid, schwere Phase", 
+                                                      ecu_who_scale == 3 & .data$ea_0010 == 0 ~ "Hospitalisiert mit Covid, schwere Phase",
+                                                      TRUE ~ ecu_who_scale.factor),
+           ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                                          .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
+                                                          .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
+                                                          .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6)))
   
-  who_scale_max <- trial_data[["eosfci"]] %>%
+  
+  #select(-(.data$ea_0010))
+  
+  who_scale_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     select(!!sym(pid), starts_with("ecu")) %>%
     group_by(!!sym(pid)) %>%
     slice_max(.data$ecu_who_scale) %>%
     distinct() %>%
     rename(ecu_who_scale_max.factor = .data$ecu_who_scale.factor,
-           ecu_who_scale_max = .data$ecu_who_scale)
+           ecu_who_scale_max = .data$ecu_who_scale) %>%
+    ungroup()
   
-  trial_data[["osfci"]] <- trial_data[["osfci"]] %>%
-    left_join(who_scale_max, by = pid) 
+  who_scale_with_diag_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
+    select(!!sym(pid), starts_with("ecu")) %>%
+    group_by(!!sym(pid)) %>%
+    slice_max(.data$ecu_who_scale_with_diag) %>%
+    distinct() %>%
+    rename(ecu_who_scale_max_with_diag.factor = .data$ecu_who_scale_with_diag.factor,
+           ecu_who_scale_max_with_diag = .data$ecu_who_scale_with_diag) %>%
+    ungroup()
+
+  
+  trial_data[[grep("^_?osfci$", table_names)]] <-  trial_data[[grep("^_?osfci$", table_names)]] %>%
+    left_join(who_scale_max, by = pid) %>%
+    left_join(who_scale_with_diag_max, by = pid)
   
   return(trial_data)
 }
