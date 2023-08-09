@@ -28,6 +28,9 @@
     <loc>/reference/build_who_scale_suep_df.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_6ils_total.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_bmi.html</loc>
   </url>
   <url>
@@ -38,6 +41,9 @@
   </url>
   <url>
     <loc>/reference/calculate_brs_total.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_cfs_seid_sum.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_days_ecu.html</loc>
@@ -58,6 +64,12 @@
     <loc>/reference/calculate_phq8_sum.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_pss_total.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_6ils_ecu.html</loc>
+  </url>
+  <url>
     <loc>/reference/categorize_apache2_score_ecu.html</loc>
   </url>
   <url>
@@ -71,6 +83,9 @@
   </url>
   <url>
     <loc>/reference/categorize_brs_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_cfs_seid.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_dds_score_ecu.html</loc>
@@ -110,6 +125,9 @@
   </url>
   <url>
     <loc>/reference/categorize_phq8_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_pss_ecu.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_resp_rate_ecu.html</loc>
@@ -208,6 +226,12 @@
     <loc>/reference/primary_coding_pop.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_pop_6ils.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_abd_overw.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_pop_age.html</loc>
   </url>
   <url>
@@ -232,6 +256,9 @@
     <loc>/reference/primary_coding_pop_gad7.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_pop_kccq.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_pop_migration.html</loc>
   </url>
   <url>
@@ -250,6 +277,9 @@
     <loc>/reference/primary_coding_pop_psqi.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_pop_pss.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_suep.html</loc>
   </url>
   <url>
@@ -263,6 +293,9 @@
   </url>
   <url>
     <loc>/reference/primary_coding_suep_brs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_cfs_seid.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_clinical_params.html</loc>
@@ -289,7 +322,16 @@
     <loc>/reference/read_tsExport_raw.html</loc>
   </url>
   <url>
+    <loc>/reference/recode_6ils.html</loc>
+  </url>
+  <url>
     <loc>/reference/recode_brs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_cfs_seid.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_pss.html</loc>
   </url>
   <url>
     <loc>/reference/remove_st_dates_tsExport.html</loc>
