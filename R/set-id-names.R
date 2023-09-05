@@ -1,5 +1,11 @@
 #TODO: to put into a better place later. Belongs actually somewhere in the read function, but we have sT-Version and ts-Version
 # 
+
+#' @description sets the name of the participant ID depending on sT or ts export.
+#' @return sT_or_ts_object with additional value in export options
+#' @param sT_or_ts_object data obejct
+#' @export 
+
 set_id_names <- function(sT_or_ts_object) {
   
   
