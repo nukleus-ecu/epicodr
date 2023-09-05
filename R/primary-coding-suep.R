@@ -615,8 +615,7 @@ primary_coding_suep <- function(trial_data) {
 #' item 2, 4, 6 need levels from 5 = "Do not agree at all" to 1 = "Totally agree"
 #' function recodes items 2, 4, 6 to needed levels if they were leveled like item 1, 3 and 5
 #' 
-#' @param brs BRS item, that needs recoding
-#' @return A numerical vector with recoded BRS item
+#' @param brs.factor BRS item, that needs recoding
 
 recode_brs <- function(brs.factor) {
   

@@ -4,7 +4,7 @@
 \alias{recode_brs}
 \title{Recode Brief Resilience Scale items}
 \usage{
-recode_brs(brs)
+recode_brs(brs.factor)
 }
 \arguments{
 \item{brs}{BRS item, that needs recoding}
