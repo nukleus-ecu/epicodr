@@ -1,23 +1,24 @@
 Type: Package
 Package: epicodr
 Title: Primary Coding for NAPKON data
-Version: 1.0.0
+Version: 2.2.0
 Authors@R: 
     c(person("Institut für Klinische Epidemiologie und Biometrie, Universitätsklinikum Würzburg, Germany", 
              role=c("cph"),
              email = "ecu@napkon.de"),
-      person(given = "Mirjam",
-             family = "Kohls",
+      person(given = "Carolin",
+             family = "Nürnberger",
              role = c("aut"),
-             email = "kohls_m@ukw.de"),
+             email = "nuernberge_c@ukw.de",
+             comment = c(ORCID = "0009-0007-1029-3707")),
       person(given = "Olga",
              family = "Miljukov",
              role = c("aut"),
              email = "miljukov_o@ukw.de"),
-      person(given = "Carolin",
-             family = "Nürnberger",
+      person(given = "Mirjam",
+             family = "Kohls",
              role = c("aut"),
-             email = "nuernberge_c@ukw.de"),
+             email = "kohls_m@ukw.de"),
       person(given = "Miriam",
              family = "Rainers",
              role = c("aut"),
