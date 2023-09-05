@@ -66,6 +66,16 @@ clean_cs <- function(x){
 
 primary_coding_suep_age <- function(trial_data, pid, visitid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
   formname_to_add_vars <- "bv1"
   formname_with_needed_vars <- "scv"
   
@@ -100,6 +110,16 @@ primary_coding_suep_age <- function(trial_data, pid, visitid) {
 #' @export
 
 primary_coding_suep_bmi <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
   
   formname_to_add_vars <- "fuv1"
   formname_with_needed_vars <- "bv1"
@@ -197,6 +217,16 @@ primary_coding_suep_clinical_params <- function(trial_data, pid, visitid) {
 
 primary_coding_suep_baseline_barthel <- function(trial_data, pid, visitid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
   formname_to_add_vars <- "bv1"
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
@@ -223,6 +253,16 @@ primary_coding_suep_baseline_barthel <- function(trial_data, pid, visitid) {
 #' @export
 
 primary_coding_suep_patient_barthel <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
   
   formname_to_add_vars <- "fuv1"
   
@@ -252,6 +292,16 @@ primary_coding_suep_patient_barthel <- function(trial_data, pid, visitid) {
 
 primary_coding_suep_moca <- function(trial_data, pid, visitid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
   formname_to_add_vars <- "fuv3"
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
@@ -280,6 +330,16 @@ primary_coding_suep_moca <- function(trial_data, pid, visitid) {
 
 primary_coding_suep_eq5d5l <- function(trial_data, pid, visitid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
   formname_to_add_vars <- "prom"
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
@@ -294,29 +354,10 @@ primary_coding_suep_eq5d5l <- function(trial_data, pid, visitid) {
 }
 
 
-#' Primary coding Recode Brief Resilience Scale (BRS)
-#' 
-#' recodes the following columns in promext: 
-#' brs_2, brs_4, brs_6
-#'
-#' @param trial_data A secuTrial data object
-#' @importFrom rlang .data
-#' @export
-
-primary_coding_suep_recode_brs <- function(trial_data) {
-  
-  trial_data[["promext"]] <- trial_data[["promext"]] %>%
-    mutate(brs_2 = recode_brs(.data$brs_2),
-           brs_4 = recode_brs(.data$brs_4),
-           brs_6 = recode_brs(.data$brs_6))
-  
-  return(trial_data)
-}
-
-
 #' Primary coding Brief Resilience Scale (BRS)
 #' 
 #' adds the following columns to promext: 
+#' ecu_brs_2, ecu_brs_4, ecu_brs_6 (recoded BRS items)
 #' ecu_brs_sum, ecu_brs_n, ecu_brs_total, ecu_brs_cat
 #'
 #' @param trial_data A secuTrial data object
@@ -326,14 +367,27 @@ primary_coding_suep_recode_brs <- function(trial_data) {
 
 primary_coding_suep_brs <- function(trial_data, visitid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
   formname_to_add_vars <- "promext"
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
   
   new_vars_to_add <- form_to_add_vars %>%
     rowwise() %>%
-    mutate(ecu_brs_sum = calculate_brs_sum(.data$brs_1, .data$brs_2, .data$brs_3, .data$brs_4, .data$brs_5, .data$brs_6),
-           ecu_brs_n = calculate_brs_n(.data$brs_1, .data$brs_2, .data$brs_3, .data$brs_4, .data$brs_5, .data$brs_6),
+    mutate(ecu_brs_2 = recode_brs(.data$brs_2.factor),
+           ecu_brs_4 = recode_brs(.data$brs_4.factor),
+           ecu_brs_6 = recode_brs(.data$brs_6.factor),
+           ecu_brs_sum = calculate_brs_sum(.data$brs_1, .data$ecu_brs_2, .data$brs_3, .data$ecu_brs_4, .data$brs_5, .data$ecu_brs_6),
+           ecu_brs_n = calculate_brs_n(.data$brs_1, .data$ecu_brs_2, .data$brs_3, .data$ecu_brs_4, .data$brs_5, .data$ecu_brs_6),
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) %>%
     ungroup() %>%
@@ -357,6 +411,16 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
 #' @export
 
 primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
   
   formname_to_add_vars <- "promext"
   
@@ -406,6 +470,17 @@ primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
 #' @export
 
 primary_coding_suep_who_scale <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  pid <- trial_data$export_options$id_names$pid
+  visitid <- trial_data$export_options$id_names$visitid
   
   trial_data[["ecu_who_scale_per_visit_data"]] <- build_who_scale_suep_df(trial_data, pid, visitid)
   trial_data <- summarize_who_scale(trial_data, pid)
@@ -508,10 +583,6 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_suep_recode_brs(trial_data)},
-           error = function(e) {
-             warning("primary_coding_suep_recode_brs() did not work. This is likely due to missing variables.")
-             print(e)})
   tryCatch(expr = {trial_data <- primary_coding_suep_brs(trial_data, visitid)},
            error = function(e) {
              warning("primary_coding_suep_brs() did not work. This is likely due to missing variables.")
@@ -547,16 +618,14 @@ primary_coding_suep <- function(trial_data) {
 #' @param brs BRS item, that needs recoding
 #' @return A numerical vector with recoded BRS item
 
-recode_brs <- function(brs) {
+recode_brs <- function(brs.factor) {
   
-  brs <- as.integer(case_when(brs == 1 ~ "5", 
-                              brs == 2 ~ "4",
-                              brs == 3 ~ "3",
-                              brs == 4 ~ "2", 
-                              brs == 5 ~ "1",
-                              brs == -1 ~ "-1"))
-  
-  return(brs)
+  case_when(brs.factor == "Stimme \u00fcberhaupt nicht zu" ~ 5, 
+            brs.factor == "Stimme eher nicht zu" ~ 4,
+            brs.factor == "Neutral" ~ 3,
+            brs.factor == "Stimme eher zu" ~ 2, 
+            brs.factor == "Stimme vollkommen zu" ~ 1,
+            brs.factor == "Keine Informationen verf\u00fcgbar" ~ -1)
 }
 
 
@@ -570,10 +639,9 @@ recode_brs <- function(brs) {
 
 recode_cfs_seid <- function(cfs) {
   
-  cfs_rec <- case_when(cfs == -1 ~ -1, 
-                       cfs <= 2 ~ 0,
-                       cfs > 2 ~ 1)
-  return(cfs_rec)
+  case_when(cfs == -1 ~ -1, 
+            cfs <= 2 ~ 0,
+            cfs > 2 ~ 1)
   
 }
 

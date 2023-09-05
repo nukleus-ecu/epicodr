@@ -376,6 +376,16 @@ primary_coding_hap_dds <- function(trial_data) {
 
 primary_coding_hap_who_scale <- function(trial_data, pid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. set_id_names() did not work.")
+  }
+  
+  pid <- trial_data$export_options$id_names$pid 
+  
   table_names <- names(trial_data)
   
   trial_data <- build_who_scale_hap(trial_data, pid)
