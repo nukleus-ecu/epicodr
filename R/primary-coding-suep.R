@@ -61,7 +61,7 @@ clean_cs <- function(x){
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_age <- function(trial_data, pid, visitid) {
@@ -96,7 +96,7 @@ primary_coding_suep_age <- function(trial_data, pid, visitid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_bmi <- function(trial_data, pid, visitid) {
@@ -137,7 +137,7 @@ primary_coding_suep_bmi <- function(trial_data, pid, visitid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 #' @export
 
@@ -192,7 +192,7 @@ primary_coding_suep_clinical_params <- function(trial_data, pid, visitid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_baseline_barthel <- function(trial_data, pid, visitid) {
@@ -219,7 +219,7 @@ primary_coding_suep_baseline_barthel <- function(trial_data, pid, visitid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_patient_barthel <- function(trial_data, pid, visitid) {
@@ -247,7 +247,7 @@ primary_coding_suep_patient_barthel <- function(trial_data, pid, visitid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_moca <- function(trial_data, pid, visitid) {
@@ -275,7 +275,7 @@ primary_coding_suep_moca <- function(trial_data, pid, visitid) {
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
 #' @importFrom eq5d eq5d
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_eq5d5l <- function(trial_data, pid, visitid) {
@@ -300,7 +300,7 @@ primary_coding_suep_eq5d5l <- function(trial_data, pid, visitid) {
 #' brs_2, brs_4, brs_6
 #'
 #' @param trial_data A secuTrial data object
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_recode_brs <- function(trial_data) {
@@ -321,7 +321,7 @@ primary_coding_suep_recode_brs <- function(trial_data) {
 #'
 #' @param trial_data A secuTrial data object
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_brs <- function(trial_data, visitid) {
@@ -353,7 +353,7 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
 #' 
 #' @param trial_data A secuTrial data object
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
@@ -402,7 +402,7 @@ primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_suep_who_scale <- function(trial_data, pid, visitid) {
@@ -421,7 +421,8 @@ primary_coding_suep_who_scale <- function(trial_data, pid, visitid) {
 #'
 #' @param trial_data A secuTrial data object
 #' @param prom A vector indication whether proms should be included in pcs calculation or not; needs to be specified as prom = "No" or prom = "Yes"
-#' @import rlang
+#' @return A secuTrial data object with primary coded variables and dataframes
+#' @export
 
 primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
   
@@ -649,7 +650,7 @@ categorize_cfs_seid <- function(ecu_cfs_seid_sum) {
 #' @param docid column name of document ID in trial_data
 #' @param visitid column name of visit ID in trial_data
 #' @importFrom rlang :=
-#' @import rlang
+#' @importFrom rlang .data
 #' @import lubridate
 #' @export
 
@@ -672,8 +673,8 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   
   # Inclusion groups (one row per pat) -----------------------------------------
-  # Definition von pädiatrischen Kontrollpatienten (gec_pr_inclusion = 8)
-  # Einschlusskriterien für pädiatrische Kontrollgruppe, wenn eines der folgenden erfüllt ist:
+  # Definition von paediatrischen Kontrollpatienten (gec_pr_inclusion = 8)
+  # Einschlusskriterien fuer paediatrische Kontrollgruppe, wenn eines der folgenden erfuellt ist:
   # data$scv$p_ctrl_acut_inf (andere akute Infektion) = 1 ("Ja")
   # data$scv$p_ctrl_kawa (Kawasaki-Syndrom) = 1 ("Ja")
   # data$scv$p_ctrl_mstill (Morbus Still) = 1 ("Ja")
@@ -876,7 +877,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
 #' 
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @export
 
 summarize_who_scale <- function(trial_data, pid) {
@@ -915,7 +916,7 @@ summarize_who_scale <- function(trial_data, pid) {
 #' 
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in data
-#' @import rlang
+#' @importFrom rlang .data
 #' @return A dataframe with one row per symptom per patient
 #' @export
 
@@ -977,7 +978,7 @@ build_suep_long_symptom_df <- function(trial_data, pid){
     select(-c(.data$end_acute.date, .data$m3_fup.date, .data$m12_fup.date)) %>%
     mutate(sy_end_min.date = case_when(.data$sy_dur.factor == "Andauernd" ~ symptom_update_visit.date, 
                                        .data$sy_dur.factor == "181-365 Tage (6-12 Monate)"~ sy_start.date + 181, 
-                                       .data$sy_dur.factor == "181 – 365 Tage (6-12 Monate)"~ sy_start.date + 181,
+                                       .data$sy_dur.factor == "181 - 365 Tage (6-12 Monate)"~ sy_start.date + 181,
                                        .data$sy_dur.factor == "121-180 Tage (4-6 Monate)"~ sy_start.date + 121, 
                                        .data$sy_dur.factor == "61-120 Tage (2-4 Monate)"~ sy_start.date + 61, 
                                        .data$sy_dur.factor == "31-60 Tage (1-2 Monate)"~ sy_start.date + 31, 
@@ -994,7 +995,7 @@ build_suep_long_symptom_df <- function(trial_data, pid){
            sy_dur_min = .data$sy_end_min.date - .data$sy_start.date,
            sy_end_max.date = case_when(.data$sy_dur.factor == "Andauernd" ~ symptom_update_visit.date, 
                                        .data$sy_dur.factor == "181-365 Tage (6-12 Monate)"~ sy_start.date + days(365), 
-                                       .data$sy_dur.factor == "181 – 365 Tage (6-12 Monate)"~ sy_start.date + days(365),
+                                       .data$sy_dur.factor == "181 - 365 Tage (6-12 Monate)"~ sy_start.date + days(365),
                                        .data$sy_dur.factor == "121-180 Tage (4-6 Monate)"~ sy_start.date + days(180), 
                                        .data$sy_dur.factor == "61-120 Tage (2-4 Monate)"~ sy_start.date + days(120), 
                                        .data$sy_dur.factor == "31-60 Tage (1-2 Monate)"~ sy_start.date + days(60), 
@@ -1008,7 +1009,7 @@ build_suep_long_symptom_df <- function(trial_data, pid){
                                        .data$sy_dur.factor == "2 Tage"~ sy_start.date + days(2),
                                        .data$sy_dur.factor == "1 Tag"~ sy_start.date + days(1)), 
            sy_dur_max =  .data$sy_end_max.date - .data$sy_start.date,
-           sy_end_applicable = case_when(((.data$sy_d.factor == "Auf Jahr genau" |  .data$sy_d.factor == "Unbekannter Zeitpunkt vor Baseline") &  .data$sy_dur.factor != "Andauernd") ~ FALSE, #"Auf Jahr genau" und "Unbekannter Zeitpunkt vor Baseline" kann nur mit "Andauernd" ausgewertet werden. 
+           sy_end_applicable = case_when(((.data$sy_d.factor == "Auf Jahr genau" |  .data$sy_d.factor == "Unbekannter Zeitpunkt vor Baseline") & .data$sy_dur.factor != "Andauernd") ~ FALSE, #"Auf Jahr genau" und "Unbekannter Zeitpunkt vor Baseline" kann nur mit "Andauernd" ausgewertet werden. 
                                          .data$sy_dur.factor == "Keine Informationen verf\u00fcgbar" ~ FALSE,
                                          .data$sy_dur.factor == "Andauernd" & is.na(.data$symptom_update_visit.date) ~ FALSE, 
                                          .data$sy_start.date < 2020-01-01 ~ FALSE, 
@@ -1059,10 +1060,10 @@ detect_symptom_complex <- function(symptom_names,
                                    sy_dur_min, sy_dur_max) {
   case_when(
     
-    # wenn 3M oder 12M nicht stattgefunden hat, können keine Symptomkomplexe festgestellt oder ausgeschlossen werden
+    # wenn 3M oder 12M nicht stattgefunden hat, koennen keine Symptomkomplexe festgestellt oder ausgeschlossen werden
     !symptom_update_visit %in% vector_of_pcss_fup_visits ~ NA_real_, 
     
-    # wenn sy_parent == "Keine Informationen verfügbar" oder sy_end_applicable = FALSE, kann dieses Symptom nicht festgestellt oder ausgeschlossen werden
+    # wenn sy_parent == "Keine Informationen verfuegbar" oder sy_end_applicable = FALSE, kann dieses Symptom nicht festgestellt oder ausgeschlossen werden
     sy_extracted_name_parent %in% symptom_names & (sy_parent == "Keine Informationen verf\u00fcgbar" | !sy_end_applicable) ~ NA_real_, 
     
     # wenn das Symptom mindestens nach in days_to_pcss_time_diff geforderten Tagen und zur Visite vorliegt, ist der Symptomkomplex zutreffend
@@ -1075,10 +1076,10 @@ detect_symptom_complex <- function(symptom_names,
     # wenn das Symptom weniger als (maximal) in days_to_pcss_time_diff geforderten Tagen vorliegt, ist der Symptomkomplex nicht zutreffend
     sy_extracted_name_parent %in% symptom_names &  sy_parent == "Ja" &  sy_time_to_visit < days_of_pcss_time_diff & sy_end_applicable ~ 0,
     
-    # wenn das Symptom die geforderte Anzahl an Tagen , aber bei der gewünschten Visite nicht mehr vorliegt, ist der Symptomkomplex nicht zutreffend
+    # wenn das Symptom die geforderte Anzahl an Tagen , aber bei der gewuenschten Visite nicht mehr vorliegt, ist der Symptomkomplex nicht zutreffend
     sy_extracted_name_parent %in% symptom_names &  sy_parent == "Ja" &  sy_time_to_visit >= days_of_pcss_time_diff & sy_end_max.date < visit_date.date & sy_end_applicable ~ 0,
     
-    # wenn aufgrund der unpräzisen Symptomdauer nicht festgestellt werden kann, ob das Symptom nach der in days_of_pcss_time_diff geforderten Anzahl an Tagen vorliegt, 
+    # wenn aufgrund der unpraezisen Symptomdauer nicht festgestellt werden kann, ob das Symptom nach der in days_of_pcss_time_diff geforderten Anzahl an Tagen vorliegt, 
     # kann dieses Symptom nicht festgestellt oder ausgeschlossen werden
     sy_extracted_name_parent %in% symptom_names &  sy_parent == "Ja" &  sy_dur_max >= days_of_pcss_time_diff & sy_dur_min < days_of_pcss_time_diff ~ NA_real_
   )
@@ -1133,10 +1134,10 @@ detect_other_symptom_of_complex <- function(symptom_names,
     # wenn das Symptom weniger als (maximal) in days_to_pcss_time_diff geforderten Tagen vorliegt, ist der Symptomkomplex nicht zutreffend
     sy_oth_icd11name %in% symptom_names &  sy_parent == "Ja" &  sy_time_to_visit < days_of_pcss_time_diff &  sy_end_applicable ~ 0,
     
-    # wenn das Symptom die geforderte Anzahl an Tagen , aber bei der gewünschten Visite nicht mehr vorliegt, ist der Symptomkomplex nicht zutreffend
+    # wenn das Symptom die geforderte Anzahl an Tagen , aber bei der gewuenschten Visite nicht mehr vorliegt, ist der Symptomkomplex nicht zutreffend
     sy_oth_icd11name %in% symptom_names &  sy_parent == "Ja" &  sy_time_to_visit >= days_of_pcss_time_diff & sy_end_max.date < visit_date.date & sy_end_applicable ~ 0,
     
-    # wenn aufgrund der unpräzisen Symptomdauer nicht festgestellt werden kann, ob das Symptom nach in days_to_pcss_time_diff geforderten Tagen vorliegt, kann dieses Symptom nicht festgestellt oder ausgeschlossen werden
+    # wenn aufgrund der unpraezisen Symptomdauer nicht festgestellt werden kann, ob das Symptom nach in days_to_pcss_time_diff geforderten Tagen vorliegt, kann dieses Symptom nicht festgestellt oder ausgeschlossen werden
     sy_oth_icd11name %in% symptom_names &  sy_parent == "Ja" &  sy_dur_max >= days_of_pcss_time_diff & sy_dur_min < days_of_pcss_time_diff ~ NA_real_
   )
 }
@@ -1152,6 +1153,7 @@ detect_other_symptom_of_complex <- function(symptom_names,
 #' @param days_of_pcss_time_diff Time difference since COVID-19 diagnosis, for which PCSS should be calculated, in days
 #' @param vector_of_pcss_fup_visits Vector of Follow-Up Visits that are sufficient to evaluate PCSS, based on PCSS time difference
 #' @return A dataframe with symptom complexes and PCSS-score for specified Follow-Up visits
+#' @importFrom rlang .data
 #' @export
 
 calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, vector_of_pcss_fup_visits) {
@@ -1189,7 +1191,7 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
                                                      vector_of_pcss_fup_visits, days_of_pcss_time_diff, .data$sy_time_to_visit, .data$sy_extracted_name_parent, 
                                                      .data$sy_parent, .data$symptom_update_visit, .data$symptom_update_visit.date, .data$sy_end_applicable, .data$visit_date.date, 
                                                      .data$sy_end_min.date, .data$sy_end_max.date, .data$sy_dur_min, .data$sy_dur_max),
-           # Sonderfall Neuro: die einzelnen symptome stammen aus unterschiedlichen formularen. um den symptomkomplex auszuschließen, müssen wir jeweils die übergeordnete Frage gec_sy bzw. sy_ne und die jeweils untergeordneten Einzelsymptome auswerten.
+           # Sonderfall Neuro: die einzelnen symptome stammen aus unterschiedlichen formularen. um den symptomkomplex auszuschliessen, muessen wir jeweils die uebergeordnete Frage gec_sy bzw. sy_ne und die jeweils untergeordneten Einzelsymptome auswerten.
            complex_9_neuro_gec = detect_symptom_complex(symptom_names = c("gec_sy_ne_conf", "sy_ne_cogn"), 
                                                         vector_of_pcss_fup_visits, days_of_pcss_time_diff, .data$sy_time_to_visit, .data$sy_extracted_name_parent, 
                                                         .data$sy_parent, .data$symptom_update_visit, .data$symptom_update_visit.date, .data$sy_end_applicable, .data$visit_date.date, 
@@ -1218,10 +1220,10 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
   
   symptom_complex_suep_summary <- long_symptom_data_pcss %>%
     group_by(!!sym(pid), .data$visit_label) %>%
-    summarise(complex_1_chemo_sum = case_when(any(.data$sy_extracted_name_parent == "sy_ne" &  .data$sy_parent == "Nein" &  .data$symptom_update_visit %in% vector_of_pcss_fup_visits) ~ 0, # wenn bei der übergeordeten Symptomfrage "Nein" geantwortet wurde, schließen wir den Sy-Komplex aus.
+    summarise(complex_1_chemo_sum = case_when(any(.data$sy_extracted_name_parent == "sy_ne" &  .data$sy_parent == "Nein" &  .data$symptom_update_visit %in% vector_of_pcss_fup_visits) ~ 0, # wenn bei der uebergeordeten Symptomfrage "Nein" geantwortet wurde, schliessen wir den Sy-Komplex aus.
                                               any(.data$complex_1_chemo == 1) ~ 1, 
                                               any(.data$complex_1_chemo == NA_real_) ~ NA_real_,
-                                              any(.data$complex_1_chemo == 0) ~ 0), # wenn kein 1 oder NA_real_ dokumentiert ist, und mindestens eine 0, schließen wir den Sy-Komplex aus.
+                                              any(.data$complex_1_chemo == 0) ~ 0), # wenn kein 1 oder NA_real_ dokumentiert ist, und mindestens eine 0, schliessen wir den Sy-Komplex aus.
               complex_2_fatigue_sum = case_when(all(.data$sy_oth_icd11name != "Fatigue" | is.na(.data$sy_oth_icd11name)) & any(.data$symptom_update_visit %in% vector_of_pcss_fup_visits) ~ 0,# wenn die Symptome aktuell sind und niemals Fatigue dokumentiert wurde, wird der Symptomkomplex ausgeschlossen
                                                 any(.data$complex_2_fatigue_oth == 1) ~ 1,
                                                 any(.data$complex_2_fatigue_oth == NA_real_) ~ NA_real_,
@@ -1250,7 +1252,7 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
                                                any(.data$complex_8_gastro == 1) ~ 1,  
                                                any(.data$complex_8_gastro == NA_real_) ~ NA_real_,  
                                                any(.data$complex_8_gastro == 0) ~ 0),
-              # Sonderfall Neuro: die einzelnen symptome stammen aus unterschiedlichen formularen. um den symptomkomplex auszuschließen, müssen wir jeweils die übergeordnete Frage gec_sy bzw. sy_ne und die jeweils untergeordneten Einzelsymptome auswerten.
+              # Sonderfall Neuro: die einzelnen symptome stammen aus unterschiedlichen formularen. um den symptomkomplex auszuschliessen, muessen wir jeweils die uebergeordnete Frage gec_sy bzw. sy_ne und die jeweils untergeordneten Einzelsymptome auswerten.
               complex_9_neuro_gec_sum = case_when(any(.data$sy_extracted_name_parent == "gec_sy" &  .data$sy_parent == "Nein" &  .data$symptom_update_visit %in% vector_of_pcss_fup_visits) ~ 0,
                                                   any(.data$complex_9_neuro_gec == 1) ~ 1,  
                                                   any(.data$complex_9_neuro_gec == NA_real_) ~ NA_real_,  
@@ -1263,7 +1265,7 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
                                                any(.data$complex_10_derma == 1) ~ 1,  
                                                any(.data$complex_10_derma == NA_real_) ~ NA_real_,  
                                                any(.data$complex_10_derma == 0) ~ 0), 
-              # Sonderfall Flulike Symptoms: die einzelnen symptome können im Formula "allgemeine Symptome"(gec_sy) und unter "andere Symptome" dokumentiert werden. um den symptomkomplex auszuschließen, müssen wir jeweils die übergeordnete Frage gec_sy und die jeweils untergeordneten Einzelsymptome/andere Symptome auswerten.
+              # Sonderfall Flulike Symptoms: die einzelnen symptome koennen im Formula "allgemeine Symptome"(gec_sy) und unter "andere Symptome" dokumentiert werden. um den symptomkomplex auszuschliessen, muessen wir jeweils die uebergeordnete Frage gec_sy und die jeweils untergeordneten Einzelsymptome/andere Symptome auswerten.
               complex_11_flulike_sy_sum = case_when(any(.data$sy_extracted_name_parent == "gec_sy" &  .data$sy_parent == "Nein" &  .data$symptom_update_visit %in% vector_of_pcss_fup_visits) ~ 0,
                                                     any(.data$complex_11_flulike_sy == 1) ~ 1,  
                                                     any(.data$complex_11_flulike_sy == NA_real_) ~ NA_real_,  
@@ -1316,6 +1318,7 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in data
 #' @return A dataframe with symptom compelexes and Post-COVID variables without PROMs in Post-COVID-Score
+#' @importFrom rlang .data
 #' @export
 
 build_pcs_score_suep_df_without_proms <- function(trial_data, pid) {
@@ -1354,6 +1357,7 @@ build_pcs_score_suep_df_without_proms <- function(trial_data, pid) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in data
 #' @return A dataframe with symptom compelexes and Post-COVID variables with and without PROMs in Post-COVID-Score
+#' @importFrom rlang .data
 #' @export
 
 build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
@@ -1510,6 +1514,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
 #' 
 #' @param parentformtablename A vector with parent table name
 #' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
 
 return_child_table_names_of_parent <- function(parentformtablename, trial_data){
   
@@ -1545,6 +1550,7 @@ return_children_table_names_of_parents <- function(parentformtablenames, trial_d
 #' Return parent table names (for two or more parent tables)
 #' 
 #' @param trial_data A SecuTrial data object
+#' @importFrom rlang .data
 
 return_parent_child_pairs <- function(trial_data){
   # parentformtablename <- "fv2_1"
@@ -1572,7 +1578,7 @@ return_parent_child_pairs <- function(trial_data){
 #' @param symptom_parentformtablenames A vector containing parent table names for symptoms
 #' @param trial_data A SecuTrial data object
 #' @param pid column name of patient ID in data
-#' @import rlang
+#' @importFrom rlang .data
 
 build_sy_subform_merged_df <- function(symptom_parentformtablenames, trial_data, pid) {
   
@@ -1612,7 +1618,7 @@ build_sy_subform_merged_df <- function(symptom_parentformtablenames, trial_data,
 #' @param symptom_parentformtablenames A vector containing parent table names for symptoms
 #' @param trial_data A SecuTrial data object
 #' @param pid column name of patient ID in data
-#' @import rlang
+#' @importFrom rlang .data
 
 build_sy_parentform_merged_df <- function(symptom_parentformtablenames, trial_data, pid) {
   
@@ -1649,6 +1655,7 @@ build_sy_parentform_merged_df <- function(symptom_parentformtablenames, trial_da
 #' 
 #' @param trial_data A SecuTrial data object
 #' @param pid column name of patient ID in data
+#' @importFrom rlang .data
 
 build_sy_parents_children_merged_df <- function(trial_data, pid){
   
@@ -1656,11 +1663,11 @@ build_sy_parents_children_merged_df <- function(trial_data, pid){
   
   sy_subforms_merged <- build_sy_subform_merged_df(symptom_parentformtablenames, trial_data, pid)
   
-  #TODO: für tableOne, spalten aus fglabel ja/nein bauen
+  #TODO: fuer tableOne, spalten aus fglabel ja/nein bauen
   # sy_subforms_merged %>%
   #  pivot_wider()
   
-  # TODO: missing type -1 (keine Information verfügbar) -> NA
+  # TODO: missing type -1 (keine Information verfuegbar) -> NA
   
   # TODO: transfer analyses steps into new script
   #look at all symptoms, take the top5 most frequently ones for further analysis
@@ -1670,7 +1677,7 @@ build_sy_parents_children_merged_df <- function(trial_data, pid){
   sy_parents_and_children <- sy_parentforms_merged %>%
     full_join(sy_subforms_merged, 
               by = c("formtablename", "formname", all_of(pid), "sy_extracted_name_parent_without_gec" = "sy_extracted_name_child")) %>%
-    # discard pädiatric data
+    # discard paediatric data
     # filter(str_starts(sy_extracted_name_parent, "sy")) %>% #MK: replaced 
     filter(!str_starts(.data$sy_extracted_name_parent, "p_")) %>%
     # the following filter helps to check, if all subforms were joined with their parent forms
@@ -1764,7 +1771,7 @@ categorize_promis_29_fatigue_2 <- function(pro_fatigue_sum) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @noRd
 
 primary_coding_suep_promis_29_fatigue <- function(trial_data, visitid) {
@@ -1926,7 +1933,7 @@ categorize_promis_29_dyspnea_2 <- function(pro_dysp_sum) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @noRd
 
 primary_coding_suep_promis_29_dyspnea <- function(trial_data, visitid) {
@@ -2056,7 +2063,7 @@ categorize_promis_cognitive_funct_2 <- function(pro_cogn_sum) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @noRd
 
 primary_coding_suep_promis_cogn_funct <- function(trial_data, visitid) {
@@ -2176,7 +2183,7 @@ categorize_promis29_sleep_2 <- function(pro_sleep_sum) {
 #' @param trial_data A secuTrial data object
 #' @param pid column name of patient ID in trial_data
 #' @param visitid column name of visit ID in trial_data
-#' @import rlang
+#' @importFrom rlang .data
 #' @noRd
 
 primary_coding_suep_promis_29_sleep <- function(trial_data, visitid) {

@@ -11,6 +11,9 @@ primary_coding_suep_pcs_score(trial_data, prom = "No")
 
 \item{prom}{A vector indication whether proms should be included in pcs calculation or not; needs to be specified as prom = "No" or prom = "Yes"}
 }
+\value{
+A secuTrial data object with primary coded variables and dataframes
+}
 \description{
 adds the following dataframes to data: 
 ecu_long_symptom_data, ecu_pcs_score

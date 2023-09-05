@@ -49,7 +49,7 @@ detect_symptom_complex(
 
 \item{sy_dur_min}{A vector indicating the minimum number of days of symptom duration}
 
-\item{sy_dur_max}{A vector indicationg the maximum number of days of symptom duration}
+\item{sy_dur_max}{A vector indicating the maximum number of days of symptom duration}
 }
 \description{
 Calculate symptom complex for Post Covid Syndrome Score (PCSS) calculation

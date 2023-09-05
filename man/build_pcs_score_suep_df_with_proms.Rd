@@ -12,7 +12,7 @@ build_pcs_score_suep_df_with_proms(trial_data, pid)
 \item{pid}{column name of patient ID in data}
 }
 \value{
-A dataframe with symptom compelxes and Post-COVID variables with and without PROMs in Post-COVID-Score
+A dataframe with symptom compelexes and Post-COVID variables with and without PROMs in Post-COVID-Score
 }
 \description{
 returns a dataframe, which contains the symptom complexes and Post-COVID variables with and without PROMs in Post-COVID-Score
