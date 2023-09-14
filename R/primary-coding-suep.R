@@ -730,7 +730,9 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   visit_data <- trial_data$scv %>%
     full_join (trial_data$m2, by=c(pid, mnpvislabel, docid)) %>%
     full_join (trial_data$m, by=c(pid, mnpvislabel, docid)) %>%
-    filter(.data$pr_visit_mode.factor != "Zus\u00e4tzliche Dokumentationsvisite" | is.na(.data$pr_visit_mode.factor)) %>%
+    filter(.data$pr_visit_mode.factor != "Zus\u00e4tzliche Dokumentationsvisite" | is.na(.data$pr_visit_mode.factor) |
+             .data$pr_visit_mode.factor != "Telefonvisite (PROM)") %>%
+    #filter(mnpvislabel != "3M Follow-Up" | mnpvislabel != "12M Follow-Up") %>%
     mutate(visit_date = coalesce(.data$gec_pr_docudate_1.date, .data$pr_docudate.date, .data$pr_incl_date.date)) %>%
     arrange(.data$visit_date) %>%
     group_by(!!sym(pid)) %>%
@@ -1004,7 +1006,7 @@ build_suep_long_symptom_df <- function(trial_data, pid){
   
   # Date of Screening visit
   scv_date <- trial_data$scv %>%
-    select(.data$pr_incl_date.date, pid)
+    select(.data$gec_pr_incl_date.date, pid)
   
   # Date of Study visits
   visit_date <- trial_data$m2 %>%
