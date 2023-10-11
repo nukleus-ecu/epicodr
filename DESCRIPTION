@@ -11,10 +11,6 @@ Authors@R:
              role = c("aut"),
              email = "nuernberge_c@ukw.de",
              comment = c(ORCID = "0009-0007-1029-3707")),
-      person(given = "Olga",
-             family = "Miljukov",
-             role = c("aut"),
-             email = "miljukov_o@ukw.de"),
       person(given = "Mirjam",
              family = "Kohls",
              role = c("aut"),
@@ -23,6 +19,10 @@ Authors@R:
              family = "Rainers",
              role = c("aut"),
              email = "miriam.rainers@med.uni-goettingen.de"),
+      person(given = "Olga",
+             family = "Miljukov",
+             role = c("aut"),
+             email = "miljukov_o@ukw.de"),
       person(given = "Klaus",
              family = "Kammerer",
              role = c("ctb", "cre"),
@@ -31,7 +31,7 @@ Authors@R:
       )
 Description: Import, primary coding and export functions for SUEP, HAP, POP data.
 License: MIT + file LICENSE
-URL: https://github.com/nukleus-ecu/epicodr
+URL: https://nukleus-ecu.github.io/epicodr/index.html
 BugReports: https://github.com/nukleus-ecu/epicodr/issues
 Depends: 
     R (>= 3.4.0)
