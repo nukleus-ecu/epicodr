@@ -4,13 +4,10 @@
 \alias{recode_brs}
 \title{Recode Brief Resilience Scale items}
 \usage{
-recode_brs(brs)
+recode_brs(brs.factor)
 }
 \arguments{
-\item{brs}{BRS item, that needs recoding}
-}
-\value{
-A numerical vector with recoded BRS item
+\item{brs.factor}{BRS item, that needs recoding}
 }
 \description{
 item polarization varies across BRS items 

@@ -13,5 +13,6 @@ primary_coding_suep_brs(trial_data, visitid)
 }
 \description{
 adds the following columns to promext: 
+ecu_brs_2, ecu_brs_4, ecu_brs_6 (recoded BRS items)
 ecu_brs_sum, ecu_brs_n, ecu_brs_total, ecu_brs_cat
 }

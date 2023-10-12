@@ -305,7 +305,7 @@ categorize_oxigensaturation_ecu <- function(so2){
   factor(
     case_when(so2 < 85  ~ "Hochgradige Hypoxygenation", 
               so2 < 90  ~ "Mittelgradige Hypoxygenation",
-              so2 < 95  ~ "M\u00e4ssige Hypoxygenation", 
+              so2 < 95  ~ "M\u00e4\u00dfige Hypoxygenation", 
               so2 <= 100  ~ "Normbereich")
   )
 }

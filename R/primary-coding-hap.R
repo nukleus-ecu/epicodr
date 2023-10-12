@@ -376,6 +376,16 @@ primary_coding_hap_dds <- function(trial_data) {
 
 primary_coding_hap_who_scale <- function(trial_data, pid) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. set_id_names() did not work.")
+  }
+  
+  pid <- trial_data$export_options$id_names$pid 
+  
   table_names <- names(trial_data)
   
   trial_data <- build_who_scale_hap(trial_data, pid)
@@ -539,27 +549,28 @@ build_who_scale_hap <- function(trial_data, pid) {
   #select(-(.data$ea_0010))
   
   who_scale_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
-    select(!!sym(pid), starts_with("ecu")) %>%
+    select(!!sym(pid), .data$ecu_who_scale, .data$ecu_who_scale.factor) %>%
     group_by(!!sym(pid)) %>%
-    slice_max(.data$ecu_who_scale) %>%
+    slice_max(.data$ecu_who_scale, with_ties = FALSE) %>%
     distinct() %>%
     rename(ecu_who_scale_max.factor = .data$ecu_who_scale.factor,
            ecu_who_scale_max = .data$ecu_who_scale) %>%
     ungroup()
   
   who_scale_with_diag_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
-    select(!!sym(pid), starts_with("ecu")) %>%
+    select(!!sym(pid), .data$ecu_who_scale_with_diag,.data$ecu_who_scale_with_diag.factor) %>%
     group_by(!!sym(pid)) %>%
-    slice_max(.data$ecu_who_scale_with_diag) %>%
+    slice_max(.data$ecu_who_scale_with_diag, with_ties = FALSE) %>%
     distinct() %>%
     rename(ecu_who_scale_max_with_diag.factor = .data$ecu_who_scale_with_diag.factor,
            ecu_who_scale_max_with_diag = .data$ecu_who_scale_with_diag) %>%
     ungroup()
-
   
   trial_data[[grep("^_?osfci$", table_names)]] <-  trial_data[[grep("^_?osfci$", table_names)]] %>%
     left_join(who_scale_max, by = pid) %>%
     left_join(who_scale_with_diag_max, by = pid)
   
   return(trial_data)
+  
 }
+
