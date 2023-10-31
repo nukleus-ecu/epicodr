@@ -330,20 +330,32 @@ create_missing_lookup <- function(vallab_lookup,
 #' 
 spss_missings_tsExport_table <- function(.data, studydata_name, missing_lookup){
   
-   vars_in_missing_lookup <- names(missing_lookup[[studydata_name]])
+  missings_attrsave <- function(x, na_values = NULL) {
+    
+    ### convert a vector to a spss labelled vector, but keep the already existing 
+    ### attributes.
+    
+    # store attributes without old missing attributes
+    x_attr <- attributes(x) %>%
+      purrr::discard(names(.) %in% c("na_values", "class"))
+    
+    # make x labelled and restore the attributes
+    x <- haven::labelled_spss(x, na_values = na_values)
+    
+    attributes(x) <- c(attributes(x), x_attr)
+    
+    return(x)
+  }
+  
+  vars_in_missing_lookup <- names(missing_lookup[[studydata_name]])
   
   # set missing value attribute (this overwrites existing ones)
   .data <- .data %>%
     mutate(across(any_of(vars_in_missing_lookup), 
-                  ~ `attr<-`(.x, "na_values",
-                           missing_lookup[[studydata_name]][[cur_column()]]$values)))
+                  ~ missings_attrsave(
+                    .x,
+                    missing_lookup[[studydata_name]][[cur_column()]]$values)))
   
-  
-  # add class attribute "haven_labelled_spss" to variables in lookup list.
-  .data <- .data %>%
-    mutate(across(any_of(vars_in_missing_lookup), 
-                  ~ `class<-`(., union("haven_labelled_spss", oldClass(.)))))
- 
   return(.data)
 }
 

@@ -561,15 +561,13 @@ valuelabels_tsExport_table <- function(.data, studydata_name, lookup) {
     ### convert a vector to a labelled vector, but keep the already existing 
     ### attributes.
     
-    # store attributes
-    x_attr <- attributes(x)
-    
-    # replace label and labels attributes if they are not NULL
-    if(!is.null(labels)) x_attr$labels <- labels
-    if(!is.null(label)) x_attr$label <- label
+    # store attributes without old labels attribute
+    x_attr <- attributes(x) %>%
+      purrr::discard(names(.) %in% c("labels", "class"))
     
     # make x labelled and restore the attributes
-    x <- haven::labelled(x)
+    x <- haven::labelled(x, labels = labels)
+    
     attributes(x) <- c(attributes(x), x_attr)
     
     return(x)
