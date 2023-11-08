@@ -248,7 +248,7 @@ primary_coding_pop_eq5d5l <- function(trial_data) {
 #' 
 #' @param trial_data A secuTrial data object
 #' @export
- 
+
 primary_coding_pop_moca <- function(trial_data) {
   
   trial_data[["neuro"]] <- trial_data[["neuro"]] %>%
@@ -561,6 +561,64 @@ primary_coding_pop_pss <- function(trial_data) {
 }
 
 
+#' Primary coding Global Physical Activity Questionnaire (GPAQ) pre COVID
+#' 
+#' adds the following column to surveyfrageboge: 
+#' ecu_gpaq_p3, ecu_gpaq_p6, ecu_gpaq_p9, ecu_gpaq_p12, ecu_gpaq_p15, ecu_gpaq_p16, ecu_gpaq_p2cln, ecu_gpaq_p3cln
+#' ecu_gpaq_p5cln, ecu_gpaq_p6cln, ecu_gpaq_p8cln, ecu_gpaq_p9cln, ecu_gpaq_p11cln, ecu_gpaq_p12cln, ecu_gpaq_p14cln
+#' ecu_gpaq_p15cln, ecu_gpaq_valid, ecu_gpaq_p16cln, ecu_gpaq_p1t3cln, ecu_gpaq_p4t6cln, ecu_gpaq_p7t9cln, ecu_gpaq_p10t12cln
+#' ecu_gpaq_p13t15cln, ecu_gpaq_p1t3_met, ecu_gpaq_p4t6_met, ecu_gpaq_p7t9_met, ecu_gpaq_p10t12_met, ecu_gpaq_p13t15_met
+#' ecu_gpaq_ptotal_met, ecu_gpaq_ptotalday_met, ecu_gpaq_pworkday_met, ecu_gpaq_ptravelday_met, ecu_gpaq_precday_met
+#' ecu_gpaq_per_work_met, ecu_gpaq_per_trans_met, ecu_gpaq_per_rec_met, ecu_gpaq_met_who, ecu_gpaq_p1t3_uw, ecu_gpaq_p4t6_uw
+#' ecu_gpaq_p7t9_uw, ecu_gpaq_p10t12_uw, ecu_gpaq_p13t15_uw, ecu_gpaq_ptotal_uw, ecu_gpaq_ptotalday_uw, ecu_gpaq_pworkday_uw
+#' ecu_gpaq_ptravelday_uw, ecu_gpaq_precday_uw, ecu_gpaq_per_work_uw, ecu_gpaq_per_trans_uw, ecu_gpaq_per_rec_uw
+#' ecu_gpaq_work, ecu_gpaq_trans, ecu_gpaq_rec, ecu_gpaq_vig_activ, ecu_gpaq_cln, ecu_gpaq_cln_sedentary
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_gpaq_pre <- function(trial_data) {
+  
+  trial_data <- primary_coding_pop_gpaq_vars_pre(trial_data)
+  trial_data <- primary_coding_pop_gpaq_calc(trial_data)
+  
+  return(trial_data)
+  
+}
+
+
+#' Primary coding Global Physical Activity Questionnaire (GPAQ) post COVID
+#' 
+#' adds the following column to surveyfrageboge: 
+#' ecu_gpaq_p3_post, ecu_gpaq_p6_post, ecu_gpaq_p9_post, ecu_gpaq_p12_post, ecu_gpaq_p15_post, ecu_gpaq_p16_post, ecu_gpaq_p2cln_post
+#' ecu_gpaq_p3cln_post, ecu_gpaq_p5cln_post, ecu_gpaq_p6cln_post, ecu_gpaq_p8cln_post, ecu_gpaq_p9cln_post, ecu_gpaq_p11cln_post
+#' ecu_gpaq_p12cln_post, ecu_gpaq_p14cln_post, ecu_gpaq_p15cln_post, ecu_gpaq_valid_post, ecu_gpaq_p16cln_post, ecu_gpaq_p1t3cln_post 
+#' ecu_gpaq_p4t6cln_post, ecu_gpaq_p7t9cln_post, ecu_gpaq_p10t12cln_post, ecu_gpaq_p13t15cln_post, ecu_gpaq_p1t3_met_post, ecu_gpaq_p4t6_met_post
+#' ecu_gpaq_p7t9_met_post, ecu_gpaq_p10t12_met_post, ecu_gpaq_p13t15_me_post, ecu_gpaq_ptotal_met_post, ecu_gpaq_ptotalday_met_post
+#' ecu_gpaq_pworkday_met_post, ecu_gpaq_ptravelday_met_post, ecu_gpaq_precday_met_post, ecu_gpaq_per_work_met_post, ecu_gpaq_per_trans_met_post
+#' ecu_gpaq_per_rec_met_post, ecu_gpaq_met_who_post, ecu_gpaq_p1t3_uw_post, ecu_gpaq_p4t6_uw_post, ecu_gpaq_p7t9_uw_post, ecu_gpaq_p10t12_uw_post
+#' ecu_gpaq_p13t15_uw_post, ecu_gpaq_ptotal_uw_post, ecu_gpaq_ptotalday_uw_post, ecu_gpaq_pworkday_uw_post, ecu_gpaq_ptravelday_uw_post
+#' ecu_gpaq_precday_uw_post, ecu_gpaq_per_work_uw_post, ecu_gpaq_per_trans_uw_post, ecu_gpaq_per_rec_uw_post, ecu_gpaq_work_post, ecu_gpaq_trans_post 
+#' ecu_gpaq_rec_post, ecu_gpaq_vig_activ_post, ecu_gpaq_cln_post, ecu_gpaq_cln_sedentary_post
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_gpaq_post <- function(trial_data) {
+  
+  trial_data <- primary_coding_pop_gpaq_vars_post(trial_data)
+  trial_data <- primary_coding_pop_gpaq_calc(trial_data)
+  
+  trial_data$surveyfrageboge <- trial_data$surveyfrageboge %>%
+    rename_with(~ paste0(., "_post"), .data$ecu_gpaq_p2cln:.data$ecu_gpaq_cln_sedentary)
+ 
+  return(trial_data)
+  
+}
+
+
 # POP Wrapper primary coding ==================================================
 
 #' Primary coding POP Data
@@ -667,6 +725,14 @@ primary_coding_pop <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_pop_pss() did not work. This is likely due to missing variables.")
              print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_gpaq_pre(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_gpaq_pre () did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_gpaq_post(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_gpaq_post () did not work. This is likely due to missing variables.")
+             print(e)})
   
   catw("Primary Coding done")
   
@@ -688,3 +754,246 @@ get_ecu_background_pop <- function(staatsang, gebland, gebland2){
                                                TRUE ~ "Nein"))
   return(ecu_migration_background)
 }
+
+
+#' Primary coding GPAQ variable/column selection for GPAQ pre COVID
+#' 
+#' @param trial_data A secuTrial data object
+
+primary_coding_pop_gpaq_vars_pre <- function(trial_data) {
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    mutate(p1 = .data$gpaq1,
+           p2 = .data$gpaq2a,
+           p3a = .data$gpaq3a_hh,
+           p3b = .data$gpaq3a_mm,
+           p4 = .data$gpaq4,
+           p5 = .data$gpaq5a,
+           p6a = .data$gpaq6a_hh,
+           p6b = .data$gpaq6a_mm,
+           p7 = .data$gpaq7,
+           p8 = .data$gpaq8a,
+           p9a = .data$gpaq9a_hh,
+           p9b = .data$gpaq9a_mm,
+           p10 = .data$gpaq10,
+           p11 = .data$gpaq11a,
+           p12a = .data$gpaq12a_hh,
+           p12b = .data$gpaq12a_mm,
+           p13 = .data$gpaq13,
+           p14 = .data$gpaq14a,
+           p15a = .data$gpaq15a_hh,
+           p15b = .data$gpaq15a_mm,
+           p16a = .data$gpaq16a_hh,
+           p16b = .data$gpaq16a_mm) 
+  
+  return(trial_data)
+}
+
+
+#' Primary coding GPAQ variable/column selection for GPAQ post COVID
+#' 
+#' @param trial_data A secuTrial data object
+
+primary_coding_pop_gpaq_vars_post <- function(trial_data) {
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    mutate(p1 = .data$gpaq1,
+           p2 = .data$gpaq2b,
+           p3a = .data$gpaq3b_hh,
+           p3b = .data$gpaq3b_mm,
+           p4 = .data$gpaq4,
+           p5 = .data$gpaq5b,
+           p6a = .data$gpaq6b_hh,
+           p6b = .data$gpaq6b_mm,
+           p7 = .data$gpaq7,
+           p8 = .data$gpaq8b,
+           p9a = .data$gpaq9b_hh,
+           p9b = .data$gpaq9b_mm,
+           p10 = .data$gpaq10,
+           p11 = .data$gpaq11b,
+           p12a = .data$gpaq12b_hh,
+           p12b = .data$gpaq12b_mm,
+           p13 = .data$gpaq13,
+           p14 = .data$gpaq14b,
+           p15a = .data$gpaq15b_hh,
+           p15b = .data$gpaq15b_mm,
+           p16a = .data$gpaq16b_hh,
+           p16b = .data$gpaq16b_mm)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding GPAQ calculation
+#' 
+#' @param trial_data A secuTrial data object
+
+primary_coding_pop_gpaq_calc <- function(trial_data) {
+  
+  trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
+    
+    mutate (
+      # create minute variables for vigorous work activity
+      p3amin = case_when(is.na(.data$p3a) ~ 0, TRUE ~ .data$p3a*60),
+      p3bmin = case_when(is.na(.data$p3b) ~ 0, TRUE ~ .data$p3b),
+      ecu_gpaq_p3 = .data$p3amin + .data$p3bmin,
+      # create minute variables for moderate work activity
+      p6amin = case_when(is.na(.data$p6a) ~ 0, TRUE ~ .data$p6a*60),
+      p6bmin = case_when(is.na(.data$p6b) ~ 0, TRUE ~ .data$p6b), 
+      ecu_gpaq_p6 = .data$p6amin + .data$p6bmin, 
+      # create minute variables for travel activity
+      p9amin = case_when(is.na(.data$p9a) ~ 0, TRUE ~ .data$p9a*60),
+      p9bmin = case_when(is.na(.data$p9b) ~ 0, TRUE ~ .data$p9b),
+      ecu_gpaq_p9 = .data$p9amin + .data$p9bmin, 
+      # create minute variables for vigorous recreation activity
+      p12amin = case_when(is.na(.data$p12a) ~ 0, TRUE ~ .data$p12a*60),
+      p12bmin = case_when(is.na(.data$p12b) ~ 0, TRUE ~ .data$p12b),
+      ecu_gpaq_p12 = .data$p12amin + .data$p12bmin, 
+      # create minute variable for moderate recreation activity
+      p15amin = case_when(is.na(.data$p15a) ~ 0, TRUE ~ .data$p15a*60),
+      p15bmin = case_when(is.na(.data$p15b) ~ 0, TRUE ~ .data$p15b),
+      ecu_gpaq_p15 = .data$p15amin + .data$p15bmin, 
+      # create minute variable for sedentary activity
+      p16amin = case_when(is.na(.data$p16a) ~ 0, TRUE ~ .data$p16a*60),
+      p16bmin = case_when(is.na(.data$p16b) ~ 0, TRUE ~ .data$p16b),
+      ecu_gpaq_p16 = .data$p16amin + .data$p16bmin,
+      
+      # check for valid response to p2
+      ecu_gpaq_p2cln = case_when((.data$p1 == 1 & (.data$p2 > 0 & .data$p2 < 8)) | (.data$p1 == 0 & (.data$p2 == 0 | is.na(.data$p2))) ~ 1, TRUE ~ 2),
+      # check for valid response to p3
+      ecu_gpaq_p3cln = case_when((.data$ecu_gpaq_p2cln == 1 & .data$p2 > 0 & .data$p2 < 8 & .data$ecu_gpaq_p3 > 9 & .data$ecu_gpaq_p3 < 961) | 
+                                   (.data$ecu_gpaq_p2cln == 1 & (.data$p2 == 0 | is.na(.data$p2)) & .data$ecu_gpaq_p3 == 0) ~ 1, TRUE ~ 2),
+      # check for valid response to p5
+      ecu_gpaq_p5cln = case_when((.data$p4 == 1 & (.data$p5 > 0 & .data$p5 < 8)) | (.data$p4 == 0 & (.data$p5 == 0 | is.na(.data$p5))) ~ 1, TRUE ~ 2),
+      # check for valid response to p6
+      ecu_gpaq_p6cln = case_when((.data$ecu_gpaq_p5cln == 1 & .data$p5 > 0 & .data$p5 < 8 & .data$ecu_gpaq_p6 > 9 & .data$ecu_gpaq_p6 < 961) | 
+                                   (.data$ecu_gpaq_p5cln == 1 & (.data$p5 == 0 | is.na(.data$p5)) & .data$ecu_gpaq_p6 == 0) ~ 1, TRUE ~ 2),
+      # check for valid response to p8
+      ecu_gpaq_p8cln = case_when((.data$p7 == 1 & (.data$p8 > 0 & .data$p8 < 8)) | (.data$p7 == 0 & (.data$p8 == 0 | is.na(.data$p8))) ~ 1, TRUE ~ 2),
+      # check for valid response to p9
+      ecu_gpaq_p9cln = case_when((.data$ecu_gpaq_p8cln == 1 & .data$p8 > 0 & .data$p8 < 8 & .data$ecu_gpaq_p9 > 9 & .data$ecu_gpaq_p9 < 961) | 
+                                   (.data$ecu_gpaq_p8cln == 1 & (.data$p8 == 0 | is.na(.data$p8)) & .data$ecu_gpaq_p9 == 0) ~ 1, TRUE ~ 2),
+      # check for valid response to p11
+      ecu_gpaq_p11cln = case_when((.data$p10 == 1 & (.data$p11 > 0 & .data$p11 < 8)) | (.data$p10 == 0 & (.data$p11 == 0 | is.na(.data$p11))) ~ 1, TRUE ~ 2),
+      # check for valid response to p12
+      ecu_gpaq_p12cln = case_when((.data$ecu_gpaq_p11cln == 1 & .data$p11 > 0 & .data$p11 < 8 & .data$ecu_gpaq_p12 > 9 & .data$ecu_gpaq_p12 < 961) | 
+                                    (.data$ecu_gpaq_p11cln == 1 & (.data$p11 == 0 | is.na(.data$p11)) & .data$ecu_gpaq_p12 == 0) ~ 1, TRUE ~ 2),
+      # check for valid response to p14
+      ecu_gpaq_p14cln = case_when((.data$p13 == 1 & (.data$p14 > 0 & .data$p14 < 8)) | (.data$p13 == 0 & (.data$p14 == 0 | is.na(.data$p14))) ~ 1, TRUE ~ 2),
+      # check for valid response to p15
+      ecu_gpaq_p15cln = case_when((.data$ecu_gpaq_p14cln == 1 & .data$p14 > 0 & .data$p14 < 8 & .data$ecu_gpaq_p15 > 9 & .data$ecu_gpaq_p15 < 961) | 
+                                    (.data$ecu_gpaq_p14cln == 1 & (.data$p14 == 0 | is.na(.data$p14)) & .data$ecu_gpaq_p15 == 0) ~ 1, TRUE ~ 2),
+      
+      # check whether at least one sub-domain has a valid answer (either no activity ("0") or activity ("1") with information about days and minutes per week)
+      ecu_gpaq_valid = case_when((.data$ecu_gpaq_p2cln == 1 & .data$ecu_gpaq_p3cln == 1) | # vigorous work activity with days and minutes per week or no vigorous work activity AND less than 960 minutes per week 
+                                   (.data$ecu_gpaq_p5cln == 1 & .data$ecu_gpaq_p6cln == 1) | # moderate work activity days and with minutes per week or no moderate work activity AND less than 960 minutes per week 
+                                   (.data$ecu_gpaq_p8cln == 1 & .data$ecu_gpaq_p9cln == 1) | # travel activity with days and minutes per week or no travel activity AND less than 960 minutes per week 
+                                   (.data$ecu_gpaq_p11cln == 1 & .data$ecu_gpaq_p12cln == 1) | # vigorous recreation activity with days and minutes per week or no vigorous recreation activity AND less than 960 minutes per week 
+                                   (.data$ecu_gpaq_p14cln == 1 & .data$ecu_gpaq_p15cln == 1) ~ 1, # moderate recreation activity with days and minutes per week oder no moderate recreation activity AND less than 960 minutes per week 
+                                 TRUE ~ 2),
+      # check for valid response to p1 through p3a & p3b
+      ecu_gpaq_p1t3cln = case_when((.data$ecu_gpaq_p3cln == 1 & .data$ecu_gpaq_valid == 1) | (is.na(.data$p1) & (.data$p2 == 0 | is.na(.data$p2)) & .data$ecu_gpaq_p3 == 0 & .data$ecu_gpaq_valid == 1) ~ 1, TRUE ~ 2),
+      # check for valid response to p4 through p6a & p6b
+      ecu_gpaq_p4t6cln = case_when((.data$ecu_gpaq_p5cln == 1 & .data$ecu_gpaq_valid == 1) | (is.na(.data$p4) & (.data$p5 == 0 | is.na(.data$p5)) & .data$ecu_gpaq_p6 == 0 & .data$ecu_gpaq_valid == 1) ~ 1, TRUE ~ 2),
+      # check for valid response to p7 through p9a & p9b
+      ecu_gpaq_p7t9cln = case_when((.data$ecu_gpaq_p8cln == 1 & .data$ecu_gpaq_valid == 1) | (is.na(.data$p7) & (.data$p8 == 0 | is.na(.data$p8)) & .data$ecu_gpaq_p9 == 0 & .data$ecu_gpaq_valid == 1) ~ 1, TRUE ~ 2),
+      # check for valid response to p10 through p12a & p12b
+      ecu_gpaq_p10t12cln = case_when((.data$ecu_gpaq_p11cln == 1 & .data$ecu_gpaq_valid == 1) | (is.na(.data$p10) & (.data$p11 == 0 | is.na(.data$p11)) & .data$ecu_gpaq_p12 == 0 & .data$ecu_gpaq_valid == 1) ~ 1, TRUE ~ 2),
+      # check for valid response to p13 through p15a & p15b
+      ecu_gpaq_p13t15cln = case_when((.data$ecu_gpaq_p14cln == 1 & .data$ecu_gpaq_valid == 1) | (is.na(.data$p13) & (.data$p14 == 0 | is.na(.data$p14)) & .data$ecu_gpaq_p15 == 0 & .data$ecu_gpaq_valid == 1) ~ 1, TRUE ~ 2),
+      # check for valid response to p16
+      ecu_gpaq_p16cln = case_when(.data$ecu_gpaq_p16 < 1441 & .data$ecu_gpaq_valid == 1 ~ 1, TRUE ~ 2),
+      
+      # built MET-value variables for activity per week 
+      ## MET value for vigorous work activity per week
+      ecu_gpaq_p1t3_met = case_when(.data$ecu_gpaq_p1t3cln == 1 ~ .data$p2 * .data$cu_gpaq_p3 * 8, TRUE ~ NA_real_),
+      ## MET value for moderate work activity per week
+      ecu_gpaq_p4t6_met = case_when(.data$ecu_gpaq_p4t6cln == 1 ~ .data$p5 * .data$ecu_gpaq_p6 * 4, TRUE ~ NA_real_),
+      ## MET value for travel activity per week
+      ecu_gpaq_p7t9_met = case_when(.data$ecu_gpaq_p7t9cln == 1 ~ .data$p8 * .data$ecu_gpaq_p9 * 4, TRUE ~ NA_real_),
+      ## MET value for vigorous recreation activity per week 
+      ecu_gpaq_p10t12_met = case_when(.data$ecu_gpaq_p10t12cln == 1 ~ .data$p11 * .data$ecu_gpaq_p12 * 8, TRUE ~ NA_real_),
+      ## MET value for moderate recreation activity per week
+      ecu_gpaq_p13t15_met = case_when(.data$ecu_gpaq_p13t15cln == 1 ~ .data$p14 * .data$ecu_gpaq_p15 * 4, TRUE ~ NA_real_),
+      ## MET value for total activity per week 
+      ecu_gpaq_ptotal_met = ifelse(is.na(.data$ecu_gpaq_p1t3_met), 0, .data$ecu_gpaq_p1t3_met) +
+        ifelse(is.na(.data$ecu_gpaq_p4t6_met), 0, .data$ecu_gpaq_p4t6_met) +
+        ifelse(is.na(.data$ecu_gpaq_p7t9_met), 0, .data$ecu_gpaq_p7t9_met) +
+        ifelse(is.na(.data$ecu_gpaq_p10t12_met), 0, .data$ecu_gpaq_p10t12_met) +
+        ifelse(is.na(.data$ecu_gpaq_p13t15_met), 0, .data$ecu_gpaq_p13t15_met),
+      ecu_gpaq_ptotal_met = case_when(.data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ .data$ecu_gpaq_ptotal_met),
+      ## MET value for average activity per day
+      ecu_gpaq_ptotalday_met = .data$ecu_gpaq_ptotal_met / 7,
+      ## MET value for average work-related activity per day
+      ecu_gpaq_pworkday_met = (.data$ecu_gpaq_p1t3_met + .data$ecu_gpaq_p4t6_met) / 7,
+      ## MET value for average transport-related activity per day
+      ecu_gpaq_ptravelday_met = .data$ecu_gpaq_p7t9_met / 7,
+      ## MET value for average recreation-related activity per day
+      ecu_gpaq_precday_met = (.data$ecu_gpaq_p10t12_met + .data$ecu_gpaq_p13t15_met) / 7,
+      ## MET value for percent of all activity from work-related activities
+      ecu_gpaq_per_work_met = ((.data$ecu_gpaq_p1t3_met + .data$ecu_gpaq_p4t6_met) / .data$ecu_gpaq_ptotal_met) * 100,
+      ## MET value for percent of all activity from transportation-related activities
+      ecu_gpaq_per_trans_met = (.data$ecu_gpaq_p7t9_met / .data$ecu_gpaq_ptotal_met) * 100, 
+      ## MET value for percent of all activity from recreation-related activities
+      ecu_gpaq_per_rec_met = ((.data$ecu_gpaq_p10t12_met + .data$ecu_gpaq_p13t15_met) / .data$ecu_gpaq_ptotal_met) * 100,
+      
+      # check if total MET activity meets who recommendations 
+      ecu_gpaq_met_who = case_when(.data$ecu_gpaq_ptotal_met < 600 ~ "Does not meet recommendations",
+                                   .data$ecu_gpaq_ptotal_met >= 600 ~ "Meets recommendations"),
+      
+      # built unweighted value variables for activity per week
+      ## unweighted value for vigorous work activity per week 
+      ecu_gpaq_p1t3_uw = case_when(.data$ecu_gpaq_p1t3cln == 1 ~ .data$p2 * .data$ecu_gpaq_p3, TRUE ~ NA),
+      ## unweighted value for moderate work activity per week
+      ecu_gpaq_p4t6_uw = case_when(.data$ecu_gpaq_p4t6cln == 1 ~ .data$p5 * .data$ecu_gpaq_p6, TRUE ~ NA),
+      ## unweighted value for travel activity per week
+      ecu_gpaq_p7t9_uw = case_when(.data$ecu_gpaq_p7t9cln == 1 ~ .data$p8 * .data$ecu_gpaq_p9, TRUE ~ NA),
+      ## unweighted value for vigorous recreation activity per week 
+      ecu_gpaq_p10t12_uw = case_when(.data$ecu_gpaq_p10t12cln == 1 ~ .data$p11 * .data$ecu_gpaq_p12, TRUE ~ NA),
+      ## unweighted value for moderate recreation activity per week
+      ecu_gpaq_p13t15_uw = case_when(.data$ecu_gpaq_p13t15cln == 1 ~ .data$p14 * .data$ecu_gpaq_p15, TRUE ~ NA),
+      ## unweighted value for total activity per week
+      ecu_gpaq_ptotal_uw = ifelse(is.na(.data$ecu_gpaq_p1t3_uw), 0, .data$ecu_gpaq_p1t3_uw) +
+        ifelse(is.na(.data$ecu_gpaq_p4t6_uw), 0, .data$ecu_gpaq_p4t6_uw) +
+        ifelse(is.na(.data$ecu_gpaq_p7t9_uw), 0, .data$ecu_gpaq_p7t9_uw) +
+        ifelse(is.na(.data$ecu_gpaq_p10t12_uw), 0, .data$ecu_gpaq_p10t12_uw) +
+        ifelse(is.na(.data$ecu_gpaq_p13t15_uw), 0, .data$ecu_gpaq_p13t15_uw),
+      ecu_gpaq_ptotal_uw = case_when(.data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ .data$ecu_gpaq_ptotal_uw), 
+      ## unweighted value for average activity per day
+      ecu_gpaq_ptotalday_uw = .data$ecu_gpaq_ptotal_uw / 7,
+      ## unweighted value for average work-related activity per day
+      ecu_gpaq_pworkday_uw = (.data$ecu_gpaq_p1t3_uw + .data$ecu_gpaq_p4t6_uw) / 7,
+      ## unweighted value for average transport-related activity per day
+      ecu_gpaq_ptravelday_uw = .data$ecu_gpaq_p7t9_uw / 7,
+      ## unweighted value for average recreation-related activity per day
+      ecu_gpaq_precday_uw = (.data$ecu_gpaq_p10t12_uw + .data$ecu_gpaq_p13t15_uw) / 7,
+      ## unweighted value for percent of all activity from work-related activities
+      ecu_gpaq_per_work_uw = ((.data$ecu_gpaq_p1t3_uw + .data$ecu_gpaq_p4t6_uw) / .data$ecu_gpaq_ptotal_uw) * 100,
+      ## unweighted value for percent of all activity from transportation-related activities
+      ecu_gpaq_per_trans_uw = (.data$ecu_gpaq_p7t9_uw / .data$ecu_gpaq_ptotal_uw) * 100, 
+      ## unweighted value for percent of all activity from recreation-related activities
+      ecu_gpaq_per_rec_uw = ((.data$ecu_gpaq_p10t12_uw + .data$ecu_gpaq_p13t15_uw) / .data$ecu_gpaq_ptotal_uw) * 100,
+      
+      # check if respondent did any activity per subdomain
+      # TODO: wenn valid == 0 (nicht valid), dann NA (sonst bekommen auch diese ein Label)
+      ## indicator for any work-related activity
+      ecu_gpaq_work = case_when(.data$p1 == 1 | .data$p4 == 1 ~ "Did work activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no work activity"),
+      ## indicator for any transportation-related activity
+      ecu_gpaq_trans = case_when(.data$p7 == 1 ~ "Did transport activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no transport activity"),
+      ## indicator for any recreation-related activity
+      ecu_gpaq_rec = case_when(.data$p10 == 1 | .data$p13 == 1 ~ "Did recreation activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no recreation activity"),
+      
+      # check if respondents did any vigorous physical activity
+      ecu_gpaq_vig_activ = case_when(.data$p1 == 1 | .data$p10 == 1 ~ "Did vigorous physical activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no vigorous physical activity"),
+      
+      # check to see if all physical activitiy responses, as a combined set, are valid 
+      # (all subsets of respones must be clean and at least one subset of responses must have a resonse (not missing))
+      ecu_gpaq_cln = case_when(.data$ecu_gpaq_valid == 1 & .data$ecu_gpaq_p1t3cln == 1 & .data$ecu_gpaq_p4t6cln == 1 & .data$ecu_gpaq_p7t9cln == 1 & .data$ecu_gpaq_p10t12cln == 1 & .data$ecu_gpaq_p13t15cln == 1 & 
+                                 (!is.na(.data$p1) | !is.na(.data$p4) | !is.na(.data$p7) | !is.na(.data$p10) | !is.na(.data$p13)) ~ 1, 
+                               TRUE ~ 2),
+      ecu_gpaq_cln_sedentary = case_when(.data$ecu_gpaq_valid == 1 & .data$ecu_gpaq_p16cln == 1 ~ 1, TRUE ~ 2)
+    ) %>%
+    select(-(.data$p1:.data$p16b), -c(.data$p3amin, .data$p3bmin, .data$p6amin, .data$p6bmin, .data$p9amin, .data$p9bmin, .data$p12amin, .data$p12bmin, .data$p15amin, .data$p15bmin, .data$p16amin, .data$p16bmin))
+  
+  return(trial_data)
+} 
