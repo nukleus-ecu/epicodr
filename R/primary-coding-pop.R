@@ -359,13 +359,11 @@ primary_coding_pop_facitf <- function(trial_data) {
 primary_coding_pop_brs <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_brs_sum = calculate_brs_sum(.data$brs1, .data$brs2, .data$brs3, .data$brs4, .data$brs5, .data$brs6),
            ecu_brs_n = calculate_brs_n(.data$brs1, .data$brs2, .data$brs3, .data$brs4, .data$brs5, .data$brs6),
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
-           ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) %>%
-    ungroup()
-  
+           ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) 
+    
   return(trial_data)
 }
 
