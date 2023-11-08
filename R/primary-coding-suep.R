@@ -382,7 +382,6 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
   
   new_vars_to_add <- form_to_add_vars %>%
-    rowwise() %>%
     mutate(ecu_brs_2 = recode_brs(.data$brs_2.factor),
            ecu_brs_4 = recode_brs(.data$brs_4.factor),
            ecu_brs_6 = recode_brs(.data$brs_6.factor),
@@ -390,7 +389,6 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
            ecu_brs_n = calculate_brs_n(.data$brs_1, .data$ecu_brs_2, .data$brs_3, .data$ecu_brs_4, .data$brs_5, .data$ecu_brs_6),
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) %>%
-    ungroup() %>%
     select(matches(visitid), starts_with("ecu"))
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
@@ -512,7 +510,7 @@ primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   trial_data[["ecu_long_symptom_data"]] <- build_suep_long_symptom_df(trial_data, pid)
   
@@ -548,7 +546,7 @@ primary_coding_suep <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   # Demographics
   tryCatch(expr = {trial_data <- primary_coding_suep_age(trial_data, pid, visitid)},
@@ -725,20 +723,20 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   # Visit Dates (one row per pat per visit) ------------------------------------
   
-  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   visit_data <- trial_data$scv %>%
-    full_join (trial_data$m2, by=c(pid, mnpvislabel, docid)) %>%
-    full_join (trial_data$m, by=c(pid, mnpvislabel, docid)) %>%
+    full_join (trial_data$m2, by=c(pid, visit_label_var_name, docid)) %>%
+    full_join (trial_data$m, by=c(pid, visit_label_var_name, docid)) %>%
     filter(.data$pr_visit_mode.factor != "Zus\u00e4tzliche Dokumentationsvisite" | is.na(.data$pr_visit_mode.factor) |
              .data$pr_visit_mode.factor != "Telefonvisite (PROM)") %>%
-    #filter(mnpvislabel != "3M Follow-Up" | mnpvislabel != "12M Follow-Up") %>%
+    #filter(visit_label_var_name != "3M Follow-Up" | visit_label_var_name != "12M Follow-Up") %>%
     mutate(visit_date = coalesce(.data$gec_pr_docudate_1.date, .data$pr_docudate.date, .data$pr_incl_date.date)) %>%
     arrange(.data$visit_date) %>%
     group_by(!!sym(pid)) %>%
-    mutate(!!sym(mnpvislabel) := str_replace(!!sym(mnpvislabel), "#", as.character(row_number()))) %>%
+    mutate(!!sym(visit_label_var_name) := str_replace(!!sym(visit_label_var_name), "#", as.character(row_number()))) %>%
     ungroup() %>%
-    select(pid, mnpvislabel, .data$visit_date)
+    select(pid, visit_label_var_name, .data$visit_date)
   
   
   # Inclusion groups (one row per pat) -----------------------------------------
@@ -787,9 +785,9 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   # Date of last Treatment Update ----------------------------------------------
   
   treatment_update_date <- trial_data$fuv3 %>%
-    left_join (trial_data$vp %>% select (.data$mnpvisid, mnpvislabel), by = "mnpvisid") %>%
+    left_join (trial_data$vp %>% select (.data$mnpvisid, visit_label_var_name), by = "mnpvisid") %>%
     filter (.data$pr_check_treat.factor == "Ja") %>% #only treatment_update == YES
-    rename (treatment_update_visit = mnpvislabel,
+    rename (treatment_update_visit = visit_label_var_name,
             treatment_update.datetime = .data$fuv3_date.date) %>%
     group_by (!!sym(pid)) %>%
     slice_max (.data$treatment_update.datetime, with_ties = FALSE) %>%
@@ -888,7 +886,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
     full_join(death_data, by=pid) %>%
     full_join(oxy_data, by=pid) %>%
     full_join(hospital_data, by=pid) %>%
-    group_by(!!sym(pid),!!sym(mnpvislabel)) %>%
+    group_by(!!sym(pid),!!sym(visit_label_var_name)) %>%
     mutate(
       is_hospital = case_when(.data$visit_date %within% .data$ecu_hospital_interval ~ 1,
                               .data$ward.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
@@ -1002,7 +1000,7 @@ build_suep_long_symptom_df <- function(trial_data, pid){
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   # Date of Screening visit
   scv_date <- trial_data$scv %>%
@@ -1010,23 +1008,23 @@ build_suep_long_symptom_df <- function(trial_data, pid){
   
   # Date of Study visits
   visit_date <- trial_data$m2 %>%
-    #left_join(select(trial_data$vp, .data$mnpvisid, mnpvislabel), by = c("mnpvisid", "mnpvislabel")) %>%
-    select(pid, mnpvislabel, .data$gec_pr_docudate_1.date) %>%
-    mutate(mnpvislabel = case_when(!!sym(mnpvislabel) == "Abschluss des Akutverlaufs" ~ "end_acute.date", 
-                                   !!sym(mnpvislabel) == "3M Follow-Up" ~ "m3_fup.date", 
-                                   !!sym(mnpvislabel) == "12M Follow-Up" ~ "m12_fup.date")) %>%
-    pivot_wider(names_from = mnpvislabel, values_from =  .data$gec_pr_docudate_1.date, id_cols = pid)
+    #left_join(select(trial_data$vp, .data$mnpvisid, visit_label_var_name), by = c("mnpvisid", "visit_label_var_name")) %>%
+    select(pid, visit_label_var_name, .data$gec_pr_docudate_1.date) %>%
+    mutate(visit_label_var_name = case_when(!!sym(visit_label_var_name) == "Abschluss des Akutverlaufs" ~ "end_acute.date", 
+                                   !!sym(visit_label_var_name) == "3M Follow-Up" ~ "m3_fup.date", 
+                                   !!sym(visit_label_var_name) == "12M Follow-Up" ~ "m12_fup.date")) %>%
+    pivot_wider(names_from = visit_label_var_name, values_from =  .data$gec_pr_docudate_1.date, id_cols = pid)
   
   visit_date_long <- trial_data$m2 %>%
-    #left_join(select(trial_data$vp, .data$mnpvisid, mnpvislabel), by = c("mnpvisid", "mnpvislabel")) %>%
-    rename(visit_label = mnpvislabel,
+    #left_join(select(trial_data$vp, .data$mnpvisid, visit_label_var_name), by = c("mnpvisid", "visit_label_var_name")) %>%
+    rename(visit_label = visit_label_var_name,
            visit_date.date = .data$gec_pr_docudate_1.date) %>%
     select(pid, .data$visit_label, .data$visit_date.date)
   
   # Date of last Symptom Update
   symptom_update_date <- trial_data$fuv3 %>%
-    #left_join(select(trial_data$vp, .data$mnpvisid, mnpvislabel), by = c("mnpvisid", "mnpvislabel")) %>%
-    rename(symptom_update_visit = mnpvislabel, 
+    #left_join(select(trial_data$vp, .data$mnpvisid, visit_label_var_name), by = c("mnpvisid", "visit_label_var_name")) %>%
+    rename(symptom_update_visit = visit_label_var_name, 
            symptom_update.datetime = .data$fuv3_date.date) %>%
     group_by(!!sym(pid)) %>%
     slice_max(.data$symptom_update.datetime, with_ties = FALSE) %>% # keep row for each pid which contains max(symptom_update.datetime) 
@@ -1403,7 +1401,7 @@ build_pcs_score_suep_df_without_proms <- function(trial_data, pid) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   ecu_pcs_score_3m <- calculate_pcs_score_suep(trial_data, pid, days_of_pcss_time_diff = 61, vector_of_pcss_fup_visits = c("3M Follow-Up", "12M Follow-Up")) 
   ecu_pcs_score_12m <- calculate_pcs_score_suep(trial_data, pid, days_of_pcss_time_diff = 335, vector_of_pcss_fup_visits = c("12M Follow-Up")) 
@@ -1442,7 +1440,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  mnpvislabel <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   ecu_pcs_score_3m <- calculate_pcs_score_suep(trial_data, pid, days_of_pcss_time_diff = 61, vector_of_pcss_fup_visits = c("3M Follow-Up", "12M Follow-Up")) 
   ecu_pcs_score_12m <- calculate_pcs_score_suep(trial_data, pid, days_of_pcss_time_diff = 335, vector_of_pcss_fup_visits = c("12M Follow-Up")) 
@@ -1454,13 +1452,13 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
   trial_data <- primary_coding_suep_promis_29_sleep(trial_data, visitid)
   
   prom <- trial_data$prom %>%
-    filter(!!sym(mnpvislabel) == "3M Follow-Up" | !!sym(mnpvislabel) == "12M Follow-Up")
+    filter(!!sym(visit_label_var_name) == "3M Follow-Up" | !!sym(visit_label_var_name) == "12M Follow-Up")
   promext <- trial_data$promext %>%
-    filter(!!sym(mnpvislabel) == "3M Follow-Up" | !!sym(mnpvislabel) == "12M Follow-Up")
+    filter(!!sym(visit_label_var_name) == "3M Follow-Up" | !!sym(visit_label_var_name) == "12M Follow-Up")
   
   relevante_proms <- prom %>%
-    left_join(promext, by = c(pid, mnpvislabel)) %>%
-    select(pid, mnpvislabel, .data$cfs.factor, .data$ecu_cfs_seid_sum, .data$ecu_cfs_seid_cat, .data$cfs_seid_crit2.factor, 
+    left_join(promext, by = c(pid, visit_label_var_name)) %>%
+    select(pid, visit_label_var_name, .data$cfs.factor, .data$ecu_cfs_seid_sum, .data$ecu_cfs_seid_cat, .data$cfs_seid_crit2.factor, 
            .data$cfs_seid_crit4.factor, .data$cfs_seid_crit5.factor, .data$ecu_promis29_fatigue_sum, .data$ecu_promis29_fatigue_cat_2, 
            .data$dysp.factor, .data$ecu_promis29_dyspnea_n, .data$ecu_promis29_dyspnea_sum, .data$ecu_promis29_dyspnea_cat_2, 
            .data$pain_loc_chest.factor, .data$pain_loc_abd.factor, .data$pain_loc_head.factor, .data$pain_dn2_6.factor, 
@@ -1468,7 +1466,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
            .data$ecu_promis29_sleep_cat_2)
   
   ecu_pcs_score_3m <- ecu_pcs_score_3m %>%
-    left_join(relevante_proms, by = c(pid, "visit_label" = mnpvislabel)) %>%
+    left_join(relevante_proms, by = c(pid, "visit_label" = visit_label_var_name)) %>%
     mutate(complex_2_fatigue_sum_screen = case_when(.data$complex_2_fatigue_sum == 1 | .data$cfs.factor == "Ja" ~ 1,
                                                     TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_promis29 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_promis29_fatigue_cat_2 == "Fatigue" ~ 1,
@@ -1499,7 +1497,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
                                                      TRUE ~ .data$complex_12_sleep_sum))
   
   ecu_pcs_score_12m <- ecu_pcs_score_12m %>%
-    left_join(relevante_proms, by = c(pid, "visit_label" = mnpvislabel)) %>%
+    left_join(relevante_proms, by = c(pid, "visit_label" = visit_label_var_name)) %>%
     mutate(complex_2_fatigue_sum_screen = case_when(.data$complex_2_fatigue_sum == 1 | .data$cfs.factor == "Ja" ~ 1,
                                                     TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_promis29 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_promis29_fatigue_cat_2 == "Fatigue" ~ 1,
