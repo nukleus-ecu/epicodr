@@ -71,6 +71,13 @@ data_spss_export_prepared <- prepare_spss_export(data_primary_coded,
 # For other formats replace 'data_spss_export_prepared' with 'data_primary_coded' and "sav" with (one of "dta", "sas", "sav", "xpt")
 write_tsExport(data_spss_export_prepared, format = "sav", path = "data/export/", metadata = TRUE)
 
+# The export of ecu-generated tables like ecu_who_scale_per_visit_data", "ecu_pcs_score" or "ecu_long_symptom_data" in NAPKON SUEP is currently not available through write_tsExport() as shown above.
+# We are working on a solution.
+# For now, please use the following lines to export ecu-generated tables 
+haven::write_sav(data_spss_export_prepared$ecu_pcs_score, "data/export/ecu_pcs_score.sav")
+
+# replace "ecu_pcs_score" by the name of the ecu-generated table you would like to export 
+
 ```
 3. Run the script.
 4. Data is exported to folder [data/export](data/export).
@@ -89,7 +96,7 @@ write_tsExport(data_spss_export_prepared, format = "sav", path = "data/export/",
 
 Descriptions of the primary codings of the NAPKON cohort platforms SÜP, POP and HAP are available at the following link:
 
-[https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2FPrim%C3%A4rkodierung%20Datenauswertung%20_%20Primary%20coding%20Data%20analysis](https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2FPrim%C3%A4rkodierung%20Datenauswertung%20_%20Primary%20coding%20Data%20analysis)
+[https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2F06_Prim%C3%A4rkodierung%20Datenauswertung__Primary%20coding%20Data%20analysis](https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2F06_Prim%C3%A4rkodierung%20Datenauswertung__Primary%20coding%20Data%20analysis)
 
 Additionally, there are manuals that include variable categorizations, aids for calculating scores, defining normal ranges of laboratory parameters and clinical parameters. Further explanations are also available in the tutorial presentation. 
 
