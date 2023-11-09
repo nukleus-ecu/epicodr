@@ -904,7 +904,7 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       
       # built MET-value variables for activity per week 
       ## MET value for vigorous work activity per week
-      ecu_gpaq_p1t3_met = case_when(.data$ecu_gpaq_p1t3cln == 1 ~ .data$p2 * .data$cu_gpaq_p3 * 8, TRUE ~ NA_real_),
+      ecu_gpaq_p1t3_met = case_when(.data$ecu_gpaq_p1t3cln == 1 ~ .data$p2 * .data$ecu_gpaq_p3 * 8, TRUE ~ NA_real_),
       ## MET value for moderate work activity per week
       ecu_gpaq_p4t6_met = case_when(.data$ecu_gpaq_p4t6cln == 1 ~ .data$p5 * .data$ecu_gpaq_p6 * 4, TRUE ~ NA_real_),
       ## MET value for travel activity per week
@@ -929,11 +929,11 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       ## MET value for average recreation-related activity per day
       ecu_gpaq_precday_met = (.data$ecu_gpaq_p10t12_met + .data$ecu_gpaq_p13t15_met) / 7,
       ## MET value for percent of all activity from work-related activities
-      ecu_gpaq_per_work_met = ((.data$ecu_gpaq_p1t3_met + .data$ecu_gpaq_p4t6_met) / .data$ecu_gpaq_ptotal_met) * 100,
+      ecu_gpaq_per_work_met = round(((.data$ecu_gpaq_p1t3_met + .data$ecu_gpaq_p4t6_met) / .data$ecu_gpaq_ptotal_met) * 100, digits = 2),
       ## MET value for percent of all activity from transportation-related activities
-      ecu_gpaq_per_trans_met = (.data$ecu_gpaq_p7t9_met / .data$ecu_gpaq_ptotal_met) * 100, 
+      ecu_gpaq_per_trans_met = round((.data$ecu_gpaq_p7t9_met / .data$ecu_gpaq_ptotal_met) * 100, digits = 2),
       ## MET value for percent of all activity from recreation-related activities
-      ecu_gpaq_per_rec_met = ((.data$ecu_gpaq_p10t12_met + .data$ecu_gpaq_p13t15_met) / .data$ecu_gpaq_ptotal_met) * 100,
+      ecu_gpaq_per_rec_met = round(((.data$ecu_gpaq_p10t12_met + .data$ecu_gpaq_p13t15_met) / .data$ecu_gpaq_ptotal_met) * 100, digits = 2),
       
       # check if total MET activity meets who recommendations 
       ecu_gpaq_met_who = case_when(.data$ecu_gpaq_ptotal_met < 600 ~ "Does not meet recommendations",
@@ -966,11 +966,11 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       ## unweighted value for average recreation-related activity per day
       ecu_gpaq_precday_uw = (.data$ecu_gpaq_p10t12_uw + .data$ecu_gpaq_p13t15_uw) / 7,
       ## unweighted value for percent of all activity from work-related activities
-      ecu_gpaq_per_work_uw = ((.data$ecu_gpaq_p1t3_uw + .data$ecu_gpaq_p4t6_uw) / .data$ecu_gpaq_ptotal_uw) * 100,
+      ecu_gpaq_per_work_uw = round(((.data$ecu_gpaq_p1t3_uw + .data$ecu_gpaq_p4t6_uw) / .data$ecu_gpaq_ptotal_uw) * 100, digits = 2),
       ## unweighted value for percent of all activity from transportation-related activities
-      ecu_gpaq_per_trans_uw = (.data$ecu_gpaq_p7t9_uw / .data$ecu_gpaq_ptotal_uw) * 100, 
+      ecu_gpaq_per_trans_uw = round((.data$ecu_gpaq_p7t9_uw / .data$ecu_gpaq_ptotal_uw) * 100, digits = 2), 
       ## unweighted value for percent of all activity from recreation-related activities
-      ecu_gpaq_per_rec_uw = ((.data$ecu_gpaq_p10t12_uw + .data$ecu_gpaq_p13t15_uw) / .data$ecu_gpaq_ptotal_uw) * 100,
+      ecu_gpaq_per_rec_uw = round(((.data$ecu_gpaq_p10t12_uw + .data$ecu_gpaq_p13t15_uw) / .data$ecu_gpaq_ptotal_uw) * 100, digits = 2),
       
       # check if respondent did any activity per subdomain
       # TODO: wenn valid == 0 (nicht valid), dann NA (sonst bekommen auch diese ein Label)
