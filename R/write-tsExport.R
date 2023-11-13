@@ -49,10 +49,10 @@ write_tsExport.tsExportdata <- function(object, format = "dta", metadata = FALSE
     purrr::keep(~ is.data.frame(.x)) %>% 
     names()
   
-  # Export only named data sets from the object. Print a warning if unnamed
+  # Export only named data frames from the object. Print a warning if unnamed
   # data sets where found.
   if ("" %in% df_names) {
-    warning("Unnamed data sets where found in the data object. Can only export named data sets.")
+    warning("Unnamed data frames where found in the data object. Can only export named data sets.")
     df_names <- setdiff(df_names, "")
   }
   
