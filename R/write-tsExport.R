@@ -44,11 +44,21 @@ write_tsExport.tsExportdata <- function(object, format = "dta", metadata = FALSE
   if (! format %in% c("dta", "sas", "sav", "xpt")) {
     stop(paste0("format must be one of 'dta', 'sas', 'sav', 'xpt'. You specified: ", format))
   }
-  x <- object$export_options$data_names
-  names(x) <- NULL
-  if (!metadata) x <- x[!x %in% object$export_options$meta_names]
   
-  lapply(x, function(obs) {
+  df_names <- object %>% 
+    purrr::keep(~ is.data.frame(.x)) %>% 
+    names()
+  
+  # Export only named data sets from the object. Print a warning if unnamed
+  # data sets where found.
+  if ("" %in% df_names) {
+    warning("Unnamed data sets where found in the data object. Can only export named data sets.")
+    df_names <- setdiff(df_names, "")
+  }
+  
+  if (!metadata) df_names <- df_names[!df_names %in% object$export_options$meta_names]
+  
+  lapply(df_names, function(obs) {
     tmp <- object[[obs]]
     write_tsExport(tmp, filename = obs, format = format, ...)
   })
