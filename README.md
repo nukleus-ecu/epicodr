@@ -71,13 +71,6 @@ data_spss_export_prepared <- prepare_spss_export(data_primary_coded,
 # For other formats replace 'data_spss_export_prepared' with 'data_primary_coded' and "sav" with (one of "dta", "sas", "sav", "xpt")
 write_tsExport(data_spss_export_prepared, format = "sav", path = "data/export/", metadata = TRUE)
 
-# The export of ecu-generated tables like ecu_who_scale_per_visit_data", "ecu_pcs_score" or "ecu_long_symptom_data" in NAPKON SUEP is currently not available through write_tsExport() as shown above.
-# We are working on a solution.
-# For now, please use the following lines to export ecu-generated tables 
-haven::write_sav(data_spss_export_prepared$ecu_pcs_score, "data/export/ecu_pcs_score.sav")
-
-# replace "ecu_pcs_score" by the name of the ecu-generated table you would like to export 
-
 ```
 3. Run the script.
 4. Data is exported to folder [data/export](data/export).
