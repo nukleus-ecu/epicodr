@@ -1086,8 +1086,8 @@ build_suep_long_symptom_df <- function(trial_data, pid){
                                             .data$sy_parent == "Nein") & #wenn das Symptom nicht vorliegt, ist ein fehlendes Datum in Ordnung
                                            .data$sy_start.date >= 2020-01-01 #wenn das Symptom vor 2020 begonnen hat, kann es nicht mit Covid in Verbindung stehen
                                          ~ TRUE), 
-           sy_end_applicable.factor = as.factor(case_when(.data$sy_end_applicable ~ "Symptomdauer kann ausgewertet werden: Symptombeginn plus Symptomdauer, oder Dauer bis zur letzten Dokumentation von 'Andauernd'.", 
-                                                          !.data$sy_end_applicable ~ "Symptomdauer kann NICHT ausgewertet werden, da der Symptombeginn weniger als 'auf Monat genau' ist, oder das Symptom andauernd, jedoch nicht aktualisiert wurde.")))
+           sy_end_applicable.factor = as.factor(case_when(.data$sy_end_applicable ~ "Symptomdauer kann ausgewertet werden.", 
+                                                          !.data$sy_end_applicable ~ "Symptomdauer kann NICHT ausgewertet werden.")))
   
   return(long_symptom_data)
 }
