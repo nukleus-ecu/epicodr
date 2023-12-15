@@ -363,7 +363,7 @@ primary_coding_pop_brs <- function(trial_data) {
            ecu_brs_n = calculate_brs_n(.data$brs1, .data$brs2, .data$brs3, .data$brs4, .data$brs5, .data$brs6),
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) 
-    
+  
   return(trial_data)
 }
 
@@ -610,8 +610,8 @@ primary_coding_pop_gpaq_post <- function(trial_data) {
   trial_data <- primary_coding_pop_gpaq_calc(trial_data)
   
   trial_data$surveyfrageboge <- trial_data$surveyfrageboge %>%
-    rename_with(~ paste0(., "_post"), .data$ecu_gpaq_p2cln:.data$ecu_gpaq_cln_sedentary)
- 
+    rename_with(~ paste0(., "_post"), .data$ecu_gpaq_p3:.data$ecu_gpaq_cln_sedentary)
+  
   return(trial_data)
   
 }
@@ -723,14 +723,15 @@ primary_coding_pop <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_pop_pss() did not work. This is likely due to missing variables.")
              print(e)})
-  tryCatch(expr = {trial_data <- primary_coding_pop_gpaq_pre(trial_data)},
-           error = function(e) {
-             warning("primary_coding_pop_gpaq_pre () did not work. This is likely due to missing variables.")
-             print(e)})
   tryCatch(expr = {trial_data <- primary_coding_pop_gpaq_post(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_gpaq_post () did not work. This is likely due to missing variables.")
              print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_pop_gpaq_pre(trial_data)},
+           error = function(e) {
+             warning("primary_coding_pop_gpaq_pre () did not work. This is likely due to missing variables.")
+             print(e)})
+
   
   catw("Primary Coding done")
   
