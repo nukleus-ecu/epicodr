@@ -89,7 +89,7 @@ write_tsExport(data_spss_export_prepared, format = "sav", path = "data/export/",
 
 Descriptions of the primary codings of the NAPKON cohort platforms SÜP, POP and HAP are available at the following link:
 
-[https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2FPrim%C3%A4rkodierung%20Datenauswertung%20_%20Primary%20coding%20Data%20analysis](https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2FPrim%C3%A4rkodierung%20Datenauswertung%20_%20Primary%20coding%20Data%20analysis)
+[https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2F06_Prim%C3%A4rkodierung%20Datenauswertung__Primary%20coding%20Data%20analysis](https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2F06_Prim%C3%A4rkodierung%20Datenauswertung__Primary%20coding%20Data%20analysis)
 
 Additionally, there are manuals that include variable categorizations, aids for calculating scores, defining normal ranges of laboratory parameters and clinical parameters. Further explanations are also available in the tutorial presentation. 
 
