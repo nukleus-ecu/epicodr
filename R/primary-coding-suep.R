@@ -439,6 +439,45 @@ primary_coding_suep_6ils <- function(trial_data) {
 }
 
 
+#' Primary coding Perceived Stress Scale (PSS)
+#' 
+#' adds the following column to promext: 
+#' ecu_six_ils1,ecu_six_ils2, ecu_six_ils3, ecu_six_ils4, ecu_six_ils5, ecu_six_ils6, ecu_six_ils_total, ecu_six_ils_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_pss <- function(trial_data) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_pss1 = recode_pss(.data$pss_1.factor, version = 1),
+           ecu_pss2 = recode_pss(.data$pss_2.factor, version = 2),
+           ecu_pss3 = recode_pss(.data$pss_3.factor, version = 2),
+           ecu_pss4 = recode_pss(.data$pss_4.factor, version = 1),
+           ecu_pss_total = calculate_pss_total(.data$ecu_pss1, .data$ecu_pss2, .data$ecu_pss3, .data$ecu_pss4, pss5 = 0, pss6 = 0, pss7 = 0, pss8 = 0, pss9 = 0, pss10 = 0)) %>%
+    select(matches(visitid), contains("ecu_pss"))
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
 #' Primary coding Chalder Fatigue Scale (CFQ-11)
 #' 
 #' adds the following columns to promext:
@@ -642,6 +681,11 @@ primary_coding_suep <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_suep_6ils(trial_data)},
            error = function(e) {
              warning("primary_coding_suep_6ils() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### Perceived Stress Scale ===================================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_pss(trial_data)},
+           error = function(e) {
+             warning("primary_coding_suep_pss() did not work. This is likely due to missing variables.")
              print(e)})
 
   ### WHO-Scale ================================================================
