@@ -397,6 +397,48 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
 }
 
 
+#' Primary coding Six Item Loneliness Scale (6 ILS)
+#' 
+#' adds the following column to promext: 
+#' ecu_six_ils1,ecu_six_ils2, ecu_six_ils3, ecu_six_ils4, ecu_six_ils5, ecu_six_ils6, ecu_six_ils_total, ecu_six_ils_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_6ils <- function(trial_data) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_six_ils1 = recode_6ils(.data$lonely_1.factor, version = "neg"),
+           ecu_six_ils2 = recode_6ils(.data$lonely_2.factor, version = "pos"),
+           ecu_six_ils3 = recode_6ils(.data$lonely_3.factor, version = "pos"),
+           ecu_six_ils4 = recode_6ils(.data$lonely_4.factor, version = "neg"),
+           ecu_six_ils5 = recode_6ils(.data$lonely_5.factor, version = "pos"),
+           ecu_six_ils6 = recode_6ils(.data$lonely_6.factor, version = "neg"),
+           ecu_six_ils_total = calculate_6ils_total(.data$ecu_six_ils1, .data$ecu_six_ils2, .data$ecu_six_ils3, .data$ecu_six_ils4, .data$ecu_six_ils5, .data$ecu_six_ils6),
+           ecu_six_ils_cat = categorize_6ils_ecu(.data$ecu_six_ils_total)) %>%
+    select(matches(visitid), contains("ecu_six_ils"))
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
 #' Primary coding Chalder Fatigue Scale (CFQ-11)
 #' 
 #' adds the following columns to promext:
@@ -595,6 +637,11 @@ primary_coding_suep <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_suep_cfq11(trial_data, visitid)},
            error = function(e) {
              warning("primary_coding_suep_cfq11() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### 6 Item Loneliness Scale ==================================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_6ils(trial_data)},
+           error = function(e) {
+             warning("primary_coding_suep_6ils() did not work. This is likely due to missing variables.")
              print(e)})
 
   ### WHO-Scale ================================================================
