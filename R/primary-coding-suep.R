@@ -397,18 +397,18 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
 }
 
 
-#' Primary coding Chandler Fatigue Scale (CFS/SEID)
+#' Primary coding Chalder Fatigue Scale (CFQ-11)
 #' 
 #' adds the following columns to promext:
-#' ecu_cfs_seid_1,ecu_cfs_seid_2, ecu_cfs_seid_3, ecu_cfs_seid_4, ecu_cfs_seid_5, ecu_cfs_seid_6, ecu_cfs_seid_7, ecu_cfs_seid_8, ecu_cfs_seid_9,
-#' ecu_cfs_seid_10, ecu_cfs_seid_11, ecu_cfs_seid_sum, ecu_cfs_seid_cat
+#' ecu_cfq11_1,ecu_cfq11_2, ecu_cfq11_3, ecu_cfq11_4, ecu_cfq11_5, ecu_cfq11_6, ecu_cfq11_7, ecu_cfq11_8, ecu_cfq11_9,
+#' ecu_cfq11_10, ecu_cfq11_11, ecu_cfq11_sum, ecu_cfq11_cat
 #' 
 #' @param trial_data A secuTrial data object
 #' @param visitid column name of visit ID in trial_data
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
+primary_coding_suep_cfq11 <- function(trial_data, visitid) {
   
   if (!("id_names" %in% names(trial_data$export_options))) {
     trial_data <- set_id_names(trial_data)
@@ -425,26 +425,25 @@ primary_coding_suep_cfs_seid <- function(trial_data, visitid) {
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
   
   new_vars_to_add <- form_to_add_vars %>%
-    rowwise() %>%
-    mutate(
-      ecu_cfs_seid_1 = recode_cfs_seid(.data$cfs_seid_1), 
-      ecu_cfs_seid_2 = recode_cfs_seid(.data$cfs_seid_2), 
-      ecu_cfs_seid_3 = recode_cfs_seid(.data$cfs_seid_3),
-      ecu_cfs_seid_4 = recode_cfs_seid(.data$cfs_seid_4), 
-      ecu_cfs_seid_5 = recode_cfs_seid(.data$cfs_seid_5), 
-      ecu_cfs_seid_6 = recode_cfs_seid(.data$cfs_seid_6), 
-      ecu_cfs_seid_7 = recode_cfs_seid(.data$cfs_seid_7), 
-      ecu_cfs_seid_8 = recode_cfs_seid(.data$cfs_seid_8), 
-      ecu_cfs_seid_9 = recode_cfs_seid(.data$cfs_seid_9), 
-      ecu_cfs_seid_10 = recode_cfs_seid(.data$cfs_seid_10), 
-      ecu_cfs_seid_11 = recode_cfs_seid(.data$cfs_seid_11), 
-      ecu_cfs_seid_sum = calculate_cfs_seid_sum(.data$ecu_cfs_seid_1, .data$ecu_cfs_seid_2, .data$ecu_cfs_seid_3, .data$ecu_cfs_seid_4, 
-                                                .data$ecu_cfs_seid_5, .data$ecu_cfs_seid_6, .data$ecu_cfs_seid_7, .data$ecu_cfs_seid_8, 
-                                                .data$ecu_cfs_seid_9, .data$ecu_cfs_seid_10, .data$ecu_cfs_seid_11),
-      ecu_cfs_seid_cat = categorize_cfs_seid(.data$ecu_cfs_seid_sum)
+    mutate(ecu_cfq11_1 = recode_cfq11(.data$cfs_seid_1), 
+           ecu_cfq11_2 = recode_cfq11(.data$cfs_seid_2), 
+           ecu_cfq11_3 = recode_cfq11(.data$cfs_seid_3),
+           ecu_cfq11_4 = recode_cfq11(.data$cfs_seid_4), 
+           ecu_cfq11_5 = recode_cfq11(.data$cfs_seid_5), 
+           ecu_cfq11_6 = recode_cfq11(.data$cfs_seid_6), 
+           ecu_cfq11_7 = recode_cfq11(.data$cfs_seid_7), 
+           ecu_cfq11_8 = recode_cfq11(.data$cfs_seid_8), 
+           ecu_cfq11_9 = recode_cfq11(.data$cfs_seid_9), 
+           ecu_cfq11_10 = recode_cfq11(.data$cfs_seid_10), 
+           ecu_cfq11_11 = recode_cfq11(.data$cfs_seid_11), 
+           ecu_cfq11_sum = calculate_cfq11_sum(.data$ecu_cfq11_1, .data$ecu_cfq11_2, .data$ecu_cfq11_3, .data$ecu_cfq11_4, 
+                                                  .data$ecu_cfq11_5, .data$ecu_cfq11_6, .data$ecu_cfq11_7, .data$ecu_cfq11_8, 
+                                                  .data$ecu_cfq11_9, .data$ecu_cfq11_10, .data$ecu_cfq11_11),
+           ecu_cfq11_cat = categorize_cfq11(.data$ecu_cfq11_sum)
     ) %>%
-    ungroup() %>%
-    select(matches(visitid), starts_with("ecu_cfs_seid"))
+    select(matches(visitid), .data$ecu_cfq11_1, .data$ecu_cfq11_2, .data$ecu_cfq11_3, .data$ecu_cfq11_4, .data$ecu_cfq11_5, 
+           .data$ecu_cfq11_6, .data$ecu_cfq11_7, .data$ecu_cfq11_8, .data$ecu_cfq11_9, .data$ecu_cfq11_10, .data$ecu_cfq11_11, 
+           .data$ecu_cfq11_sum, .data$ecu_cfq11_cat)
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by = visitid)
   
@@ -592,10 +591,10 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_brs() did not work. This is likely due to missing variables.")
              print(e)})
-  ### Chandler Fatigue Scale ====================================================
-  tryCatch(expr = {trial_data <- primary_coding_suep_cfs_seid(trial_data, visitid)},
+  ### Chalder Fatigue Scale ====================================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_cfq11(trial_data, visitid)},
            error = function(e) {
-             warning("primary_coding_suep_cfs_seid() did not work. This is likely due to missing variables.")
+             warning("primary_coding_suep_cfq11() did not work. This is likely due to missing variables.")
              print(e)})
 
   ### WHO-Scale ================================================================
@@ -634,80 +633,80 @@ recode_brs <- function(brs.factor) {
 }
 
 
-#' Recode Chandler Fatigue Scale (CFS/SEID) items
+#' Recode Chalder Fatigue Scale (CFQ-11) items
 #' 
-#' @description recodes the Chandler Fatigue Scale (CFS/SEID) items into a dichotomous variable
+#' @description recodes the Chalder Fatigue Scale (CFQ-11) items into a dichotomous variable
 #' 
-#' @param cfs Item of Chandler Fatigue Scale (CFS/SEID) that needs to be recoded
-#' @return A vector with the correctly coded CFS/SEID item
+#' @param cfq Item of Chalder Fatigue Scale (CFQ-11) that needs to be recoded
+#' @return A vector with the correctly coded CFQ-11 item
 #' @export
 
-recode_cfs_seid <- function(cfs) {
+recode_cfq11 <- function(cfq) {
   
-  case_when(cfs == -1 ~ -1, 
-            cfs <= 2 ~ 0,
-            cfs > 2 ~ 1)
+  case_when(cfq == -1 ~ -1, 
+            cfq <= 2 ~ 0,
+            cfq > 2 ~ 1)
   
 }
 
 
-## Chandler Fatigue Scale (CFS/SEID) ==========================================
+## Chalder Fatigue Scale (CFQ-11) ==========================================
 
-#' Calculate Chandler Fatigue Scale (CFS/SEID) sum score
+#' Calculate Chalder Fatigue Scale (CFQ-11) sum score
 #' 
-#' @description Calculate sum score of CFS/SEID
+#' @description Calculate sum score of CFQ-11
 #' 
 #' items need to be recoded first
 #' 
-#' @param cfs_1 vector for item "Is fatigue a problem for you?"
-#' @param cfs_2 vector for item "Do you need to rest frequently?."
-#' @param cfs_3 vector for item "Do you feel tired or sleepy?"
-#' @param cfs_4 vector for item "Do you have difficulty getting things done?"
-#' @param cfs_5 vector for item "Do you lack energy?"
-#' @param cfs_6 vector for item "Do you have less strength in your muscles?"
-#' @param cfs_7 vector for item "Do you feel weak?"
-#' @param cfs_8 vector for item "Do you find it difficult to concentrate?"
-#' @param cfs_9 vector for item "Do you have slips of the tongue when you speak?"
-#' @param cfs_10 vector for item "Do you find it difficult to think clearly?"
-#' @param cfs_11 vector for item "How is your memory?"
+#' @param cfq_1 vector for item "Is fatigue a problem for you?"
+#' @param cfq_2 vector for item "Do you need to rest frequently?."
+#' @param cfq_3 vector for item "Do you feel tired or sleepy?"
+#' @param cfq_4 vector for item "Do you have difficulty getting things done?"
+#' @param cfq_5 vector for item "Do you lack energy?"
+#' @param cfq_6 vector for item "Do you have less strength in your muscles?"
+#' @param cfq_7 vector for item "Do you feel weak?"
+#' @param cfq_8 vector for item "Do you find it difficult to concentrate?"
+#' @param cfq_9 vector for item "Do you have slips of the tongue when you speak?"
+#' @param cfq_10 vector for item "Do you find it difficult to think clearly?"
+#' @param cfq_11 vector for item "How is your memory?"
 #' 
-#' @return A numeric vector with sum score of CFS/SEID
+#' @return A numeric vector with sum score of CFQ-11
 #' @export
 
-calculate_cfs_seid_sum <- function(cfs_1, cfs_2, cfs_3, cfs_4, cfs_5, cfs_6, cfs_7, cfs_8, cfs_9, cfs_10, cfs_11) {
+calculate_cfq11_sum <- function(cfq_1, cfq_2, cfq_3, cfq_4, cfq_5, cfq_6, cfq_7, cfq_8, cfq_9, cfq_10, cfq_11) {
   
-  ecu_cfs_seid_sum <- ifelse(cfs_1 == -1, 0, cfs_1) +
-    ifelse(cfs_2 == -1, 0, cfs_2) +
-    ifelse(cfs_3 == -1, 0, cfs_3) + 
-    ifelse(cfs_4 == -1, 0, cfs_4) +
-    ifelse(cfs_5 == -1, 0, cfs_5) +
-    ifelse(cfs_6 == -1, 0, cfs_6) + 
-    ifelse(cfs_7 == -1, 0, cfs_7) +
-    ifelse(cfs_8 == -1, 0, cfs_8) +
-    ifelse(cfs_9 == -1, 0, cfs_9) +
-    ifelse(cfs_10 == -1, 0, cfs_10) + 
-    ifelse(cfs_11 == -1, 0, cfs_11)
-
-  return(ecu_cfs_seid_sum)
+  ecu_cfq11_sum <- ifelse(cfq_1 == -1, 0, cfq_1) + 
+    ifelse(cfq_2 == -1, 0, cfq_2) +
+    ifelse(cfq_3 == -1, 0, cfq_3) + 
+    ifelse(cfq_4 == -1, 0, cfq_4) + 
+    ifelse(cfq_5 == -1, 0, cfq_5) + 
+    ifelse(cfq_6 == -1, 0, cfq_6) + 
+    ifelse(cfq_7 == -1, 0, cfq_7) + 
+    ifelse(cfq_8 == -1, 0, cfq_8) + 
+    ifelse(cfq_9 == -1, 0, cfq_9) +
+    ifelse(cfq_10 == -1, 0, cfq_10) + 
+    ifelse(cfq_11 == -1, 0, cfq_11)
+  
+  return(ecu_cfq11_sum)
   
 }
 
 
-#' Categorize Chandler Fatigue Scale (CFS/SEID)
+#' Categorize Chalder Fatigue Scale (CFQ-11)
 #' 
-#' @description Categorize CFS/SEID
+#' @description Categorize CFQ-11
 #' 
-#' @param ecu_cfs_seid_sum A numerical vector with CFS/SEID sum score
+#' @param ecu_cfq11_sum A numerical vector with CFQ-11 sum score
 #' 
 #' @return A factor /w levels "No Fatigue" and "Fatigue"
 #' @export
 
-categorize_cfs_seid <- function(ecu_cfs_seid_sum) {
+categorize_cfq11 <- function(ecu_cfq11_sum) {
   
-  ecu_cfs_seid_cat <- case_when(ecu_cfs_seid_sum <= 3 ~ "No fatigue",
-                                ecu_cfs_seid_sum >= 4 ~ "Fatigue")
+  ecu_cfq11_cat <- case_when(ecu_cfq11_sum <= 3 ~ "No fatigue",
+                             ecu_cfq11_sum >= 4 ~ "Fatigue")
   
-  return(ecu_cfs_seid_cat)
+  return(ecu_cfq11_cat)
   
 }
 
@@ -1446,7 +1445,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
   ecu_pcs_score_3m <- calculate_pcs_score_suep(trial_data, pid, days_of_pcss_time_diff = 61, vector_of_pcss_fup_visits = c("3M Follow-Up", "12M Follow-Up")) 
   ecu_pcs_score_12m <- calculate_pcs_score_suep(trial_data, pid, days_of_pcss_time_diff = 335, vector_of_pcss_fup_visits = c("12M Follow-Up")) 
   
-  if (!("ecu_cfs_seid_sum" %in% names(trial_data$promext))) {trial_data <- primary_coding_suep_cfs_seid(trial_data, visitid)}
+  if (!("ecu_cfq11_sum" %in% names(trial_data$promext))) {trial_data <- primary_coding_suep_cfq11(trial_data, visitid)}
   trial_data <- primary_coding_suep_promis_29_fatigue(trial_data, visitid)
   trial_data <- primary_coding_suep_promis_29_dyspnea(trial_data, visitid)
   trial_data <- primary_coding_suep_promis_cogn_funct(trial_data, visitid)
@@ -1459,7 +1458,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
   
   relevante_proms <- prom %>%
     left_join(promext, by = c(pid, visit_label_var_name)) %>%
-    select(pid, visit_label_var_name, .data$cfs.factor, .data$ecu_cfs_seid_sum, .data$ecu_cfs_seid_cat, .data$cfs_seid_crit2.factor, 
+    select(pid, visit_label_var_name, .data$cfs.factor, .data$ecu_cfq11_sum, .data$ecu_cfq11_cat, .data$cfs_seid_crit2.factor, 
            .data$cfs_seid_crit4.factor, .data$cfs_seid_crit5.factor, .data$ecu_promis29_fatigue_sum, .data$ecu_promis29_fatigue_cat_2, 
            .data$dysp.factor, .data$ecu_promis29_dyspnea_n, .data$ecu_promis29_dyspnea_sum, .data$ecu_promis29_dyspnea_cat_2, 
            .data$pain_loc_chest.factor, .data$pain_loc_abd.factor, .data$pain_loc_head.factor, .data$pain_dn2_6.factor, 
@@ -1472,10 +1471,10 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
                                                     TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_promis29 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_promis29_fatigue_cat_2 == "Fatigue" ~ 1,
                                                       TRUE ~ .data$complex_2_fatigue_sum),
-           complex_2_fatigue_sum_cfs = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_cfs_seid_cat == "Fatigue" ~ 1,
+           complex_2_fatigue_sum_cfq11 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_cfq11_cat == "Fatigue" ~ 1,
                                                  TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_all = case_when(.data$complex_2_fatigue_sum == 1 | .data$complex_2_fatigue_sum_screen == 1 | .data$complex_2_fatigue_sum_promis29 == 1 | 
-                                                   .data$complex_2_fatigue_sum_cfs == 1 ~ 1,
+                                                   .data$complex_2_fatigue_sum_cfq11 == 1 ~ 1,
                                                  TRUE ~ .data$complex_2_fatigue_sum),
            complex_3_exercise_sum_screen = case_when(.data$complex_3_exercise_sum == 1 | .data$dysp.factor == "Ja" | .data$cfs_seid_crit2.factor == "Ja" ~ 1,
                                                      TRUE ~ .data$complex_3_exercise_sum),
@@ -1503,10 +1502,10 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
                                                     TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_promis29 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_promis29_fatigue_cat_2 == "Fatigue" ~ 1,
                                                       TRUE ~ .data$complex_2_fatigue_sum),
-           complex_2_fatigue_sum_cfs = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_cfs_seid_cat == "Fatigue" ~ 1,
+           complex_2_fatigue_sum_cfq11 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_cfq11_cat == "Fatigue" ~ 1,
                                                  TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_all = case_when(.data$complex_2_fatigue_sum == 1 | .data$complex_2_fatigue_sum_screen == 1 | .data$complex_2_fatigue_sum_promis29 == 1 | 
-                                                   .data$complex_2_fatigue_sum_cfs == 1 ~ 1,
+                                                   .data$complex_2_fatigue_sum_cfq11 == 1 ~ 1,
                                                  TRUE ~ .data$complex_2_fatigue_sum),
            complex_3_exercise_sum_screen = case_when(.data$complex_3_exercise_sum == 1 | .data$dysp.factor == "Ja" | .data$cfs_seid_crit2.factor == "Ja" ~ 1,
                                                      TRUE ~ .data$complex_3_exercise_sum),
