@@ -518,8 +518,8 @@ primary_coding_suep_cfq11 <- function(trial_data, visitid) {
            ecu_cfq11_10 = recode_cfq11(.data$cfs_seid_10), 
            ecu_cfq11_11 = recode_cfq11(.data$cfs_seid_11), 
            ecu_cfq11_sum = calculate_cfq11_sum(.data$ecu_cfq11_1, .data$ecu_cfq11_2, .data$ecu_cfq11_3, .data$ecu_cfq11_4, 
-                                                  .data$ecu_cfq11_5, .data$ecu_cfq11_6, .data$ecu_cfq11_7, .data$ecu_cfq11_8, 
-                                                  .data$ecu_cfq11_9, .data$ecu_cfq11_10, .data$ecu_cfq11_11),
+                                               .data$ecu_cfq11_5, .data$ecu_cfq11_6, .data$ecu_cfq11_7, .data$ecu_cfq11_8, 
+                                               .data$ecu_cfq11_9, .data$ecu_cfq11_10, .data$ecu_cfq11_11),
            ecu_cfq11_cat = categorize_cfq11(.data$ecu_cfq11_sum)
     ) %>%
     select(matches(visitid), .data$ecu_cfq11_1, .data$ecu_cfq11_2, .data$ecu_cfq11_3, .data$ecu_cfq11_4, .data$ecu_cfq11_5, 
@@ -631,6 +631,213 @@ primary_coding_suep_ards <- function(trial_data, pid) {
 }
 
 
+# Recode PROMIS ================================================================
+
+#' Primary coding PROMIS-29 Dyspnoe items (recoding)
+#'  
+#' adds the following columns to promext: 
+#' ecu_pro_dysp_1, ecu_pro_dysp_2, ecu_pro_dysp_3, ecu_pro_dysp_4, ecu_pro_dysp_5, ecu_pro_dysp_6, ecu_pro_dysp_7,
+#' ecu_pro_dysp_8, ecu_pro_dysp_9, ecu_pro_dysp_10
+#'
+#' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom rlang .data
+#' @return A secuTrial data object with primary coded variables and dataframes
+#' @export
+
+primary_coding_suep_recode_promis_dysp <- function(trial_data, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_pro_dysp_1 = recode_promis_dyspnoe(.data$pro_dysfl001.factor), 
+           ecu_pro_dysp_2 = recode_promis_dyspnoe(.data$pro_dysfl002.factor),
+           ecu_pro_dysp_3 = recode_promis_dyspnoe(.data$pro_dysfl003.factor),
+           ecu_pro_dysp_4 = recode_promis_dyspnoe(.data$pro_dysfl004.factor),
+           ecu_pro_dysp_5 = recode_promis_dyspnoe(.data$pro_dysfl005.factor),
+           ecu_pro_dysp_6 = recode_promis_dyspnoe(.data$pro_dysfl006.factor),
+           ecu_pro_dysp_7 = recode_promis_dyspnoe(.data$pro_dysfl007.factor),
+           ecu_pro_dysp_8 = recode_promis_dyspnoe(.data$pro_dysfl008.factor),
+           ecu_pro_dysp_9 = recode_promis_dyspnoe(.data$pro_dysfl009.factor),
+           ecu_pro_dysp_10 = recode_promis_dyspnoe(.data$pro_dysfl10.factor)) %>%
+    select(matches(visitid), .data$ecu_pro_dysp_1, .data$ecu_pro_dysp_2, .data$ecu_pro_dysp_3, .data$ecu_pro_dysp_4, .data$ecu_pro_dysp_5, 
+           .data$ecu_pro_dysp_6, .data$ecu_pro_dysp_7, .data$ecu_pro_dysp_8, .data$ecu_pro_dysp_9, .data$ecu_pro_dysp_10)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding PROMIS-29 Cognitive impairments items (recoding)
+#' 
+#' adds the following columns to prom:
+#' ecu_pro_cogn_1, ecu_pro_cogn_2, ecu_pro_cogn_3, ecu_pro_cogn_4
+#' 
+#' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_recode_promis_cogn_funct <- function(trial_data, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "prom"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_pro_cogn_1 = recode_promis_cognitive(.data$pro_pc2r.factor), 
+           ecu_pro_cogn_2 = recode_promis_cognitive(.data$pro_pc35r.factor),
+           ecu_pro_cogn_3 = recode_promis_cognitive(.data$pro_pc36r.factor),
+           ecu_pro_cogn_4 = recode_promis_cognitive(.data$pro_pc42r.factor)) %>%
+    select(matches(visitid), .data$ecu_pro_cogn_1, .data$ecu_pro_cogn_2, .data$ecu_pro_cogn_3, .data$ecu_pro_cogn_4)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+  
+}
+
+
+#' Primary coding PROMIS-29 Sleep disturbance items (recoding)
+#' 
+#' adds the following columns to promext:
+#' ecu_pro29_sleep_1, ecu_pro29_sleep_2
+#' 
+#' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_recode_promis_sleep <- function(trial_data, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_pro29_sleep_1 = recode_promis29_sleep(.data$pro_29_sleep109.factor), 
+           ecu_pro29_sleep_2 = recode_promis29_sleep(.data$pro_29_sleep116.factor)) %>%
+    select(matches(visitid), .data$ecu_pro29_sleep_1, .data$ecu_pro29_sleep_2)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+  
+}
+
+
+#' Primary coding PROMIS-29 Physical Function items (recoding)
+#' 
+#' adds the following columns to promext:
+#' ecu_pro29_phys_funct_1, ecu_pro29_phys_funct_2, ecu_pro29_phys_funct_3, ecu_pro29_phys_funct_4
+#' 
+#' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_recode_promis_phys <- function(trial_data, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_pro29_phys_funct_1 = recode_promis29_phys_funct(.data$pro_29_pfa11.factor), 
+           ecu_pro29_phys_funct_2 = recode_promis29_phys_funct(.data$pro_29_pfa21.factor),
+           ecu_pro29_phys_funct_3 = recode_promis29_phys_funct(.data$pro_29_pfa23.factor),
+           ecu_pro29_phys_funct_4 = recode_promis29_phys_funct(.data$pro_29_pfa53.factor)) %>%
+    select(matches(visitid), .data$ecu_pro29_phys_funct_1, .data$ecu_pro29_phys_funct_2, .data$ecu_pro29_phys_funct_3, .data$ecu_pro29_phys_funct_4)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+  
+}
+
+
+#' Primary coding PROMIS-29 Ability to participate in social roles and activities items (recoding)
+#' 
+#' adds the following columns to promext:
+#' ecu_pro29_social_1, ecu_pro29_social_2, ecu_pro29_social_3, ecu_pro29_social_4
+#' 
+#' @param trial_data A secuTrial data object
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_recode_promis_social <- function(trial_data, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_pro29_social_1 = recode_promis29_social(.data$pro_29_srpper11_caps.factor), 
+           ecu_pro29_social_2 = recode_promis29_social(.data$pro_29_srpper18_caps.factor),
+           ecu_pro29_social_3 = recode_promis29_social(.data$pro_29_srpper23_caps.factor),
+           ecu_pro29_social_4 = recode_promis29_social(.data$pro_29_srpper46_caps.factor)) %>%
+    select(matches(visitid), .data$ecu_pro29_social_1, .data$ecu_pro29_social_2, .data$ecu_pro29_social_3, .data$ecu_pro29_social_4)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+  
+}
+
 # SUEP Wrapper primary coding ==================================================
 
 #' Primary coding SUEP Data
@@ -717,7 +924,6 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_pss() did not work. This is likely due to missing variables.")
              print(e)})
-
   ### WHO-Scale ================================================================
   tryCatch(expr = {trial_data <- primary_coding_suep_who_scale(trial_data, pid, visitid)},
            error = function(e) {
@@ -728,6 +934,28 @@ primary_coding_suep <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_suep_ards(trial_data, pid)},
            error = function(e) {
              warning("primary_coding_suep_ards() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## PROMIS Recoding ===========================================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_recode_promis_dysp(trial_data, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_recode_promis_dysp() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_recode_promis_cogn_funct(trial_data, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_recode_promis_cogn_funct() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_recode_promis_sleep(trial_data, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_recode_promis_sleep() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_recode_promis_phys(trial_data, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_recode_promis_phys() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_recode_promis_social(trial_data, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_recode_promis_social() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
@@ -919,7 +1147,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   # Date of last Treatment Update ----------------------------------------------
   
   treatment_update_date <- trial_data$fuv3 %>%
-    #left_join (trial_data$vp %>% select (.data$mnpvisid, visit_label_var_name), by = "mnpvisid") %>%
+    #left_join (trial_data$vp %>% select (.data$mnpvisid, .data$visit_label_var_name), by = "mnpvisid") %>%
     filter (.data$pr_check_treat.factor == "Ja") %>% #only treatment_update == YES
     rename (treatment_update_visit = visit_label_var_name,
             treatment_update.datetime = .data$fuv3_date.date) %>%
@@ -947,8 +1175,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
       gec_oxy_type.factor = factor(fct_reorder(.data$gec_oxy_type.factor, .data$gec_oxy_type, na.rm = FALSE), ordered = TRUE)) %>%
     select(pid, .data$gec_oxy.factor, .data$gec_oxy_type, .data$gec_oxy_type.factor, .data$gec_oxy_start.date, .data$gec_oxy_start_d.factor, .data$gec_oxy_start_uk.factor, 
            .data$gec_oxy_end.date, .data$gec_oxy_end_d.factor, .data$gec_oxy_end_uk.factor, .data$gec_oxy_end_on.factor, .data$treatment_update.date, 
-           .data$ecu_oxy_interval)  
-  
+           .data$ecu_oxy_interval) 
   
   # Hospitalisation (one row per pat per start date) ---------------------------
   
@@ -1059,7 +1286,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
                                                      .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6))
-    )
+    ) 
   
   return(who_scale_per_visit_data)
   
@@ -1081,7 +1308,7 @@ summarize_who_scale <- function(trial_data, pid) {
   
   who_scale_max <- trial_data[["ecu_who_scale_per_visit_data"]] %>%
     group_by(!!sym(pid)) %>%
-    slice_max(.data$ecu_who_scale) %>% 
+    slice_max(.data$ecu_who_scale, with_ties = FALSE) %>% 
     ungroup() %>%
     rename(ecu_who_scale_max = .data$ecu_who_scale,
            ecu_who_scale_max.factor = .data$ecu_who_scale.factor) %>%
@@ -1089,7 +1316,7 @@ summarize_who_scale <- function(trial_data, pid) {
   
   who_scale_with_diag_max <- trial_data[["ecu_who_scale_per_visit_data"]] %>%
     group_by(!!sym(pid)) %>%
-    slice_max(.data$ecu_who_scale_with_diag) %>%
+    slice_max(.data$ecu_who_scale_with_diag, with_ties = FALSE) %>%
     ungroup() %>%
     rename(ecu_who_scale_with_diag_max = .data$ecu_who_scale_with_diag,
            ecu_who_scale_with_diag_max.factor = .data$ecu_who_scale_with_diag.factor) %>%
@@ -1485,7 +1712,7 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
   
   pcs_score_result_df <- symptom_complex_suep_summary %>% 
     filter(.data$visit_label %in% vector_of_pcss_fup_visits) %>%
-    mutate(pcs_score_sum_without_proms = if_else(.data$complex_1_chemo_sum == 1, 3.5, 0) +
+    mutate(pcs_score_sum_without_proms = if_else(.data$complex_1_chemo_sum == 1, 3.5, 0) + 
              if_else(.data$complex_2_fatigue_sum == 1, 7.0, 0) +
              if_else(.data$complex_3_exercise_sum == 1, 4.0, 0) +
              if_else(.data$complex_4_pain_sum == 1, 6.5, 0) +
@@ -1496,7 +1723,7 @@ calculate_pcs_score_suep <- function(trial_data, pid, days_of_pcss_time_diff, ve
              if_else(.data$complex_9_neuro_sum == 1, 6.5, 0) +
              if_else(.data$complex_10_derma_sum == 1, 2.0, 0) +
              if_else(.data$complex_11_flulike_sum == 1, 3.5, 0) +
-             if_else(.data$complex_12_sleep_sum == 1, 5.0, 0),
+             if_else(.data$complex_12_sleep_sum == 1, 5.0, 0), 
            pcs_score_group_without_proms = cut(.data$pcs_score_sum_without_proms,
                                                breaks= c(-Inf, 0, 10.75, 26.25, Inf ), 
                                                labels=c("0", "<=10,75", "10,75<x<=26,25", ">26,25")))
@@ -1599,7 +1826,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
            complex_2_fatigue_sum_promis29 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_promis29_fatigue_cat_2 == "Fatigue" ~ 1,
                                                       TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_cfq11 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_cfq11_cat == "Fatigue" ~ 1,
-                                                 TRUE ~ .data$complex_2_fatigue_sum),
+                                                   TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_all = case_when(.data$complex_2_fatigue_sum == 1 | .data$complex_2_fatigue_sum_screen == 1 | .data$complex_2_fatigue_sum_promis29 == 1 | 
                                                    .data$complex_2_fatigue_sum_cfq11 == 1 ~ 1,
                                                  TRUE ~ .data$complex_2_fatigue_sum),
@@ -1630,7 +1857,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
            complex_2_fatigue_sum_promis29 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_promis29_fatigue_cat_2 == "Fatigue" ~ 1,
                                                       TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_cfq11 = case_when(.data$complex_2_fatigue_sum == 1 | .data$ecu_cfq11_cat == "Fatigue" ~ 1,
-                                                 TRUE ~ .data$complex_2_fatigue_sum),
+                                                   TRUE ~ .data$complex_2_fatigue_sum),
            complex_2_fatigue_sum_all = case_when(.data$complex_2_fatigue_sum == 1 | .data$complex_2_fatigue_sum_screen == 1 | .data$complex_2_fatigue_sum_promis29 == 1 | 
                                                    .data$complex_2_fatigue_sum_cfq11 == 1 ~ 1,
                                                  TRUE ~ .data$complex_2_fatigue_sum),
@@ -1670,7 +1897,7 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
              if_else(.data$complex_12_sleep_sum_promis29 == 1, 5.0, 0),
            pcs_score_group_with_proms = cut(.data$pcs_score_sum_with_proms,
                                             breaks= c(-Inf, 0, 10.75, 26.25, Inf ), 
-                                            labels=c("0", "<=10,75", "10,75<x<=26,25", ">26,25"))) 
+                                            labels=c("0", "<=10,75", "10,75<x<=26,25", ">26,25")))
   
   ecu_pcs_score_12m <- ecu_pcs_score_12m %>%
     mutate(pcs_score_sum_with_proms = if_else(.data$complex_1_chemo_sum == 1, 3.5, 0) +
@@ -2153,15 +2380,15 @@ count_n_promis_29_dyspnea <- function(pro_dysp_1, pro_dysp_2, pro_dysp_3, pro_dy
                                       pro_dysp_10) {
   
   pro_dysp_n <- ifelse(!is.na(pro_dysp_1), 1, 0) +
-                    ifelse(!is.na(pro_dysp_2), 1, 0) +
-                    ifelse(!is.na(pro_dysp_3), 1, 0) +
-                    ifelse(!is.na(pro_dysp_4), 1, 0) +
-                    ifelse(!is.na(pro_dysp_5), 1, 0) +
-                    ifelse(!is.na(pro_dysp_6), 1, 0) +
-                    ifelse(!is.na(pro_dysp_7), 1, 0) +
-                    ifelse(!is.na(pro_dysp_8), 1, 0) +
-                    ifelse(!is.na(pro_dysp_9), 1, 0) +
-                    ifelse(!is.na(pro_dysp_10), 1, 0)
+    ifelse(!is.na(pro_dysp_2), 1, 0) +
+    ifelse(!is.na(pro_dysp_3), 1, 0) +
+    ifelse(!is.na(pro_dysp_4), 1, 0) +
+    ifelse(!is.na(pro_dysp_5), 1, 0) +
+    ifelse(!is.na(pro_dysp_6), 1, 0) +
+    ifelse(!is.na(pro_dysp_7), 1, 0) +
+    ifelse(!is.na(pro_dysp_8), 1, 0) +
+    ifelse(!is.na(pro_dysp_9), 1, 0) +
+    ifelse(!is.na(pro_dysp_10), 1, 0)
   pro_dysp_n <- ifelse(pro_dysp_n <= 0 | is.na(pro_dysp_n), NA_real_, pro_dysp_n)
   
   return(pro_dysp_n)
@@ -2190,15 +2417,15 @@ count_n_promis_29_dyspnea <- function(pro_dysp_1, pro_dysp_2, pro_dysp_3, pro_dy
 calculate_promis_29_dyspnea_sum <- function(pro_dysp_1, pro_dysp_2, pro_dysp_3, pro_dysp_4, pro_dysp_5, pro_dysp_6, pro_dysp_7, pro_dysp_8, pro_dysp_9,
                                             pro_dysp_10, pro_dysp_n) {
   
-  pro_dysp_sum <- ifelse(is.na(pro_dysp_1), 0, pro_dysp_1) + 
+  pro_dysp_sum <- ifelse(is.na(pro_dysp_1), 0, pro_dysp_1) +
     ifelse(is.na(pro_dysp_2), 0, pro_dysp_2) +
     ifelse(is.na(pro_dysp_3), 0, pro_dysp_3) +
-    ifelse(is.na(pro_dysp_4), 0, pro_dysp_4) +
+    ifelse(is.na(pro_dysp_4), 0, pro_dysp_4) + 
     ifelse(is.na(pro_dysp_5), 0, pro_dysp_5) +
-    ifelse(is.na(pro_dysp_6), 0, pro_dysp_6) +
+    ifelse(is.na(pro_dysp_6), 0, pro_dysp_6) + 
     ifelse(is.na(pro_dysp_7), 0, pro_dysp_7) +
     ifelse(is.na(pro_dysp_8), 0, pro_dysp_8) +
-    ifelse(is.na(pro_dysp_9), 0, pro_dysp_9) +
+    ifelse(is.na(pro_dysp_9), 0, pro_dysp_9) + 
     ifelse(is.na(pro_dysp_10), 0, pro_dysp_10)
   pro_dysp_sum <- ifelse(pro_dysp_n >= 4, pro_dysp_sum, NA_real_)
   
@@ -2263,25 +2490,39 @@ primary_coding_suep_promis_29_dyspnea <- function(trial_data, visitid) {
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
   
-  new_vars_to_add <- form_to_add_vars %>%
-    mutate(pro_dysp_1 = recode_promis_dyspnoe(.data$pro_dysfl001.factor), 
-           pro_dysp_2 = recode_promis_dyspnoe(.data$pro_dysfl002.factor),
-           pro_dysp_3 = recode_promis_dyspnoe(.data$pro_dysfl003.factor),
-           pro_dysp_4 = recode_promis_dyspnoe(.data$pro_dysfl004.factor),
-           pro_dysp_5 = recode_promis_dyspnoe(.data$pro_dysfl005.factor),
-           pro_dysp_6 = recode_promis_dyspnoe(.data$pro_dysfl006.factor),
-           pro_dysp_7 = recode_promis_dyspnoe(.data$pro_dysfl007.factor),
-           pro_dysp_8 = recode_promis_dyspnoe(.data$pro_dysfl008.factor),
-           pro_dysp_9 = recode_promis_dyspnoe(.data$pro_dysfl009.factor),
-           pro_dysp_10 = recode_promis_dyspnoe(.data$pro_dysfl10.factor),
-           ecu_promis29_dyspnea_n = count_n_promis_29_dyspnea(.data$pro_dysp_1, .data$pro_dysp_2, .data$pro_dysp_3, .data$pro_dysp_4, .data$pro_dysp_5, 
-                                                              .data$pro_dysp_6, .data$pro_dysp_7, .data$pro_dysp_8, .data$pro_dysp_9, .data$pro_dysp_10),
-           ecu_promis29_dyspnea_sum = calculate_promis_29_dyspnea_sum(.data$pro_dysp_1, .data$pro_dysp_2, .data$pro_dysp_3, .data$pro_dysp_4, .data$pro_dysp_5, 
-                                                                      .data$pro_dysp_6,.data$pro_dysp_7, .data$pro_dysp_8, .data$pro_dysp_9, .data$pro_dysp_10, 
-                                                                      .data$ecu_promis29_dyspnea_n),
-           ecu_promis29_dyspnea_cat = categorize_promis_29_dyspnea(.data$ecu_promis29_dyspnea_sum),
-           ecu_promis29_dyspnea_cat_2 = categorize_promis_29_dyspnea_2(.data$ecu_promis29_dyspnea_sum)) %>%
-   select(matches(visitid), .data$ecu_promis29_dyspnea_n, .data$ecu_promis29_dyspnea_sum, .data$ecu_promis29_dyspnea_cat, .data$ecu_promis29_dyspnea_cat_2)
+  if (! "ecu_pro_dysp_1" %in% names(form_to_add_vars)) {
+    
+    new_vars_to_add <- form_to_add_vars %>%
+      mutate(pro_dysp_1 = recode_promis_dyspnoe(.data$pro_dysfl001.factor), 
+             pro_dysp_2 = recode_promis_dyspnoe(.data$pro_dysfl002.factor),
+             pro_dysp_3 = recode_promis_dyspnoe(.data$pro_dysfl003.factor),
+             pro_dysp_4 = recode_promis_dyspnoe(.data$pro_dysfl004.factor),
+             pro_dysp_5 = recode_promis_dyspnoe(.data$pro_dysfl005.factor),
+             pro_dysp_6 = recode_promis_dyspnoe(.data$pro_dysfl006.factor),
+             pro_dysp_7 = recode_promis_dyspnoe(.data$pro_dysfl007.factor),
+             pro_dysp_8 = recode_promis_dyspnoe(.data$pro_dysfl008.factor),
+             pro_dysp_9 = recode_promis_dyspnoe(.data$pro_dysfl009.factor),
+             pro_dysp_10 = recode_promis_dyspnoe(.data$pro_dysfl10.factor),
+             ecu_promis29_dyspnea_n = count_n_promis_29_dyspnea(.data$pro_dysp_1, .data$pro_dysp_2, .data$pro_dysp_3, .data$pro_dysp_4, .data$pro_dysp_5, 
+                                                                .data$pro_dysp_6, .data$pro_dysp_7, .data$pro_dysp_8, .data$pro_dysp_9, .data$pro_dysp_10),
+             ecu_promis29_dyspnea_sum = calculate_promis_29_dyspnea_sum(.data$pro_dysp_1, .data$pro_dysp_2, .data$pro_dysp_3, .data$pro_dysp_4, .data$pro_dysp_5, 
+                                                                        .data$pro_dysp_6,.data$pro_dysp_7, .data$pro_dysp_8, .data$pro_dysp_9, .data$pro_dysp_10, 
+                                                                        .data$ecu_promis29_dyspnea_n),
+             ecu_promis29_dyspnea_cat = categorize_promis_29_dyspnea(.data$ecu_promis29_dyspnea_sum),
+             ecu_promis29_dyspnea_cat_2 = categorize_promis_29_dyspnea_2(.data$ecu_promis29_dyspnea_sum)) %>%
+      select(matches(visitid), .data$ecu_promis29_dyspnea_n, .data$ecu_promis29_dyspnea_sum, .data$ecu_promis29_dyspnea_cat, .data$ecu_promis29_dyspnea_cat_2) } else {
+        
+        new_vars_to_add <- form_to_add_vars %>%
+          mutate(ecu_promis29_dyspnea_n = count_n_promis_29_dyspnea(.data$ecu_pro_dysp_1, .data$ecu_pro_dysp_2, .data$ecu_pro_dysp_3, .data$ecu_pro_dysp_4, .data$ecu_pro_dysp_5, 
+                                                                    .data$ecu_pro_dysp_6, .data$ecu_pro_dysp_7, .data$ecu_pro_dysp_8, .data$ecu_pro_dysp_9, .data$ecu_pro_dysp_10),
+                 ecu_promis29_dyspnea_sum = calculate_promis_29_dyspnea_sum(.data$ecu_pro_dysp_1, .data$ecu_pro_dysp_2, .data$ecu_pro_dysp_3, .data$ecu_pro_dysp_4, .data$ecu_pro_dysp_5, 
+                                                                            .data$ecu_pro_dysp_6, .data$ecu_pro_dysp_7, .data$ecu_pro_dysp_8, .data$ecu_pro_dysp_9, .data$ecu_pro_dysp_10, 
+                                                                            .data$ecu_promis29_dyspnea_n),
+                 ecu_promis29_dyspnea_cat = categorize_promis_29_dyspnea(.data$ecu_promis29_dyspnea_sum),
+                 ecu_promis29_dyspnea_cat_2 = categorize_promis_29_dyspnea_2(.data$ecu_promis29_dyspnea_sum)) %>%
+          select(matches(visitid), .data$ecu_promis29_dyspnea_n, .data$ecu_promis29_dyspnea_sum, .data$ecu_promis29_dyspnea_cat, .data$ecu_promis29_dyspnea_cat_2) 
+        
+      }
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -2390,15 +2631,25 @@ primary_coding_suep_promis_cogn_funct <- function(trial_data, visitid) {
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
   
-  new_vars_to_add <- form_to_add_vars %>%
-    mutate(pro_cogn_1 = recode_promis_cognitive(.data$pro_pc2r.factor), 
-           pro_cogn_2 = recode_promis_cognitive(.data$pro_pc35r.factor),
-           pro_cogn_3 = recode_promis_cognitive(.data$pro_pc36r.factor),
-           pro_cogn_4 = recode_promis_cognitive(.data$pro_pc42r.factor),
-           ecu_promis_cogn_funct_sum = calculate_promis_cognitive_funct_sum(.data$pro_cogn_1, .data$pro_cogn_2, .data$pro_cogn_3, .data$pro_cogn_4),
-           ecu_promis_cogn_funct_cat = categorize_promis_cognitive_funct(.data$ecu_promis_cogn_funct_sum),
-           ecu_promis_cogn_funct_cat_2 = categorize_promis_cognitive_funct_2(.data$ecu_promis_cogn_funct_sum)) %>%
-    select(matches(visitid), .data$ecu_promis_cogn_funct_sum, .data$ecu_promis_cogn_funct_cat, .data$ecu_promis_cogn_funct_cat_2)
+  if (! "ecu_pro_cogn_1" %in% names(form_to_add_vars)) {
+    
+    new_vars_to_add <- form_to_add_vars %>%
+      mutate(pro_cogn_1 = recode_promis_cognitive(.data$pro_pc2r.factor), 
+             pro_cogn_2 = recode_promis_cognitive(.data$pro_pc35r.factor),
+             pro_cogn_3 = recode_promis_cognitive(.data$pro_pc36r.factor),
+             pro_cogn_4 = recode_promis_cognitive(.data$pro_pc42r.factor),
+             ecu_promis_cogn_funct_sum = calculate_promis_cognitive_funct_sum(.data$pro_cogn_1, .data$pro_cogn_2, .data$pro_cogn_3, .data$pro_cogn_4),
+             ecu_promis_cogn_funct_cat = categorize_promis_cognitive_funct(.data$ecu_promis_cogn_funct_sum),
+             ecu_promis_cogn_funct_cat_2 = categorize_promis_cognitive_funct_2(.data$ecu_promis_cogn_funct_sum)) %>%
+      select(matches(visitid), .data$ecu_promis_cogn_funct_sum, .data$ecu_promis_cogn_funct_cat, .data$ecu_promis_cogn_funct_cat_2) } else {
+        
+        new_vars_to_add <- form_to_add_vars %>%
+          mutate(ecu_promis_cogn_funct_sum = calculate_promis_cognitive_funct_sum(.data$ecu_pro_cogn_1, .data$ecu_pro_cogn_2, .data$ecu_pro_cogn_3, .data$ecu_pro_cogn_4),
+                 ecu_promis_cogn_funct_cat = categorize_promis_cognitive_funct(.data$ecu_promis_cogn_funct_sum),
+                 ecu_promis_cogn_funct_cat_2 = categorize_promis_cognitive_funct_2(.data$ecu_promis_cogn_funct_sum)) %>%
+          select(matches(visitid), .data$ecu_promis_cogn_funct_sum, .data$ecu_promis_cogn_funct_cat, .data$ecu_promis_cogn_funct_cat_2)
+        
+      }
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -2507,16 +2758,70 @@ primary_coding_suep_promis_29_sleep <- function(trial_data, visitid) {
   
   form_to_add_vars <- trial_data[[formname_to_add_vars]]
   
-  new_vars_to_add <- form_to_add_vars %>%
-    mutate(pro29_sleep_1 = recode_promis29_sleep(.data$pro_29_sleep109.factor), 
-           pro29_sleep_2 = recode_promis29_sleep(.data$pro_29_sleep116.factor),
-           ecu_promis29_sleep_sum = calculate_promis29_sleep_sum(.data$pro29_sleep_1, .data$pro29_sleep_2, .data$pro_29_sleep20, .data$pro_29_sleep44),
-           ecu_promis29_sleep_cat = categorize_promis29_sleep(.data$ecu_promis29_sleep_sum),
-           ecu_promis29_sleep_cat_2 = categorize_promis29_sleep_2(.data$ecu_promis29_sleep_sum)) %>%
-    select(matches(visitid), .data$ecu_promis29_sleep_sum, .data$ecu_promis29_sleep_cat, .data$ecu_promis29_sleep_cat_2)
+  if (! "ecu_pro29_sleep_1" %in% names(form_to_add_vars)) {
+    
+    new_vars_to_add <- form_to_add_vars %>%
+      mutate(pro29_sleep_1 = recode_promis29_sleep(.data$pro_29_sleep109.factor), 
+             pro29_sleep_2 = recode_promis29_sleep(.data$pro_29_sleep116.factor),
+             ecu_promis29_sleep_sum = calculate_promis29_sleep_sum(.data$pro29_sleep_1, .data$pro29_sleep_2, .data$pro_29_sleep20, .data$pro_29_sleep44),
+             ecu_promis29_sleep_cat = categorize_promis29_sleep(.data$ecu_promis29_sleep_sum),
+             ecu_promis29_sleep_cat_2 = categorize_promis29_sleep_2(.data$ecu_promis29_sleep_sum)) %>%
+      select(matches(visitid), .data$ecu_promis29_sleep_sum, .data$ecu_promis29_sleep_cat, .data$ecu_promis29_sleep_cat_2) } else {
+        
+        new_vars_to_add <- form_to_add_vars %>%
+          mutate(ecu_promis29_sleep_sum = calculate_promis29_sleep_sum(.data$ecu_pro29_sleep_1, .data$ecu_pro29_sleep_2, .data$pro_29_sleep20, .data$pro_29_sleep44),
+                 ecu_promis29_sleep_cat = categorize_promis29_sleep(.data$ecu_promis29_sleep_sum),
+                 ecu_promis29_sleep_cat_2 = categorize_promis29_sleep_2(.data$ecu_promis29_sleep_sum)) %>%
+          select(matches(visitid), .data$ecu_promis29_sleep_sum, .data$ecu_promis29_sleep_cat, .data$ecu_promis29_sleep_cat_2)
+        
+      }
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
   return(trial_data)
   
+}
+
+
+### PROMIS Physical Function ===================================================
+
+#' Recode PROMIS-29 Physical Function items
+#' 
+#' @description 
+#' recodes the PROMIS-29 Physical Function items to needed levels
+#' 
+#' @param pro_phys_funct.factor Item of PROMIS-29 Physical Function that needs to be recoded
+#' 
+#' @return A vector with the correctly coded PROMIS-29 Physical Function item
+#' @export
+
+recode_promis29_phys_funct <- function(pro_phys_funct.factor) {
+  case_when(pro_phys_funct.factor == "Ohne jede Schwierigkeit" ~ 5,
+            pro_phys_funct.factor == "Mit geringen Schwierigkeiten" ~ 4,
+            pro_phys_funct.factor == "Mit einigen Schwierigkeiten" ~ 3, 
+            pro_phys_funct.factor == "Mit gro\u00dfen Schwierigkeiten" ~ 2,
+            pro_phys_funct.factor == "Kann ich gar nicht" ~ 1,
+            TRUE ~ NA_real_)
+}
+
+### PROMIS-29 Ability to participate in social roles and activities ============
+
+#' Recode PROMIS-29 Ability to participate in social roles and activities items
+#' 
+#' @description 
+#' recodes the PROMIS-29 Ability to participate in social roles and activities items to needed levels
+#' 
+#' @param pro_social.factor Item of PROMIS-29 Ability to participate in social roles and activities that needs to be recoded
+#' 
+#' @return A vector with the correctly coded PROMIS-29 Ability to participate in social roles and activities item
+#' @export
+
+recode_promis29_social <- function(pro_social.factor) {
+  
+  case_when(pro_social.factor == "Nie" ~ 5,
+            pro_social.factor == "Selten" ~ 4,
+            pro_social.factor == "Manchmal" ~ 3, 
+            pro_social.factor == "Oft" ~ 2,
+            pro_social.factor == "Immer" ~ 1,
+            TRUE ~ NA_real_)
 }
