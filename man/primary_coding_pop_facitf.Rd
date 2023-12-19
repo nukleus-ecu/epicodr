@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary-coding-pop.R
 \name{primary_coding_pop_facitf}
 \alias{primary_coding_pop_facitf}
-\title{Primary coding Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)}
+\title{Primary coding Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue Scale)}
 \usage{
 primary_coding_pop_facitf(trial_data)
 }
