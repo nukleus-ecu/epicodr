@@ -601,6 +601,36 @@ primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
 }
 
 
+# ARDS =========================================================================
+
+#' Primary coding for ARDS by imaging procedures
+#' 
+#' adds the following dataframes to data: 
+#' ecu_ards
+#' 
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @return A secuTrial data object with primary coded variables and dataframes
+#' @export
+
+primary_coding_suep_ards <- function(trial_data, pid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  pid <- trial_data$export_options$id_names$pid 
+  
+  trial_data[["ecu_ards"]] <- build_ards_df(trial_data, pid)
+  
+  return(trial_data)
+}
+
+
 # SUEP Wrapper primary coding ==================================================
 
 #' Primary coding SUEP Data
@@ -692,6 +722,12 @@ primary_coding_suep <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_suep_who_scale(trial_data, pid, visitid)},
            error = function(e) {
              warning("primary_coding_suep_who_scale() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## ARDS ======================================================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_ards(trial_data, pid)},
+           error = function(e) {
+             warning("primary_coding_suep_ards() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
@@ -1658,6 +1694,132 @@ build_pcs_score_suep_df_with_proms <- function(trial_data, pid) {
     select(pid, .data$visit_label, contains("pcs_score"))
   
   return(ecu_pcs_score)
+  
+}
+
+
+## ARDS ========================================================================
+
+#' Build dataframe with ARDS by imaging procedures
+#' 
+#' @return dataframe, which contains the ards data
+#' 
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+build_ards_df <- function (trial_data, pid) {
+  
+  death_yes <- "a Tod"
+  ards_yes <- "b ARDS Kriterien erf\u00fcllt"
+  ards_excl <- "c ARDS ausgeschlossen"
+  patho_yes <- "c Pathologischer Befund"
+  imaging_no <- "f Gar keine Bildgebung"
+  normal_res <- "d Normalbefund"
+  no_res <- "e Kein Befund"
+  no_info <- "e Keine Informationen verf\u00fcgbar"
+  imaging_no_further <- "j Keine weitere Bildgebung"
+  result_unclear <- "k Befund unklar"
+  
+  # ARDS via imaging
+  lung_diag <- trial_data$fv13 %>%
+    mutate(form_parent = "fv13") %>%
+    select(pid, .data$form_parent, .data$mnpfs0.factor, .data$mnpfs1.factor, .data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor) 
+  
+  # CT Thorax
+  ect_ards <- trial_data$ect %>% 
+    select(pid, .data$gec_ct_result.factor, .data$ct_date.date, .data$ct_date_uk.factor, .data$gec_ct_covid19, .data$ct_cons, .data$ct_cons_side, .data$ct_ret, .data$ct_grglass, 
+           .data$ct_grglass_side, .data$ct_crazypav, .data$ct_treeinb, .data$ct_treeinb_side) %>%
+    rename(result.factor = .data$gec_ct_result.factor,
+           outcome_date.date = .data$ct_date.date,
+           outcome_date_uk.factor= .data$ct_date_uk.factor) %>%
+    mutate(form = "ect") %>%
+    filter(!is.na(.data$result.factor))
+  
+  # X-Ray Thorax
+  exray_ards <- trial_data$exray %>%
+    select(pid, .data$gec_xray_result.factor, .data$xray_date.date, .data$xray_date_uk.factor, .data$xray_cons, .data$xray_cons_side, .data$xray_infil, .data$xray_infil_side) %>%
+    rename(result.factor = .data$gec_xray_result.factor,
+           outcome_date.date = .data$xray_date.date,
+           outcome_date_uk.factor = .data$xray_date_uk.factor) %>%
+    mutate(form = "exray") %>%
+    filter(.data$result.factor !="Keine Informationen verf\u00fcgbar" | !is.na(.data$result.factor))
+  
+  # US Thorax
+  elus_ards <- trial_data$elus %>% 
+    select(pid, .data$gec_lus_result.factor, .data$lus_date.date, .data$lus_date_uk.factor) %>%
+    rename(result.factor = .data$gec_lus_result.factor,
+           outcome_date.date = .data$lus_date.date,
+           outcome_date_uk.factor = .data$lus_date_uk.factor) %>%
+    mutate(form = "elus")%>%
+    filter(.data$result.factor !="Keine Informationen verf\u00fcgbar" | !is.na(.data$result.factor))
+  
+  #MRI Thorax
+  elmr_ards <- trial_data$elmr %>% 
+    select(pid, .data$lmr_result.factor, .data$lmr_date.date, .data$lmr_date_uk.factor) %>%
+    rename(result.factor = .data$lmr_result.factor,
+           outcome_date.date = .data$lmr_date.date,
+           outcome_date_uk.factor = .data$lmr_date_uk.factor) %>%
+    mutate(form = "elmr") %>%
+    filter(.data$result.factor !="Keine Informationen verf\u00fcgbar"| !is.na(.data$result.factor))
+  
+  img_ards <- ect_ards %>%
+    bind_rows(exray_ards) %>%
+    bind_rows(elus_ards) %>%
+    bind_rows(elmr_ards) 
+  
+  ards <- lung_diag %>%
+    left_join(img_ards, by = pid) %>%
+    mutate(form = ifelse(is.na(.data$form), .data$form_parent, .data$form)) %>%
+    mutate(result.factor = as.character(.data$result.factor),
+           result.factor = case_when(str_detect(.data$result.factor, "Normalbefund") ~ normal_res,
+                                     str_detect(.data$result.factor, "Pathologisch") ~ patho_yes,
+                                     str_detect(.data$result.factor, "Kein Befund") ~ no_res,
+                                     str_detect(.data$result.factor, "Nein, kein")  ~ imaging_no_further,
+                                     str_detect(.data$result.factor, "Keine Informationen verf\u00fcgbar")  ~ no_info,
+                                     TRUE ~ .data$result.factor)
+    ) %>%
+    group_by(!!sym(pid)) %>%
+    mutate(
+      result.factor = case_when(
+        if_all(c(.data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor), ~ str_detect(., "Nein, kein")) ~ imaging_no,
+        if_all(c(.data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor), ~ str_detect(., "Keine Informationen verf\u00fcgbar")) ~ no_info,
+        !is.na(.data$result.factor) ~ .data$result.factor,
+        TRUE ~ result_unclear)
+    ) %>%
+    ungroup() %>%
+    mutate(
+      outcome = case_when(
+        .data$gec_ct_covid19 == 1 | .data$gec_ct_covid19 == 2 ~ ards_yes,
+        .data$ct_cons == 1 & .data$ct_cons_side == 3  ~ ards_yes,
+        .data$ct_ret == 1 & (.data$ct_grglass == 1 | .data$ct_crazypav == 1) ~ ards_yes,
+        .data$ct_grglass == 1 & .data$ct_grglass_side == 3  ~ ards_yes,
+        .data$ct_treeinb == 1 & .data$ct_treeinb_side == 3 ~ ards_yes,
+        # explicitly exclude ards
+        .data$gec_ct_covid19 != 4 & 
+          (.data$ct_cons !=1 | (.data$ct_cons == 1 & .data$ct_cons_side != 3 & .data$ct_cons_side != 4)) &
+          (.data$ct_ret !=1 | (.data$ct_ret == 1 & .data$ct_grglass != 3 & .data$ct_crazypav != 3)) &
+          (.data$ct_grglass ==1 & .data$ct_grglass_side !=3 & .data$ct_grglass_side !=4) &
+          (.data$ct_treeinb != 1 | (.data$ct_treeinb == 1 & .data$ct_treeinb_side !=3 & .data$ct_treeinb_side !=4)) ~ ards_excl,
+        TRUE ~ as.character(.data$result.factor)
+      )) %>%
+    mutate(
+      # Examination date is exact
+      outcome_date_d.factor = ifelse(!is.na(.data$outcome_date.date), "Exakte Angabe (Befunddatum)", NA),
+      ards_rx = case_when(
+        .data$xray_cons == 1 & .data$xray_cons_side == 3 ~ ards_yes,
+        .data$xray_infil == 1 & .data$xray_infil_side == 3 ~ ards_yes,
+        # explicitly exclude ards
+        (.data$xray_cons != 1 | (.data$xray_cons ==1 & .data$xray_cons_side != 3 & .data$xray_cons_side != 4)) &
+          (.data$xray_infil != 1 | (.data$xray_infil ==1 & .data$xray_infil_side != 3 & .data$xray_infil_side != 4))  ~ ards_excl,
+        TRUE ~ as.character(.data$result.factor)),
+      outcome = ifelse(.data$form == "exray", .data$ards_rx, .data$outcome)) %>%
+    rename(mnpfs0.factor_outcome = .data$mnpfs0.factor) %>%
+    select(pid, .data$mnpfs0.factor_outcome, .data$result.factor, .data$outcome, .data$outcome_date.date, .data$outcome_date_d.factor, .data$outcome_date_uk.factor, 
+           .data$form, .data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor) 
+  
+  return(ards)
   
 }
 
