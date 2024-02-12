@@ -4,12 +4,10 @@
 \alias{primary_coding_suep_ards}
 \title{Primary coding for ARDS by imaging procedures}
 \usage{
-primary_coding_suep_ards(trial_data, pid)
+primary_coding_suep_ards(trial_data)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
-
-\item{pid}{column name of patient ID in trial_data}
 }
 \value{
 A secuTrial data object with primary coded variables and dataframes
