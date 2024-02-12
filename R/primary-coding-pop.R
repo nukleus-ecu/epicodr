@@ -603,6 +603,40 @@ primary_coding_pop_gpaq_post <- function(trial_data) {
 }
 
 
+#' 6 Minute Walk Test (6MWT)
+#' 
+#' adds the following columns to geria:
+#' ecu_6mwt_soll, ecu_6mwt_soll_erreicht
+#' 
+#' @param trial_data a SsecuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_6mwt <- function(trial_data, pid) {
+  
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
+  
+  needed_vars <- trial_data$geria %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    select(pid, visit_name_temp) %>% 
+    left_join(trial_data$erstbefragung %>% select(pid, "gec_demo_age", visit_label_var_name) %>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    left_join(trial_data$anthropo %>% select(pid, "gec_height", visit_label_var_name)%>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    select(pid, .data$visit_name_temp, .data$gec_demo_age, .data$gec_height)
+  
+  trial_data$geria <- trial_data$geria %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    left_join(needed_vars, by = c(pid, "visit_name_temp")) %>%
+    mutate(ecu_6mwt_soll = 592.134 + (0.203 * (.data$gec_demo_age < 56.2) * (56.2 - .data$gec_demo_age)) -
+             (5.034 * (.data$gec_demo_age > 56.2) * (.data$gec_demo_age - 56.2)) + 1.857 * (.data$gec_height - 172.6),
+           ecu_6mwt_soll_erreicht = case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ 1,
+                                              .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ 0)) %>%
+    select(-visit_name_temp)
+  
+  return(trial_data)
+  
+}
+
+
 # POP Wrapper primary coding ==================================================
 
 #' Primary coding POP Data
