@@ -613,7 +613,7 @@ primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
 #' @return A secuTrial data object with primary coded variables and dataframes
 #' @export
 
-primary_coding_suep_ards <- function(trial_data, pid) {
+primary_coding_suep_ards <- function(trial_data) {
   
   if (!("id_names" %in% names(trial_data$export_options))) {
     trial_data <- set_id_names(trial_data)
@@ -931,7 +931,7 @@ primary_coding_suep <- function(trial_data) {
              print(e)})
   
   ## ARDS ======================================================================
-  tryCatch(expr = {trial_data <- primary_coding_suep_ards(trial_data, pid)},
+  tryCatch(expr = {trial_data <- primary_coding_suep_ards(trial_data)},
            error = function(e) {
              warning("primary_coding_suep_ards() did not work. This is likely due to missing variables.")
              print(e)})
@@ -1222,7 +1222,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
       warning("death_date is missing in fv2_6")
       print(e)})
   
-  death_data <- trial_data$fv2_6_death %>%
+  death_data <- fv2_6_death %>%
     bind_rows(eresid_death) %>%
     group_by(!!sym(pid)) %>%
     mutate(
@@ -1998,50 +1998,44 @@ build_ards_df <- function (trial_data, pid) {
   
   ards <- lung_diag %>%
     left_join(img_ards, by = pid) %>%
-    mutate(form = ifelse(is.na(.data$form), .data$form_parent, .data$form)) %>%
-    mutate(result.factor = as.character(.data$result.factor),
+    mutate(form = ifelse(is.na(.data$form), .data$form_parent, .data$form),
+           result.factor = as.character(.data$result.factor),
            result.factor = case_when(str_detect(.data$result.factor, "Normalbefund") ~ normal_res,
                                      str_detect(.data$result.factor, "Pathologisch") ~ patho_yes,
                                      str_detect(.data$result.factor, "Kein Befund") ~ no_res,
                                      str_detect(.data$result.factor, "Nein, kein")  ~ imaging_no_further,
                                      str_detect(.data$result.factor, "Keine Informationen verf\u00fcgbar")  ~ no_info,
-                                     TRUE ~ .data$result.factor)
-    ) %>%
-    group_by(!!sym(pid)) %>%
-    mutate(
-      result.factor = case_when(
-        if_all(c(.data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor), ~ str_detect(., "Nein, kein")) ~ imaging_no,
-        if_all(c(.data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor), ~ str_detect(., "Keine Informationen verf\u00fcgbar")) ~ no_info,
-        !is.na(.data$result.factor) ~ .data$result.factor,
-        TRUE ~ result_unclear)
-    ) %>%
-    ungroup() %>%
-    mutate(
-      outcome = case_when(
-        .data$gec_ct_covid19 == 1 | .data$gec_ct_covid19 == 2 ~ ards_yes,
-        .data$ct_cons == 1 & .data$ct_cons_side == 3  ~ ards_yes,
-        .data$ct_ret == 1 & (.data$ct_grglass == 1 | .data$ct_crazypav == 1) ~ ards_yes,
-        .data$ct_grglass == 1 & .data$ct_grglass_side == 3  ~ ards_yes,
-        .data$ct_treeinb == 1 & .data$ct_treeinb_side == 3 ~ ards_yes,
-        # explicitly exclude ards
-        .data$gec_ct_covid19 != 4 & 
-          (.data$ct_cons !=1 | (.data$ct_cons == 1 & .data$ct_cons_side != 3 & .data$ct_cons_side != 4)) &
-          (.data$ct_ret !=1 | (.data$ct_ret == 1 & .data$ct_grglass != 3 & .data$ct_crazypav != 3)) &
-          (.data$ct_grglass ==1 & .data$ct_grglass_side !=3 & .data$ct_grglass_side !=4) &
-          (.data$ct_treeinb != 1 | (.data$ct_treeinb == 1 & .data$ct_treeinb_side !=3 & .data$ct_treeinb_side !=4)) ~ ards_excl,
-        TRUE ~ as.character(.data$result.factor)
-      )) %>%
-    mutate(
-      # Examination date is exact
-      outcome_date_d.factor = ifelse(!is.na(.data$outcome_date.date), "Exakte Angabe (Befunddatum)", NA),
-      ards_rx = case_when(
-        .data$xray_cons == 1 & .data$xray_cons_side == 3 ~ ards_yes,
-        .data$xray_infil == 1 & .data$xray_infil_side == 3 ~ ards_yes,
-        # explicitly exclude ards
-        (.data$xray_cons != 1 | (.data$xray_cons ==1 & .data$xray_cons_side != 3 & .data$xray_cons_side != 4)) &
-          (.data$xray_infil != 1 | (.data$xray_infil ==1 & .data$xray_infil_side != 3 & .data$xray_infil_side != 4))  ~ ards_excl,
-        TRUE ~ as.character(.data$result.factor)),
-      outcome = ifelse(.data$form == "exray", .data$ards_rx, .data$outcome)) %>%
+                                     .data$gec_ct.factor == "Nein, kein CT-Thorax" & 
+                                       .data$gec_xray.factor == "Nein, kein Röntgen-Thorax" &
+                                       .data$gec_lus.factor == "Nein, kein Lungenultraschall" & 
+                                       .data$lmr.factor == "Nein, keine MRT-Untersuchung der Lunge" ~ imaging_no,
+                                     .data$gec_ct.factor == "Keine Informationen verf\u00fcgbar" & 
+                                       .data$gec_xray.factor == "Keine Informationen verf\u00fcgbar" & 
+                                       .data$gec_lus.factor == "Keine Informationen verf\u00fcgbar" & 
+                                       .data$lmr.factor == "Keine Informationen verf\u00fcgbar" ~ no_info,
+                                     !is.na(.data$result.factor) ~ .data$result.factor,
+                                     TRUE ~ result_unclear),
+           outcome = case_when(.data$gec_ct_covid19 == 1 | .data$gec_ct_covid19 == 2 ~ ards_yes,
+                               .data$ct_cons == 1 & .data$ct_cons_side == 3  ~ ards_yes,
+                               .data$ct_ret == 1 & (.data$ct_grglass == 1 | .data$ct_crazypav == 1) ~ ards_yes,
+                               .data$ct_grglass == 1 & .data$ct_grglass_side == 3  ~ ards_yes,
+                               .data$ct_treeinb == 1 & .data$ct_treeinb_side == 3 ~ ards_yes,
+                               # explicitly exclude ards
+                               .data$gec_ct_covid19 != 4 & 
+                                 (.data$ct_cons !=1 | (.data$ct_cons == 1 & .data$ct_cons_side != 3 & .data$ct_cons_side != 4)) &
+                                 (.data$ct_ret !=1 | (.data$ct_ret == 1 & .data$ct_grglass != 3 & .data$ct_crazypav != 3)) &
+                                 (.data$ct_grglass ==1 & .data$ct_grglass_side !=3 & .data$ct_grglass_side !=4) &
+                                 (.data$ct_treeinb != 1 | (.data$ct_treeinb == 1 & .data$ct_treeinb_side !=3 & .data$ct_treeinb_side !=4)) ~ ards_excl,
+                               TRUE ~ as.character(.data$result.factor)),
+           # Examination date is exact
+           outcome_date_d.factor = ifelse(!is.na(.data$outcome_date.date), "Exakte Angabe (Befunddatum)", NA),
+           ards_rx = case_when(.data$xray_cons == 1 & .data$xray_cons_side == 3 ~ ards_yes,
+                               .data$xray_infil == 1 & .data$xray_infil_side == 3 ~ ards_yes,
+                               # explicitly exclude ards
+                               (.data$xray_cons != 1 | (.data$xray_cons ==1 & .data$xray_cons_side != 3 & .data$xray_cons_side != 4)) &
+                                 (.data$xray_infil != 1 | (.data$xray_infil ==1 & .data$xray_infil_side != 3 & .data$xray_infil_side != 4))  ~ ards_excl,
+                               TRUE ~ as.character(.data$result.factor)),
+           outcome = ifelse(.data$form == "exray", .data$ards_rx, .data$outcome)) %>%
     rename(mnpfs0.factor_outcome = .data$mnpfs0.factor) %>%
     select(pid, .data$mnpfs0.factor_outcome, .data$result.factor, .data$outcome, .data$outcome_date.date, .data$outcome_date_d.factor, .data$outcome_date_uk.factor, 
            .data$form, .data$gec_ct.factor, .data$gec_xray.factor, .data$gec_lus.factor, .data$lmr.factor) 
