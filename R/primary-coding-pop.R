@@ -134,10 +134,10 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
   
   needed_vars <- trial_data[["anthropo"]] %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
-    select(pid, visit_name_temp) %>%
+    select(pid, .data$visit_name_temp) %>%
     left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor, visit_label_var_name) %>%
                 mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
-    select(-visit_name)
+    select(-.data$visit_name)
   
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
@@ -146,7 +146,7 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
                                  .data$gec_gender.factor == "Weiblich" & .data$taillumfang > 88 ~ "Abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang <= 102 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang > 102 ~ "Abdominal overweight")) %>%
-    select(-contains("gec_gender"), -visit_name_temp)
+    select(-contains("gec_gender"), -.data$visit_name_temp)
   
   return(trial_data)
 }
@@ -615,6 +615,7 @@ primary_coding_pop_gpaq_post <- function(trial_data) {
 #' ecu_6mwt_soll, ecu_6mwt_soll_erreicht
 #' 
 #' @param trial_data a SsecuTrial data object
+#' @param pid column name of patient ID in trial_data
 #' @importFrom rlang .data
 #' @export
 
@@ -624,7 +625,7 @@ primary_coding_pop_6mwt <- function(trial_data, pid) {
   
   needed_vars <- trial_data$geria %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
-    select(pid, visit_name_temp) %>% 
+    select(pid, .data$visit_name_temp) %>% 
     left_join(trial_data$erstbefragung %>% select(pid, "gec_demo_age", visit_label_var_name) %>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
     left_join(trial_data$anthropo %>% select(pid, "gec_height", visit_label_var_name)%>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
     select(pid, .data$visit_name_temp, .data$gec_demo_age, .data$gec_height)
@@ -636,7 +637,7 @@ primary_coding_pop_6mwt <- function(trial_data, pid) {
              (5.034 * (.data$gec_demo_age > 56.2) * (.data$gec_demo_age - 56.2)) + 1.857 * (.data$gec_height - 172.6),
            ecu_6mwt_soll_erreicht = case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ 1,
                                               .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ 0)) %>%
-    select(-visit_name_temp)
+    select(-.data$visit_name_temp)
   
   return(trial_data)
   

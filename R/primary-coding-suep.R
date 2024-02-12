@@ -609,7 +609,6 @@ primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
 #' ecu_ards
 #' 
 #' @param trial_data A secuTrial data object
-#' @param pid column name of patient ID in trial_data
 #' @return A secuTrial data object with primary coded variables and dataframes
 #' @export
 
@@ -2006,7 +2005,7 @@ build_ards_df <- function (trial_data, pid) {
                                      str_detect(.data$result.factor, "Nein, kein")  ~ imaging_no_further,
                                      str_detect(.data$result.factor, "Keine Informationen verf\u00fcgbar")  ~ no_info,
                                      .data$gec_ct.factor == "Nein, kein CT-Thorax" & 
-                                       .data$gec_xray.factor == "Nein, kein Röntgen-Thorax" &
+                                       .data$gec_xray.factor == "Nein, kein R\u00f6ntgen-Thorax" &
                                        .data$gec_lus.factor == "Nein, kein Lungenultraschall" & 
                                        .data$lmr.factor == "Nein, keine MRT-Untersuchung der Lunge" ~ imaging_no,
                                      .data$gec_ct.factor == "Keine Informationen verf\u00fcgbar" & 
