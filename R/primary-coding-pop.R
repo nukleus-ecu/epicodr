@@ -132,15 +132,21 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
   
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
   
-  trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
-    mutate(visit_name_temp = str_remove(visit_label_var_name, "-EB|-VO")) %>%
+  needed_vars <- trial_data[["anthropo"]] %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    select(pid, visit_name_temp) %>%
     left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor, visit_label_var_name) %>%
-                mutate(visit_name_temp = str_remove(visit_label_var_name, "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+                mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    select(-visit_name)
+  
+  trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    left_join(needed_vars, by = c(pid, "visit_name_temp")) %>%
     mutate(ecu_waist = case_when(.data$gec_gender.factor == "Weiblich" & .data$taillumfang <= 88 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "Weiblich" & .data$taillumfang > 88 ~ "Abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang <= 102 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang > 102 ~ "Abdominal overweight")) %>%
-    select(-contains("gec_gender"))
+    select(-contains("gec_gender"), -visit_name_temp)
   
   return(trial_data)
 }
