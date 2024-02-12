@@ -775,6 +775,11 @@ primary_coding_pop <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_pop_gpaq_pre () did not work. This is likely due to missing variables.")
              print(e)})
+  ### 6 Minute Walk Test (6MWT) ================================================
+  tryCatch(expr = {trial_data <- primary_coding_pop_6mwt(trial_data, pid)},
+           error = function(e) {
+             warning("primary_coding_pop_6mwt() did not work. This is likely due to missing variables.")
+             print(e)})
   
   
   catw("Primary Coding done")
