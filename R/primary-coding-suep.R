@@ -354,6 +354,396 @@ primary_coding_suep_eq5d5l <- function(trial_data, pid, visitid) {
 }
 
 
+#' Primary coding EQ5D-3L-Index for children aged 4 (PROXY Version)
+#' 
+#' adds the following column to promp4:
+#' ecu_eq5d3l_proxy_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_4p <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp4"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom4_eq5d_par1, .data$p_prom4_eq5d_par2, .data$p_prom4_eq5d_par3, .data$p_prom4_eq5d_par4,
+                                                                 .data$p_prom4_eq5d_par5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_proxy_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-3L-Index for children aged 5-7 (PROXY Version)
+#' 
+#' adds the following column to promp5:
+#' ecu_eq5d3l_proxy_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_5t7p <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp5"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom5_eq5d_par1, .data$p_prom5_eq5d_par2, .data$p_prom5_eq5d_par3, .data$p_prom5_eq5d_par4,
+                                                                 .data$p_prom5_eq5d_par5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_proxy_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-3L-Index for children aged 8 (PROXY Version)
+#' 
+#' adds the following column to promp8:
+#' ecu_eq5d3l_proxy_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_8p <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp8"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom8_eq5d_par1, .data$p_prom8_eq5d_par2, .data$p_prom8_eq5d_par3, .data$p_prom8_eq5d_par4,
+                                                                 .data$p_prom8_eq5d_par5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_proxy_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-3L-Index for children aged 8 (Y Version)
+#' 
+#' adds the following column to promp8k:
+#' ecu_eq5d3l_y_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_8y <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp8k"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_y_index = calculate_eq5d3l_y_index(.data$p_prom8_eq5d_kid1, .data$p_prom8_eq5d_kid2, .data$p_prom8_eq5d_kid3, .data$p_prom8_eq5d_kid4,
+                                                         .data$p_prom8_eq5d_kid5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_y_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-3L-Index for children aged 9-11 (PROXY Version)
+#' 
+#' adds the following column to promp9:
+#' ecu_eq5d3l_proxy_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_9t11p <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp9"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom9_eq5d_par1, .data$p_prom9_eq5d_par2, .data$p_prom9_eq5d_par3, .data$p_prom9_eq5d_par4,
+                                                                 .data$p_prom9_eq5d_par5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_proxy_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-3L-Index for children aged 9-11 (Y Version)
+#' 
+#' adds the following column to promp9k:
+#' ecu_eq5d3l_y_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_9t11y <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp9k"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_y_index = calculate_eq5d3l_y_index(.data$p_prom9_eq5d_kid1, .data$p_prom9_eq5d_kid2, .data$p_prom9_eq5d_kid3, .data$p_prom9_eq5d_kid4,
+                                                         .data$p_prom9_eq5d_kid5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_y_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-5L-Index for children aged 12 (PROXY Version)
+#' 
+#' adds the following column to promp12:
+#' ecu_eq5d5l_proxy_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d5l_12p <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp12"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d5l_proxy_index = calculate_eq5d5l_index(.data$p_prom12_eq5d_par1, .data$p_prom12_eq5d_par2, .data$p_prom12_eq5d_par3, .data$p_prom12_eq5d_par4,
+                                                           .data$p_prom12_eq5d_par5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d5l_proxy_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-5L-Index for children aged 12 (Y Version)
+#' 
+#' adds the following column to promp12k:
+#' ecu_eq5d5l_y_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d5l_12y <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp12k"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d5l_y_index = calculate_eq5d5l_y_index(.data$p_prom12_eq5d_t_kid1, .data$p_prom12_eq5d_t_kid2, .data$p_prom12_eq5d_t_kid3, 
+                                                         .data$p_prom12_eq5d_t_kid4, .data$p_prom12_eq5d_t_kid5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d5l_y_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-3L-Index for children aged 13-18 (PROXY Version)
+#' 
+#' adds the following column to promp13:
+#' ecu_eq5d3l_proxy_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d3l_13t18p <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp13"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom13_eq5d_p1, .data$p_prom13_eq5d_p2, .data$p_prom13_eq5d_p3, .data$p_prom13_eq5d_p4,
+                                                                 .data$p_prom13_eq5d_p5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d3l_proxy_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
+#' Primary coding EQ5D-5L-Index for children aged 13-18 (Y Version)
+#' 
+#' adds the following column to promp13k:
+#' ecu_eq5d5l_y_index
+#'
+#' @param trial_data A secuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @param visitid column name of visit ID in trial_data
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_eq5d5l_13t18y <- function(trial_data, pid, visitid) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promp13k"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_eq5d5l_y_index = calculate_eq5d5l_y_index(.data$p_prom13_eq5d_t_kid1, .data$p_prom13_eq5d_t_kid2, .data$p_prom13_eq5d_t_kid3, 
+                                                         .data$p_prom13_eq5d_t_kid4, .data$p_prom13_eq5d_t_kid5)) %>% 
+    select(matches(visitid), .data$ecu_eq5d5l_y_index)
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
 #' Primary coding Brief Resilience Scale (BRS)
 #' 
 #' adds the following columns to promext: 
@@ -902,6 +1292,46 @@ primary_coding_suep <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_suep_eq5d5l(trial_data, pid, visitid)},
            error = function(e) {
              warning("primary_coding_suep_eq5d5l() did not work. This is likely due to missing variables.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_4p(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_4p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_5t7p(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_5t7p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_8p(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_8p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_8y(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_8y() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_9t11p(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_9t11p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_9t11y(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_9t11y() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d5l_12p(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d5l_12p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d5l_12y(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d5l_12y() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d3l_13t18p(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d3l_13t18p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
+             print(e)})
+  tryCatch(expr = {trial_data <- primary_coding_suep_eq5d5l_13t18y(trial_data, pid, visitid)},
+           error = function(e) {
+             warning("primary_coding_suep_eq5d5l_13t18p() did not work. This is likely due to missing variables or no inclusion of paediatric patients.")
              print(e)})
   ### Brief Resilience Scale ===================================================
   tryCatch(expr = {trial_data <- primary_coding_suep_brs(trial_data, visitid)},
@@ -2041,6 +2471,68 @@ build_ards_df <- function (trial_data, pid) {
   
   return(ards)
   
+}
+
+
+## EQ5D for children ===========================================================
+
+#' Calculate EQ5D-3L-Index (PROXY Version)
+#' 
+#' @description Calculates EQ-5D-3L index following recommendations for Germany
+#' @param mo is a vector for mobility score of eq5d
+#' @param sc is a vector for self-care score of eq5d
+#' @param ua is a vector for usual activity score of eq5d
+#' @param pd is a vector for pain/discomfort score of eq5d
+#' @param ad is a vector for anxiety/depression score of eq5d
+#' @importFrom eq5d eq5d
+#' @return vector with eq5d-3l-index-proxy 
+#' @export
+
+calculate_eq5d3l_proxy_index <- function (mo, sc, ua, pd, ad) {
+  ecu_eq5d_score <- paste (mo, sc, ua, pd, ad, sep="")
+  ecu_eq5d3l_proxy_index <- eq5d::eq5d(scores = ecu_eq5d_score, type = "TTO", version = "3L", country = "Germany", ignore.invalid = TRUE)
+  
+  return (ecu_eq5d3l_proxy_index)
+}
+
+
+#' Calculate EQ5D-3L-Index (Y Version)
+#' 
+#' @description Calculates EQ-5D-3L index following recommendations for Germany
+#' @param mo is a vector for mobility score of eq5d
+#' @param sc is a vector for self-care score of eq5d
+#' @param ua is a vector for usual activity score of eq5d
+#' @param pd is a vector for pain/discomfort score of eq5d
+#' @param ad is a vector for anxiety/depression score of eq5d
+#' @importFrom eq5d eq5d
+#' @return vector with eq5d-3l-index-y 
+#' @export
+
+calculate_eq5d3l_y_index <- function (mo, sc, ua, pd, ad) {
+  ecu_eq5d_score <- paste (mo, sc, ua, pd, ad, sep="")
+  ecu_eq5d3l_y_index <- eq5d::eq5d(scores = ecu_eq5d_score, type = "TTO", version = "Y", country = "Germany", ignore.invalid = TRUE)
+  
+  return (ecu_eq5d3l_y_index)
+}
+
+
+#' Calculate EQ5D-5L-Index (Y Version)
+#' 
+#' @description Calculates EQ-5D-5L index following recommendations for Germany
+#' @param mo is a vector for mobility score of eq5d
+#' @param sc is a vector for self-care score of eq5d
+#' @param ua is a vector for usual activity score of eq5d
+#' @param pd is a vector for pain/discomfort score of eq5d
+#' @param ad is a vector for anxiety/depression score of eq5d
+#' @importFrom eq5d eq5d
+#' @return vector with eq5d-5l-index-y 
+#' @export
+
+calculate_eq5d5l_y_index <- function (mo, sc, ua, pd, ad) {
+  ecu_eq5d_score <- paste (mo, sc, ua, pd, ad, sep="")
+  ecu_eq5d5l_y_index <- eq5d::eq5d(scores = ecu_eq5d_score, type = "VT", version = "Y", country = "Germany", ignore.invalid = TRUE)
+  
+  return (ecu_eq5d5l_y_index)
 }
 
 
