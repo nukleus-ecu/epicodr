@@ -1,7 +1,7 @@
 Type: Package
 Package: epicodr
 Title: Primary Coding for NAPKON data
-Version: 2.3.0
+Version: 3.0.0
 Authors@R: 
     c(person("Institut für Klinische Epidemiologie und Biometrie, Universitätsklinikum Würzburg, Germany", 
              role=c("cph"),
