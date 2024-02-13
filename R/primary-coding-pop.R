@@ -636,7 +636,9 @@ primary_coding_pop_6mwt <- function(trial_data, pid) {
     mutate(ecu_6mwt_soll = 592.134 + (0.203 * (.data$gec_demo_age < 56.2) * (56.2 - .data$gec_demo_age)) -
              (5.034 * (.data$gec_demo_age > 56.2) * (.data$gec_demo_age - 56.2)) + 1.857 * (.data$gec_height - 172.6),
            ecu_6mwt_soll_erreicht = case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ 1,
-                                              .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ 0)) %>%
+                                              .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ 0),
+           ecu_6mwt_soll_erreicht.factor = as.factor(case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ "Ja",
+                                                               .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ "Nein"))) %>%
     select(-.data$visit_name_temp)
   
   return(trial_data)
