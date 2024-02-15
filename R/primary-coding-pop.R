@@ -299,7 +299,8 @@ primary_coding_pop_phq8 <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
     mutate(ecu_phq8_sum = calculate_phq8_sum(.data$phq8_1, .data$phq8_2, .data$phq8_3, .data$phq8_4, .data$phq8_5, .data$phq8_6, .data$phq8_7, .data$phq8_8),
-           ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum))
+           ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum),
+           ecu_phq8_cat_2 = categorize_phq8_ecu_2(.data$ecu_phq8_sum))
   
   return(trial_data)
 }

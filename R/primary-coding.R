@@ -417,6 +417,64 @@ categorize_mmrc_ecu <- function (mmrc) {
 }
 
 
+#' Recode Patient Health Questionnaire items (PHQ)
+#' 
+#' @description recodes Patient Health Questionnaire items to needed levels
+#' 
+#' @param phq.factor PHQ item, that needs recoding
+
+recode_phq <- function(phq.factor) {
+  
+  case_when(phq.factor == "\u00dcberhaupt nicht" ~ 0, 
+            phq.factor == "An einzelnen Tagen" ~ 1,
+            phq.factor == "An mehr als der H\u00e4lfte der Tage" ~ 2,
+            phq.factor == "Beinahe jeden Tag" ~ 3)
+  
+}
+
+
+#' Calculate Patient Health Questionnaire (PHQ 4) sum score
+#' 
+#' @description Calculate sum score of PHQ-4
+#' 
+#' Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
+#' @param phq4_1 vector for item "Little interest or pleasure in doing things."
+#' @param phq4_2 vector for item "Feeling down, depressed, or hopeless."
+#' @param phq4_3 vector for item "Feeling nervous, anxious or on edge."
+#' @param phq4_4 vector for item "Not being able to stop or control worrying."
+#' 
+#' Answers need coded levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
+#' 
+#' @return A numeric vector with sum score of phq8
+#' @export
+
+calculate_phq4_sum <- function (phq4_1, phq4_2, phq4_3, phq4_4) {
+  
+  ecu_phq4_sum <- phq4_1 + phq4_2 + phq4_3 + phq4_4
+  
+  return(ecu_phq4_sum)
+  
+}
+
+
+#' Categorize Patient Health Questionnaire (PHQ 4) 
+#' 
+#' @description Categorize PHQ-4 sum score in "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @param ecu_phq4_sum numeric vector with sum score of phq4
+#' @return A factorized vector w/ levels "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @export
+
+categorize_phq4_ecu <- function (ecu_phq4_sum) {
+  
+  factor (
+    case_when (ecu_phq4_sum >= 0 & ecu_phq4_sum <= 2 ~ "No depression",
+               ecu_phq4_sum >= 3 & ecu_phq4_sum <= 5 ~ "Mild depression",
+               ecu_phq4_sum >= 6 & ecu_phq4_sum <= 8 ~ "Moderate depression",
+               ecu_phq4_sum >= 9 & ecu_phq4_sum <= 12 ~ "Severe depression"))
+  
+}
+
+
 #' Calculate Patient Health Questionnaire Depression Scale 8 (PHQ 8) sum score
 #' 
 #' @description Calculate sum score of PHQ-8
@@ -454,6 +512,23 @@ categorize_phq8_ecu <- function (ecu_phq8_sum) {
   factor (
     case_when (ecu_phq8_sum < 10 ~ "No depression",
                ecu_phq8_sum >= 10 ~ "Depression")
+  )
+}
+
+
+#' Categorize Patient Health Questionnaire Depression Scale 8 (PHQ 8) - 4 groups
+#' 
+#' @description Categorize PHQ-8 sum score in "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @param ecu_phq8_sum numeric vector with sum score of phq8
+#' @return A factorized vector w/ levels "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @export
+
+categorize_phq8_ecu_2 <- function (ecu_phq8_sum) {
+  factor (
+    case_when (ecu_phq8_sum >= 0 & ecu_phq8_sum <= 4 ~ "No depression",
+               ecu_phq8_sum >= 5 & ecu_phq8_sum <= 9 ~ "Mild depression", 
+               ecu_phq8_sum >= 10 & ecu_phq8_sum <= 14 ~ "Moderate depression", 
+               ecu_phq8_sum >= 15 & ecu_phq8_sum <= 24 ~ "Severe depression")
   )
 }
 

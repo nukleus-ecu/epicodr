@@ -991,6 +991,46 @@ primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
 }
 
 
+#' Primary coding Patient Health Questionnaire (PHQ-4)
+#' 
+#' adds the following column to prom: 
+#' ecu_phq4_1, ecu_phq4_2, ecu_phq4_3, ecu_phq4_4, ecu_phq4_sum, ecu_phq4_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_phq4 <- function(trial_data) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "prom"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_phq4_1 = recode_phq(.data$phq4_1.factor),
+           ecu_phq4_2 = recode_phq(.data$phq4_2.factor),
+           ecu_phq4_3 = recode_phq(.data$phq4_3.factor),
+           ecu_phq4_4 = recode_phq(.data$phq4_4.factor),
+           ecu_phq4_sum = calculate_phq4_sum(.data$ecu_phq4_1, .data$ecu_phq4_2, .data$ecu_phq4_3, .data$ecu_phq4_4),
+           ecu_phq4_cat = categorize_phq4_ecu(.data$ecu_phq4_sum)) %>%
+    select(matches(visitid), contains("ecu_phq4"))
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+}
+
+
 # ARDS =========================================================================
 
 #' Primary coding for ARDS by imaging procedures
@@ -1357,6 +1397,11 @@ primary_coding_suep <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_suep_who_scale(trial_data, pid, visitid)},
            error = function(e) {
              warning("primary_coding_suep_who_scale() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### Patient Health QUestionnaire =============================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_phq4(trial_data)},
+           error = function(e) {
+             warning("primary_coding_suep_phq4() did not work. This is likely due to missing variables.")
              print(e)})
   
   ## ARDS ======================================================================
