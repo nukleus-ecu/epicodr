@@ -928,3 +928,65 @@ categorize_6ils_ecu <- function(ecu_6ils_total) {
   return(ecu_6ils_cat)
   
 }
+
+
+#' Recode Pain diagnostic questionnaire (DN-4 - Interview)
+#' 
+#' @description recodes Pain diacnostic questionnaire items to needed levels
+#' 
+#' @param dn4 DN-4 item, that needs recoding
+
+recode_dn4 <- function(dn4) {
+  
+  case_when(dn4 == "-1" ~ NA_real_, 
+            TRUE ~ dn4)
+  
+}
+
+
+#' Calculate Pain diagnostic questionnaire (DN-4 - Interview) sum score
+#' 
+#' @description Calculate sum score of DN-4
+#' 
+#' Patients are asked "Does the pain have one or more of the following characteristics?"
+#' @param dn4_1 vector for item "Burning"
+#' @param dn4_2 vector for item "Painful cold"
+#' @param dn4_3 vector for item "Electric Shocks"
+#' Patients were asked "Is the pain associated with one or more of the following symptoms in the same area?"
+#' @param dn4_4 vector for item "Tingling"
+#' @param dn4_5 vector for item "Pins and Needles"
+#' @param dn4_6 vector for item "Numbness"
+#' @param dn4_7 vector for item "Itching"
+#' 
+#' @return A numeric vector with sum score of dn4
+#' @export
+
+calculate_dn4_sum <- function (dn4_1, dn4_2, dn4_3, dn4_4, dn4_5, dn4_6, dn4_7) {
+  
+  ecu_dn4_sum <- ifelse(dn4_1 == 1, 1, 0) + 
+    ifelse(dn4_2 == 1, 1, 0) + 
+    ifelse(dn4_3 == 1, 1, 0) + 
+    ifelse(dn4_4 == 1, 1, 0) + 
+    ifelse(dn4_5 == 1, 1, 0) + 
+    ifelse(dn4_6 == 1, 1, 0) + 
+    ifelse(dn4_7 == 1, 1, 0)
+  
+  return(ecu_dn4_sum)
+  
+}
+
+
+#' Categorize Pain diagnostic questionnaire (DN-4 - Interview)
+#' 
+#' @description Categorize DN-4 sum score in neuropathic pain and no neuropathic pain
+#' @param ecu_dn4_sum numeric vector with sum score of dn4
+#' @return A factorized vector w/ levels "No neuropathic pain" and "Neuropathic pain"
+#' @export
+
+categorize_dn4_ecu <- function (ecu_dn4_sum) {
+  
+  factor (
+    case_when (ecu_dn4_sum <= 3 ~ "No neuropathic pain",
+               ecu_dn4_sum >= 4 ~ "Neuropathic pain"))
+  
+}

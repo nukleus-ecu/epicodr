@@ -1028,6 +1028,51 @@ primary_coding_suep_phq4 <- function(trial_data) {
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
   return(trial_data)
+  
+}
+
+
+#' Primary coding Pain diagnostic Questionnaire (DN-4 - Interview)
+#' 
+#' adds the following column to promext: 
+#' ecu_dn4_sum, ecu_dn4_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_suep_dn4 <- function(trial_data) {
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  visitid <- trial_data$export_options$id_names$visitid
+  
+  formname_to_add_vars <- "promext"
+  
+  form_to_add_vars <- trial_data[[formname_to_add_vars]]
+  
+  new_vars_to_add <- form_to_add_vars %>%
+    mutate(ecu_dn4_1 = recode_dn4(.data$pain_dn2_1),
+           ecu_dn4_2 = recode_dn4(.data$pain_dn2_2),
+           ecu_dn4_3 = recode_dn4(.data$pain_dn2_3),
+           ecu_dn4_4 = recode_dn4(.data$pain_dn2_4),
+           ecu_dn4_5 = recode_dn4(.data$pain_dn2_5),
+           ecu_dn4_6 = recode_dn4(.data$pain_dn2_6),
+           ecu_dn4_7 = recode_dn4(.data$pain_dn2_7),
+           ecu_dn4_sum = calculate_dn4_sum(.data$ecu_dn4_1, .data$ecu_dn4_2, .data$ecu_dn4_3, .data$ecu_dn4_4, .data$ecu_dn4_5, .data$ecu_dn4_6, .data$ecu_dn4_7),
+           ecu_dn4_cat = categorize_dn4_ecu(.data$ecu_dn4_sum)) %>%
+    select(matches(visitid), contains("ecu_dn4"))
+  
+  trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
+  
+  return(trial_data)
+  
 }
 
 
@@ -1398,10 +1443,15 @@ primary_coding_suep <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_suep_who_scale() did not work. This is likely due to missing variables.")
              print(e)})
-  ### Patient Health QUestionnaire =============================================
+  ### Patient Health Questionnaire =============================================
   tryCatch(expr = {trial_data <- primary_coding_suep_phq4(trial_data)},
            error = function(e) {
              warning("primary_coding_suep_phq4() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### Pain diagnostic questionnaire ============================================
+  tryCatch(expr = {trial_data <- primary_coding_suep_dn4(trial_data)},
+           error = function(e) {
+             warning("primary_coding_suep_dn4() did not work. This is likely due to missing variables.")
              print(e)})
   
   ## ARDS ======================================================================
