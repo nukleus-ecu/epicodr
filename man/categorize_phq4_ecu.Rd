@@ -13,5 +13,5 @@ categorize_phq4_ecu(ecu_phq4_sum)
 A factorized vector w/ levels "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 }
 \description{
-Categorize PHQ-4 sum score in depression and no depression
+Categorize PHQ-4 sum score in "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 }
