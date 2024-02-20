@@ -22,6 +22,24 @@
     <loc>/pull_request_template.html</loc>
   </url>
   <url>
+    <loc>/reference/build_pcs_score_suep_df_with_proms.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_pcs_score_suep_df_without_proms.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_suep_long_symptom_df.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_sy_parentform_merged_df.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_sy_parents_children_merged_df.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_sy_subform_merged_df.html</loc>
+  </url>
+  <url>
     <loc>/reference/build_who_scale_hap.html</loc>
   </url>
   <url>
@@ -59,6 +77,9 @@
   </url>
   <url>
     <loc>/reference/calculate_gad7_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_pcs_score_suep.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_phq8_sum.html</loc>
@@ -149,6 +170,12 @@
   </url>
   <url>
     <loc>/reference/defactorize_tsExport_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/detect_other_symptom_of_complex.html</loc>
+  </url>
+  <url>
+    <loc>/reference/detect_symptom_complex.html</loc>
   </url>
   <url>
     <loc>/reference/ecu_age_cat_3.html</loc>
@@ -256,6 +283,21 @@
     <loc>/reference/primary_coding_pop_gad7.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_pop_gpaq_calc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_gpaq_post.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_gpaq_pre.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_gpaq_vars_post.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_pop_gpaq_vars_pre.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_pop_kccq.html</loc>
   </url>
   <url>
@@ -310,7 +352,7 @@
     <loc>/reference/primary_coding_suep_patient_barthel.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_coding_suep_recode_brs.html</loc>
+    <loc>/reference/primary_coding_suep_pcs_score.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_who_scale.html</loc>
@@ -331,6 +373,15 @@
     <loc>/reference/recode_cfs_seid.html</loc>
   </url>
   <url>
+    <loc>/reference/recode_promis29_sleep.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_promis_cognitive.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_promis_dyspnoe.html</loc>
+  </url>
+  <url>
     <loc>/reference/recode_pss.html</loc>
   </url>
   <url>
@@ -338,6 +389,18 @@
   </url>
   <url>
     <loc>/reference/remove_st_dates_tsExport_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/return_child_table_names_of_parent.html</loc>
+  </url>
+  <url>
+    <loc>/reference/return_children_table_names_of_parents.html</loc>
+  </url>
+  <url>
+    <loc>/reference/return_parent_child_pairs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_id_names.html</loc>
   </url>
   <url>
     <loc>/reference/spss_labelled_tsExport.html</loc>

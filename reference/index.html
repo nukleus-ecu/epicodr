@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">epicodr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.0</span>
       </span>
     </div>
 
@@ -48,6 +48,30 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="build_pcs_score_suep_df_with_proms.html">build_pcs_score_suep_df_with_proms()</a></code> </p>
+        </td>
+        <td><p>Create data frame with Symptom Complexes and Post-COVID variables with and without PROMs in Post-COVID-Score</p></td>
+      </tr><tr><td>
+          <p><code><a href="build_pcs_score_suep_df_without_proms.html">build_pcs_score_suep_df_without_proms()</a></code> </p>
+        </td>
+        <td><p>Create data frame with Symptom Complexes and Post-COVID variables without PROMs in Post-COVID-Score</p></td>
+      </tr><tr><td>
+          <p><code><a href="build_suep_long_symptom_df.html">build_suep_long_symptom_df()</a></code> </p>
+        </td>
+        <td><p>Create long symptom data frame</p></td>
+      </tr><tr><td>
+          <p><code><a href="build_sy_parentform_merged_df.html">build_sy_parentform_merged_df()</a></code> </p>
+        </td>
+        <td><p>Build symptom subform data frame (merged with parent forms)</p></td>
+      </tr><tr><td>
+          <p><code><a href="build_sy_parents_children_merged_df.html">build_sy_parents_children_merged_df()</a></code> </p>
+        </td>
+        <td><p>Build symptom subform data frame (merged with parent and cild forms)</p></td>
+      </tr><tr><td>
+          <p><code><a href="build_sy_subform_merged_df.html">build_sy_subform_merged_df()</a></code> </p>
+        </td>
+        <td><p>Build symptom subform data frame</p></td>
+      </tr><tr><td>
           <p><code><a href="build_who_scale_hap.html">build_who_scale_hap()</a></code> </p>
         </td>
         <td><p>Calculate and categorize WHO-Scale</p></td>
@@ -99,6 +123,10 @@
           <p><code><a href="calculate_gad7_sum.html">calculate_gad7_sum()</a></code> </p>
         </td>
         <td><p>Calculate Generalized Anxiety Disorder 7 (GAD-7) sum score</p></td>
+      </tr><tr><td>
+          <p><code><a href="calculate_pcs_score_suep.html">calculate_pcs_score_suep()</a></code> </p>
+        </td>
+        <td><p>Calculate PCS Score</p></td>
       </tr><tr><td>
           <p><code><a href="calculate_phq8_sum.html">calculate_phq8_sum()</a></code> </p>
         </td>
@@ -207,6 +235,14 @@
           <p><code><a href="defactorize_tsExport.html">defactorize_tsExport()</a></code> </p>
         </td>
         <td><p>Remove factorized variables tsExport data.</p></td>
+      </tr><tr><td>
+          <p><code><a href="detect_other_symptom_of_complex.html">detect_other_symptom_of_complex()</a></code> </p>
+        </td>
+        <td><p>Calculate symptom complex for Post Covid Syndrome Score (PCSS) calculation - for symptoms coded in "other"</p></td>
+      </tr><tr><td>
+          <p><code><a href="detect_symptom_complex.html">detect_symptom_complex()</a></code> </p>
+        </td>
+        <td><p>Calculate symptom complex for Post Covid Syndrome Score (PCSS) calculation</p></td>
       </tr><tr><td>
           <p><code><a href="ecu_age_cat_3.html">ecu_age_cat_3()</a></code> </p>
         </td>
@@ -340,6 +376,26 @@
         </td>
         <td><p>Primary coding Generalized Anxiety Disorder 7 (GAD-7)</p></td>
       </tr><tr><td>
+          <p><code><a href="primary_coding_pop_gpaq_calc.html">primary_coding_pop_gpaq_calc()</a></code> </p>
+        </td>
+        <td><p>Primary coding GPAQ calculation</p></td>
+      </tr><tr><td>
+          <p><code><a href="primary_coding_pop_gpaq_post.html">primary_coding_pop_gpaq_post()</a></code> </p>
+        </td>
+        <td><p>Primary coding Global Physical Activity Questionnaire (GPAQ) post COVID</p></td>
+      </tr><tr><td>
+          <p><code><a href="primary_coding_pop_gpaq_pre.html">primary_coding_pop_gpaq_pre()</a></code> </p>
+        </td>
+        <td><p>Primary coding Global Physical Activity Questionnaire (GPAQ) pre COVID</p></td>
+      </tr><tr><td>
+          <p><code><a href="primary_coding_pop_gpaq_vars_post.html">primary_coding_pop_gpaq_vars_post()</a></code> </p>
+        </td>
+        <td><p>Primary coding GPAQ variable/column selection for GPAQ post COVID</p></td>
+      </tr><tr><td>
+          <p><code><a href="primary_coding_pop_gpaq_vars_pre.html">primary_coding_pop_gpaq_vars_pre()</a></code> </p>
+        </td>
+        <td><p>Primary coding GPAQ variable/column selection for GPAQ pre COVID</p></td>
+      </tr><tr><td>
           <p><code><a href="primary_coding_pop_kccq.html">primary_coding_pop_kccq()</a></code> </p>
         </td>
         <td><p>Kansas City Cardiomyopathy Questionnaire (KCCQ)</p></td>
@@ -412,9 +468,9 @@
         </td>
         <td><p>Primary coding Barthel index (patient status)</p></td>
       </tr><tr><td>
-          <p><code><a href="primary_coding_suep_recode_brs.html">primary_coding_suep_recode_brs()</a></code> </p>
+          <p><code><a href="primary_coding_suep_pcs_score.html">primary_coding_suep_pcs_score()</a></code> </p>
         </td>
-        <td><p>Primary coding Recode Brief Resilience Scale (BRS)</p></td>
+        <td><p>Primary coding PCS-Score</p></td>
       </tr><tr><td>
           <p><code><a href="primary_coding_suep_who_scale.html">primary_coding_suep_who_scale()</a></code> </p>
         </td>
@@ -440,6 +496,18 @@
         </td>
         <td><p>Recode Chandler Fatigue Scale (CFS/SEID) items</p></td>
       </tr><tr><td>
+          <p><code><a href="recode_promis29_sleep.html">recode_promis29_sleep()</a></code> </p>
+        </td>
+        <td><p>Recode PROMIS-29 Sleep disturbance items</p></td>
+      </tr><tr><td>
+          <p><code><a href="recode_promis_cognitive.html">recode_promis_cognitive()</a></code> </p>
+        </td>
+        <td><p>Recode PROMIS-29 Cognitive impairments items</p></td>
+      </tr><tr><td>
+          <p><code><a href="recode_promis_dyspnoe.html">recode_promis_dyspnoe()</a></code> </p>
+        </td>
+        <td><p>Recode PROMIS-29 Dyspnea items</p></td>
+      </tr><tr><td>
           <p><code><a href="recode_pss.html">recode_pss()</a></code> </p>
         </td>
         <td><p>Recode Perceived Stress Scale (PSS) items</p></td>
@@ -447,6 +515,22 @@
           <p><code><a href="remove_st_dates_tsExport.html">remove_st_dates_tsExport()</a></code> </p>
         </td>
         <td><p>Remove original secutrial date string variables from tsExport data.</p></td>
+      </tr><tr><td>
+          <p><code><a href="return_child_table_names_of_parent.html">return_child_table_names_of_parent()</a></code> </p>
+        </td>
+        <td><p>Return parent table name (for one parent table)</p></td>
+      </tr><tr><td>
+          <p><code><a href="return_children_table_names_of_parents.html">return_children_table_names_of_parents()</a></code> </p>
+        </td>
+        <td><p>Return parent table names (for two or more parent tables)</p></td>
+      </tr><tr><td>
+          <p><code><a href="return_parent_child_pairs.html">return_parent_child_pairs()</a></code> </p>
+        </td>
+        <td><p>Return parent table names (for two or more parent tables)</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_id_names.html">set_id_names()</a></code> </p>
+        </td>
+        <td><p>Sets ID names and writes them into vectors</p></td>
       </tr><tr><td>
           <p><code><a href="spss_labelled_tsExport.html">spss_labelled_tsExport()</a></code> </p>
         </td>
@@ -476,7 +560,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mirjam Kohls, Olga Miljukov, Carolin Nürnberger, Miriam Rainers, Klaus Kammerer.</p>
+  <p></p><p>Developed by Carolin Nürnberger, Mirjam Kohls, Miriam Rainers, Olga Miljukov, Klaus Kammerer.</p>
 </div>
 
 <div class="pkgdown">
