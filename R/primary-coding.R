@@ -437,7 +437,7 @@ categorize_mmrc_ecu <- function (mmrc) {
 #' @export
 
 calculate_phq8_sum <- function (phq8_1, phq8_2, phq8_3, phq8_4, phq8_5, phq8_6, phq8_7, phq8_8) {
-  ecu_phq8_sum <- sum(phq8_1, phq8_2, phq8_3, phq8_4, phq8_5, phq8_6, phq8_7, phq8_8)
+  ecu_phq8_sum <- phq8_1 + phq8_2 + phq8_3 + phq8_4 + phq8_5 + phq8_6 + phq8_7 + phq8_8
   
   return(ecu_phq8_sum)
 }
@@ -544,7 +544,7 @@ categorize_dds_score_ecu <- function(dds_score) {
 #' @export
 
 calculate_gad7_sum <- function (gad7_1, gad7_2, gad7_3, gad7_4, gad7_5, gad7_6, gad7_7){
-  ecu_gad7_sum <- sum(gad7_1, gad7_2, gad7_3, gad7_4, gad7_5, gad7_6, gad7_7) 
+  ecu_gad7_sum <- gad7_1 + gad7_2 + gad7_3 + gad7_4 + gad7_5 + gad7_6 + gad7_7
   
   return(ecu_gad7_sum)
 }
@@ -593,8 +593,8 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
  
 calculate_facitf_sum <- function(facitf_1,facitf_2, facitf_3, facitf_4, facitf_5, facitf_6, facitf_7, facitf_8, facitf_9, facitf_10,
                                  facitf_11, facitf_12, facitf_13) {
-  ecu_facitf_sum <- sum(facitf_1,facitf_2, facitf_3, facitf_4, facitf_5, facitf_6, facitf_7, facitf_8, facitf_9, facitf_10,
-                        facitf_11, facitf_12, facitf_13)
+  ecu_facitf_sum <- facitf_1 + facitf_2 + facitf_3 + facitf_4 + facitf_5 + facitf_6 + facitf_7 + facitf_8 + facitf_9 + facitf_10 +
+                        facitf_11 + facitf_12 + facitf_13
   
   return(ecu_facitf_sum)
 }
@@ -642,7 +642,7 @@ calculate_brs_sum <- function(brs_1, brs_2, brs_3, brs_4, brs_5, brs_6) {
     ifelse(brs_6 >= 1, brs_6, 0)
   
   ecu_brs_sum <- case_when(is.na(brs_1) & is.na(brs_2) & is.na(brs_3) & is.na(brs_4) & is.na(brs_5) & is.na(brs_6) ~ NA,
-                           brs_1 == -1 & brs_2 == -1 & brs_3 == -1 & brs_4 == -1 & brs_5 == -1 & brs_6 == -1 ~ NA,
+                           brs_1 == "-1" & brs_2 == "-1" & brs_3 == "-1" & brs_4 == "-1" & brs_5 == "-1" & brs_6 == "-1" ~ NA,
                            TRUE ~ ecu_brs_sum)
   
   return(ecu_brs_sum)
@@ -724,15 +724,15 @@ categorize_brs_ecu <- function(ecu_brs_total) {
 recode_pss <- function(pss.factor, version) {
   
   if (version == 1) {case_when(pss.factor == "Nie" ~ 0,
-                               pss.factor == "Fast nie" ~ 1,
+                               pss.factor == "Fast nie" | pss.factor == "Selten" ~ 1,
                                pss.factor == "Manchmal" ~ 2, 
-                               pss.factor == "Ziemlich oft" ~ 3,
+                               pss.factor == "Ziemlich oft" | pss.factor == "H\u00e4ufig" ~ 3,
                                pss.factor == "Sehr oft" ~ 4)} else 
                                  
                                  if (version == 2) {case_when(pss.factor == "Nie" ~ 4,
-                                                              pss.factor == "Fast nie" ~ 3,
+                                                              pss.factor == "Fast nie" | pss.factor == "Selten" ~ 3,
                                                               pss.factor == "Manchmal" ~ 2, 
-                                                              pss.factor == "Ziemlich oft" ~ 1,
+                                                              pss.factor == "Ziemlich oft" | pss.factor == "H\u00e4ufig" ~ 1,
                                                               pss.factor == "Sehr oft" ~ 0)}
   
 }
@@ -760,7 +760,7 @@ recode_pss <- function(pss.factor, version) {
 
 calculate_pss_total <- function(pss1, pss2, pss3, pss4, pss5, pss6, pss7, pss8, pss9, pss10) {
   
-  ecu_pss_total <- sum(pss1, pss2, pss3, pss4, pss5, pss6, pss7, pss8, pss9, pss10)
+  ecu_pss_total <- pss1 + pss2 + pss3 + pss4 + pss5 + pss6 + pss7 + pss8 + pss9 + pss10
   
   return(ecu_pss_total)
   
@@ -803,9 +803,9 @@ categorize_pss_ecu <- function(ecu_pss_total) {
 recode_6ils <- function(six_ils.factor, version) {
   
   if (version == "neg") {case_when(six_ils.factor == "Trifft gar nicht zu" | six_ils.factor == "Trifft eher nicht zu" ~ 0,
-                                   six_ils.factor == "Trifft eher zu" | six_ils.factor == "Triift ganz zu" ~ 1)} else 
+                                   six_ils.factor == "Trifft eher zu" | six_ils.factor == "Triift ganz zu" | six_ils.factor == "Trifft genau zu" ~ 1)} else 
                                      if (version == "pos") {case_when(six_ils.factor == "Trifft gar nicht zu" | six_ils.factor == "Trifft eher nicht zu" ~ 1,
-                                                                      six_ils.factor == "Trifft eher zu" | six_ils.factor == "Trifft ganz zu" ~ 0)}
+                                                                      six_ils.factor == "Trifft eher zu" | six_ils.factor == "Trifft ganz zu" | six_ils.factor == "Trifft genau zu" ~ 0)}
   
 }
 
@@ -829,7 +829,7 @@ recode_6ils <- function(six_ils.factor, version) {
 
 calculate_6ils_total <- function(six_ils1, six_ils2, six_ils3, six_ils4, six_ils5, six_ils6) {
   
-  ecu_6ils_total <- sum(six_ils1, six_ils2, six_ils3, six_ils4, six_ils5, six_ils6)
+  ecu_6ils_total <- six_ils1 + six_ils2 + six_ils3 + six_ils4 + six_ils5 + six_ils6
   
   return(ecu_6ils_total)
   

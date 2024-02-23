@@ -254,28 +254,26 @@ primary_coding_hap_moca <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?moca$", table_names)]] <- trial_data[[grep("^_?moca$", table_names)]]%>%
-    rowwise() %>%
-    mutate(ecu_moca_total_score = sum(ifelse(.data$moca_0021 == 1, .data$moca_0022, 0),
-                                      ifelse(.data$moca_0023 == 1, .data$moca_0024, 0), 
-                                      ifelse(.data$moca_0025 == 1, .data$moca_0026, 0),
-                                      .data$moca_0032, 
-                                      ifelse(.data$moca_0051 == 1, .data$moca_0052, 0),
-                                      ifelse(.data$moca_0053 == 1, .data$moca_0054, 0),
-                                      ifelse(.data$moca_0055 == 1, .data$moca_0056, 0),
-                                      ifelse(.data$moca_0057 == 1, .data$moca_0058, 0),
-                                      ifelse(.data$moca_0061 == 1, .data$moca_0062, 0),
-                                      ifelse(.data$moca_0063 == 1, .data$moca_0064, 0),
-                                      ifelse(is.na(.data$moca_0072), .data$moca_0071, 0), 
-                                      ifelse(.data$moca_0081 == 1, .data$moca_0082, 0),
-                                      ifelse(.data$moca_0091 == 1, .data$moca_0092, 0),
-                                      ifelse(.data$moca_0097 == 1, .data$moca_0098, 0),
-                                      ifelse(.data$moca_0093 == 1, .data$moca_0094, 0),
-                                      ifelse(.data$moca_0095 == 1, .data$moca_0096, 0),
-                                      ifelse(.data$moca_0099 == 1, .data$moca_0100, 0),
-                                      ifelse(.data$moca_0101 == 1, .data$moca_0102, 0),
-                                      ifelse(.data$moca_0110 >= 0, .data$moca_0110, 0)),
-           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) %>%
-    ungroup()
+    mutate(ecu_moca_total_score = ifelse(.data$moca_0021 == 1, .data$moca_0022, 0) +
+             ifelse(.data$moca_0023 == 1, .data$moca_0024, 0) +
+             ifelse(.data$moca_0025 == 1, .data$moca_0026, 0) +
+             .data$moca_0032 +
+             ifelse(.data$moca_0051 == 1, .data$moca_0052, 0) +
+             ifelse(.data$moca_0053 == 1, .data$moca_0054, 0) +
+             ifelse(.data$moca_0055 == 1, .data$moca_0056, 0) +
+             ifelse(.data$moca_0057 == 1, .data$moca_0058, 0) +
+             ifelse(.data$moca_0061 == 1, .data$moca_0062, 0) +
+             ifelse(.data$moca_0063 == 1, .data$moca_0064, 0) +
+             ifelse(is.na(.data$moca_0072), .data$moca_0071, 0) + 
+             ifelse(.data$moca_0081 == 1, .data$moca_0082, 0) +
+             ifelse(.data$moca_0091 == 1, .data$moca_0092, 0) +
+             ifelse(.data$moca_0097 == 1, .data$moca_0098, 0) +
+             ifelse(.data$moca_0093 == 1, .data$moca_0094, 0) +
+             ifelse(.data$moca_0095 == 1, .data$moca_0096, 0) +
+             ifelse(.data$moca_0099 == 1, .data$moca_0100, 0) +
+             ifelse(.data$moca_0101 == 1, .data$moca_0102, 0) +
+             ifelse(.data$moca_0110 >= 0, .data$moca_0110, 0),
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) 
   
   return(trial_data)
 }
@@ -423,29 +421,30 @@ primary_coding_hap <- function(trial_data) {
   
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
   
-  # Demographics
-  
+  ## Demographics ==============================================================
+  ### Age ======================================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_age(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_age() did not work. This is likely due to missing variables.")
              print(e)})
+  ### BMI ======================================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_bmi(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_bmi() did not work. This is likely due to missing variables.")
              print(e)})
   
-  # Clinical parameters
+  ## Clinical parameters =======================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_clinical_params_his(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_clinical_params_his() did not work. This is likely due to missing variables.")
              print(e)})
-  
   tryCatch(expr = {trial_data <- primary_coding_hap_clinical_params(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_clinical_params() did not work. This is likely due to missing variables.")
              print(e)})
   
-  # Scores
+  ## Scores ====================================================================
+  ### Barthel-Index ============================================================
   tryCatch(expr= {trial_data <- primary_coding_hap_barthel_pre(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_barthel_pre() did not work. This is likely due to missing variables.")
@@ -454,30 +453,37 @@ primary_coding_hap <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_hap_barthel_disc() did not work. This is likely due to missing variables.")
              print(e)})
+  ### EQ-5D-5L =================================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_eq5d5l(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
+  ### MoCA =====================================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_moca(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_moca() did not work. This is likely due to missing variables.")
              print(e)})
+  ### NEWS-Score ===============================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_news_first(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_news_first() did not work. This is likely due to missing variables.")
              print(e)})
+  ### APACHE-2 Score ===========================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_apache2(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_apache2() did not work. This is likely due to missing variables.")
              print(e)})
+  ### ICDSC Score ==============================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_icdsc(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_icdsc() did not work. This is likely due to missing variables.")
              print(e)})
+  ### DDS Score ================================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_dds(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_dds() did not work. This is likely due to missing variables.")
              print(e)})
+  ### WHO-Scale ================================================================
   tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data, pid)},
            error = function(e) {
              warning("primary_coding_hap_who_scale() did not work. This is likely due to missing variables.")
@@ -515,8 +521,9 @@ build_who_scale_hap <- function(trial_data, pid) {
     filter(!!sym(visit_label_var_name) == "Screening / V1") %>%
     group_by(!!sym(pid)) %>%
     slice_max(.data$ea_0010) %>%
-    select(!!sym(pid), .data$ea_0010) %>%
-    ungroup()
+    ungroup() %>%
+    select(!!sym(pid), .data$ea_0010)
+
   
   trial_data[[grep("^_?e_?osfci$", table_names)]] <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     left_join(main_diag, by = pid) %>%
@@ -553,18 +560,20 @@ build_who_scale_hap <- function(trial_data, pid) {
     group_by(!!sym(pid)) %>%
     slice_max(.data$ecu_who_scale, with_ties = FALSE) %>%
     distinct() %>%
+    ungroup() %>%
     rename(ecu_who_scale_max.factor = .data$ecu_who_scale.factor,
-           ecu_who_scale_max = .data$ecu_who_scale) %>%
-    ungroup()
+           ecu_who_scale_max = .data$ecu_who_scale)
+
   
   who_scale_with_diag_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     select(!!sym(pid), .data$ecu_who_scale_with_diag,.data$ecu_who_scale_with_diag.factor) %>%
     group_by(!!sym(pid)) %>%
     slice_max(.data$ecu_who_scale_with_diag, with_ties = FALSE) %>%
     distinct() %>%
+    ungroup() %>%
     rename(ecu_who_scale_max_with_diag.factor = .data$ecu_who_scale_with_diag.factor,
-           ecu_who_scale_max_with_diag = .data$ecu_who_scale_with_diag) %>%
-    ungroup()
+           ecu_who_scale_max_with_diag = .data$ecu_who_scale_with_diag)
+
   
   trial_data[[grep("^_?osfci$", table_names)]] <-  trial_data[[grep("^_?osfci$", table_names)]] %>%
     left_join(who_scale_max, by = pid) %>%

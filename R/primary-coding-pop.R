@@ -132,15 +132,21 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
   
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
   
-  trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
-    mutate(visit_name_temp = str_remove(visit_label_var_name, "-EB|-VO")) %>%
+  needed_vars <- trial_data[["anthropo"]] %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    select(pid, .data$visit_name_temp) %>%
     left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor, visit_label_var_name) %>%
-                mutate(visit_name_temp = str_remove(visit_label_var_name, "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+                mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    select(-.data$visit_name)
+  
+  trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    left_join(needed_vars, by = c(pid, "visit_name_temp")) %>%
     mutate(ecu_waist = case_when(.data$gec_gender.factor == "Weiblich" & .data$taillumfang <= 88 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "Weiblich" & .data$taillumfang > 88 ~ "Abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang <= 102 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang > 102 ~ "Abdominal overweight")) %>%
-    select(-contains("gec_gender"))
+    select(-contains("gec_gender"), -.data$visit_name_temp)
   
   return(trial_data)
 }
@@ -252,12 +258,10 @@ primary_coding_pop_eq5d5l <- function(trial_data) {
 primary_coding_pop_moca <- function(trial_data) {
   
   trial_data[["neuro"]] <- trial_data[["neuro"]] %>%
-    rowwise() %>%
-    mutate(ecu_moca_total_score = sum(.data$moca_tmt, .data$moca_figure, .data$moca_clock, .data$moca_naming, .data$moca_attention, .data$moca_speech, 
-                                      .data$moca_abstract, .data$moca_recall_number, .data$moca_orientation, .data$moca_education),
+    mutate(ecu_moca_total_score = .data$moca_tmt + .data$moca_figure + .data$moca_clock + .data$moca_naming + .data$moca_attention + .data$moca_speech + 
+             .data$moca_abstract + .data$moca_recall_number + .data$moca_orientation + .data$moca_education,
            ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)
-    ) %>%
-    ungroup()
+    ) 
   
   return(trial_data)
 }
@@ -294,10 +298,8 @@ primary_coding_pop_mmrc <- function(trial_data) {
 primary_coding_pop_phq8 <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_phq8_sum = calculate_phq8_sum(.data$phq8_1, .data$phq8_2, .data$phq8_3, .data$phq8_4, .data$phq8_5, .data$phq8_6, .data$phq8_7, .data$phq8_8),
-           ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum)) %>%
-    ungroup()
+           ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum))
   
   return(trial_data)
 }
@@ -316,16 +318,14 @@ primary_coding_pop_phq8 <- function(trial_data) {
 primary_coding_pop_gad7 <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_gad7_sum = calculate_gad7_sum(.data$gad7_1, .data$gad7_2, .data$gad7_3, .data$gad7_4, .data$gad7_5, .data$gad7_6, .data$gad7_7),
-           ecu_gad7_cat = categorize_gad7_ecu(.data$ecu_gad7_sum)) %>%
-    ungroup()
+           ecu_gad7_cat = categorize_gad7_ecu(.data$ecu_gad7_sum))
   
   return(trial_data)
 }
 
 
-#' Primary coding Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)
+#' Primary coding Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue Scale)
 #' 
 #' adds the following column to surveyfrageboge: 
 #' ecu_facitf
@@ -337,11 +337,9 @@ primary_coding_pop_gad7 <- function(trial_data) {
 primary_coding_pop_facitf <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_facitf_sum = calculate_facitf_sum(.data$facitf1, .data$facitf2, .data$facitf3, .data$facitf4, .data$facitf5, .data$facitf6, .data$facitf7, 
                                                  .data$facitf8, .data$facitf9, .data$facitf10, .data$facitf11, .data$facitf12, .data$facitf13),
-           ecu_facitf_cat = categorize_facitf_ecu(.data$ecu_facitf_sum)) %>%
-    ungroup()
+           ecu_facitf_cat = categorize_facitf_ecu(.data$ecu_facitf_sum)) 
   
   return(trial_data)
 }
@@ -381,7 +379,6 @@ primary_coding_pop_brs <- function(trial_data) {
 primary_coding_pop_psqi <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_psqi_comp_1 = .data$psqi6,
            ecu_psqi_comp_2_sum = case_when(.data$psqi2 <= 15 ~ 0,
                                            .data$psqi2 >= 16 & .data$psqi2 <= 30 ~ 1,
@@ -400,20 +397,19 @@ primary_coding_pop_psqi <- function(trial_data) {
                                        .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 75 & .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 84 ~ 1,
                                        .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 65 & .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 74 ~ 2,
                                        .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 64 ~ 3),
-           ecu_psqi_comp_5_sum = sum(.data$psqi5b, .data$psqi5c, .data$psqi5d, .data$psqi5e, .data$psqi5f, .data$psqi5g, .data$psqi5h, .data$psqi5i, .data$psqi5j),
+           ecu_psqi_comp_5_sum = .data$psqi5b + .data$psqi5c + .data$psqi5d + .data$psqi5e + .data$psqi5f + .data$psqi5g + .data$psqi5h + .data$psqi5i + .data$psqi5j,
            ecu_psqi_comp_5 = case_when(.data$ecu_psqi_comp_5_sum == 0 ~ 0,
                                        .data$ecu_psqi_comp_5_sum >= 1 & .data$ecu_psqi_comp_5_sum <= 9 ~ 1,
                                        .data$ecu_psqi_comp_5_sum >= 10 & .data$ecu_psqi_comp_5_sum <= 18 ~ 2,
                                        .data$ecu_psqi_comp_5_sum >= 19 ~ 3),
            ecu_psqi_comp_6 = .data$psqi7,
-           ecu_psqi_comp_7_sum = sum(.data$psqi8, .data$psqi9),
+           ecu_psqi_comp_7_sum = .data$psqi8 + .data$psqi9,
            ecu_psqi_comp_7 = case_when(.data$ecu_psqi_comp_7_sum == 0 ~ 0,
                                        .data$ecu_psqi_comp_7_sum == 1 | .data$ecu_psqi_comp_7_sum == 2 ~ 1,
                                        .data$ecu_psqi_comp_7_sum == 3 | .data$ecu_psqi_comp_7_sum == 4 ~ 2,
                                        .data$ecu_psqi_comp_7_sum >= 5 ~ 3),
-           ecu_psqi_global_score = sum(.data$ecu_psqi_comp_1, .data$ecu_psqi_comp_2, .data$ecu_psqi_comp_3, .data$ecu_psqi_comp_4, .data$ecu_psqi_comp_5, 
-                                       .data$ecu_psqi_comp_6, .data$ecu_psqi_comp_7)) %>%
-    ungroup()
+           ecu_psqi_global_score = .data$ecu_psqi_comp_1 + .data$ecu_psqi_comp_2 + .data$ecu_psqi_comp_3 + .data$ecu_psqi_comp_4 + .data$ecu_psqi_comp_5 + 
+             .data$ecu_psqi_comp_6 + .data$ecu_psqi_comp_7) 
   
   return(trial_data)
 }
@@ -511,7 +507,6 @@ primary_coding_pop_kccq <- function(trial_data){
 primary_coding_pop_6ils <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_six_ils1 = recode_6ils(.data$six_ils1.factor, version = "neg"),
            ecu_six_ils2 = recode_6ils(.data$six_ils2.factor, version = "pos"),
            ecu_six_ils3 = recode_6ils(.data$six_ils3.factor, version = "pos"),
@@ -519,8 +514,7 @@ primary_coding_pop_6ils <- function(trial_data) {
            ecu_six_ils5 = recode_6ils(.data$six_ils5.factor, version = "pos"),
            ecu_six_ils6 = recode_6ils(.data$six_ils6.factor, version = "neg"),
            ecu_six_ils_total = calculate_6ils_total(.data$ecu_six_ils1, .data$ecu_six_ils2, .data$ecu_six_ils3, .data$ecu_six_ils4, .data$ecu_six_ils5, .data$ecu_six_ils6),
-           ecu_six_ils_cat = categorize_6ils_ecu(.data$ecu_six_ils_total)) %>%
-    ungroup()
+           ecu_six_ils_cat = categorize_6ils_ecu(.data$ecu_six_ils_total)) 
   
   return(trial_data)
 }
@@ -538,7 +532,6 @@ primary_coding_pop_6ils <- function(trial_data) {
 primary_coding_pop_pss <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    rowwise() %>%
     mutate(ecu_pss1 = recode_pss(.data$pss01.factor, version = 1),
            ecu_pss2 = recode_pss(.data$pss02.factor, version = 1),
            ecu_pss3 = recode_pss(.data$pss03.factor, version = 1),
@@ -551,8 +544,7 @@ primary_coding_pop_pss <- function(trial_data) {
            ecu_pss10 = recode_pss(.data$pss10.factor, version = 1),
            ecu_pss_total = calculate_pss_total(.data$ecu_pss1,.data$ecu_pss2, .data$ecu_pss3, .data$ecu_pss4, .data$ecu_pss5, .data$ecu_pss6, 
                                                .data$ecu_pss7, .data$ecu_pss8, .data$ecu_pss9, .data$ecu_pss10),
-           ecu_pss_cat = categorize_pss_ecu(.data$ecu_pss_total)) %>%
-    ungroup()
+           ecu_pss_cat = categorize_pss_ecu(.data$ecu_pss_total)) 
   
   return(trial_data)
   
@@ -617,6 +609,43 @@ primary_coding_pop_gpaq_post <- function(trial_data) {
 }
 
 
+#' 6 Minute Walk Test (6MWT)
+#' 
+#' adds the following columns to geria:
+#' ecu_6mwt_soll, ecu_6mwt_soll_erreicht
+#' 
+#' @param trial_data a SsecuTrial data object
+#' @param pid column name of patient ID in trial_data
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_pop_6mwt <- function(trial_data, pid) {
+  
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
+  
+  needed_vars <- trial_data$geria %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    select(pid, .data$visit_name_temp) %>% 
+    left_join(trial_data$erstbefragung %>% select(pid, "gec_demo_age", visit_label_var_name) %>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    left_join(trial_data$anthropo %>% select(pid, "gec_height", visit_label_var_name)%>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    select(pid, .data$visit_name_temp, .data$gec_demo_age, .data$gec_height)
+  
+  trial_data$geria <- trial_data$geria %>%
+    mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
+    left_join(needed_vars, by = c(pid, "visit_name_temp")) %>%
+    mutate(ecu_6mwt_soll = 592.134 + (0.203 * (.data$gec_demo_age < 56.2) * (56.2 - .data$gec_demo_age)) -
+             (5.034 * (.data$gec_demo_age > 56.2) * (.data$gec_demo_age - 56.2)) + 1.857 * (.data$gec_height - 172.6),
+           ecu_6mwt_soll_erreicht = case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ 1,
+                                              .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ 0),
+           ecu_6mwt_soll_erreicht.factor = as.factor(case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ "Ja",
+                                                               .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ "Nein"))) %>%
+    select(-.data$visit_name_temp)
+  
+  return(trial_data)
+  
+}
+
+
 # POP Wrapper primary coding ==================================================
 
 #' Primary coding POP Data
@@ -646,83 +675,100 @@ primary_coding_pop <- function(trial_data) {
   docid <- trial_data$export_options$id_names$docid
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
   
-  # Demographics
+  ## Demographics ==============================================================
+  ### Age ======================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_age(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_age() did not work. This is likely due to missing variables.")
              print(e)})
+  ### Migration ================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_migration(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_migration() did not work. This is likely due to missing variables.")
              print(e)})
+  
+  ## BMI =======================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_bmi(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_bmi() did not work. This is likely due to missing variables.")
              print(e)})
+  
+  ## Abdominal overweight ======================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_abd_overw(trial_data, pid)},
            error = function(e) {
              warning("primary_coding_pop_abd_overw() did not work. This is likely due to missing variables.")
              print(e)})
   
-  # Clinical parameters
+  ## Clinical parameters =======================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_clinical_params(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_clinical_params() did not work. This is likely due to missing variables.")
              print(e)})
   
-  # Cardiological parameters
+  ## Cardiological parameters ==================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_cardio_params(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_cardio_params() did not work. This is likely due to missing variables.")
              print(e)})
   
-  # Pneumoogical parameters
+  ## Pneumoogical parameters ===================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_pneumo_params(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_pneumo_params() did not work. This is likely due to missing variables.")
              print(e)})
   
-  # Scores
+  ## Scores ====================================================================
+  ### EQ-5D-5L =================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_eq5d5l(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
+  ### MoCA =====================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_moca(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_moca() did not work. This is likely due to missing variables.")
              print(e)})
+  ### MMRC =====================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_mmrc(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_mmrc() did not work. This is likely due to missing variables.")
              print(e)})
+  ### PHQ-8 ====================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_phq8(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_phq8() did not work. This is likely due to missing variables.")
              print(e)})
+  ### GAD-7 ====================================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_gad7(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_gad7() did not work. This is likely due to missing variables.")
              print(e)})
+  ### FACIT-Fatigue Scale ======================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_facitf(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_facitf() did not work. This is likely due to missing variables.")
              print(e)})
+  ### Brief Resilience Scale ===================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_brs(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_brs() did not work. This is likely due to missing variables.")
              print(e)})
+  ### Pittsburg Sleep Quality Index ============================================
   tryCatch(expr = {trial_data <- primary_coding_pop_psqi(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_psqi() did not work. This is likely due to missing variables.")
              print(e)})
+  ### Six-Item Loneliness Scale ================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_6ils(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_6ils() did not work. This is likely due to missing variables.")
              print(e)})
+  ### Perceived Stress Scale ===================================================
   tryCatch(expr = {trial_data <- primary_coding_pop_pss(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_pss() did not work. This is likely due to missing variables.")
              print(e)})
+  ### Global Physical Activity Questionnaire ===================================
   tryCatch(expr = {trial_data <- primary_coding_pop_gpaq_post(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_gpaq_post () did not work. This is likely due to missing variables.")
@@ -731,7 +777,12 @@ primary_coding_pop <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_pop_gpaq_pre () did not work. This is likely due to missing variables.")
              print(e)})
-
+  ### 6 Minute Walk Test (6MWT) ================================================
+  tryCatch(expr = {trial_data <- primary_coding_pop_6mwt(trial_data, pid)},
+           error = function(e) {
+             warning("primary_coding_pop_6mwt() did not work. This is likely due to missing variables.")
+             print(e)})
+  
   
   catw("Primary Coding done")
   
