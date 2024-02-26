@@ -2471,7 +2471,7 @@ build_ards_df <- function (trial_data, pid) {
   # ARDS via imaging
   lung_diag <- trial_data$fv13 %>%
     mutate(form_parent = "fv13") %>%
-    select(all_of(pid),"form_parent", "mnpfs0.factor", "mnpfs1.factor", "gec_ct.factor", "gec_xray.factor", "gec_lus.factor", "lmr.factor") 
+    select(all_of(pid),"form_parent", "gec_ct.factor", "gec_xray.factor", "gec_lus.factor", "lmr.factor") 
   
   # CT Thorax
   ect_ards <- trial_data$ect %>% 
@@ -2555,8 +2555,7 @@ build_ards_df <- function (trial_data, pid) {
                                  (.data$xray_infil != 1 | (.data$xray_infil ==1 & .data$xray_infil_side != 3 & .data$xray_infil_side != 4))  ~ ards_excl,
                                TRUE ~ as.character(.data$result.factor)),
            outcome = ifelse(.data$form == "exray", .data$ards_rx, .data$outcome)) %>%
-    rename(mnpfs0.factor_outcome = "mnpfs0.factor") %>%
-    select(all_of(pid),"mnpfs0.factor_outcome", "result.factor", "outcome", "outcome_date.date", "outcome_date_d.factor", "outcome_date_uk.factor", 
+    select(all_of(pid), "result.factor", "outcome", "outcome_date.date", "outcome_date_d.factor", "outcome_date_uk.factor", 
            "form", "gec_ct.factor", "gec_xray.factor", "gec_lus.factor", "lmr.factor") 
   
   return(ards)
