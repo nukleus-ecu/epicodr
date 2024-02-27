@@ -134,10 +134,10 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
   
   needed_vars <- trial_data[["anthropo"]] %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
-    select(pid, .data$visit_name_temp) %>%
-    left_join(trial_data[["erstbefragung"]] %>% select (pid, .data$gec_gender, .data$gec_gender.factor, visit_label_var_name) %>%
+    select(all_of(pid), "visit_name_temp") %>%
+    left_join(trial_data[["erstbefragung"]] %>% select (all_of(pid), "gec_gender", "gec_gender.factor", all_of(visit_label_var_name)) %>%
                 mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
-    select(-.data$visit_name)
+    select(-"visit_name")
   
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
@@ -146,7 +146,7 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
                                  .data$gec_gender.factor == "Weiblich" & .data$taillumfang > 88 ~ "Abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang <= 102 ~ "No abdominal overweight",
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang > 102 ~ "Abdominal overweight")) %>%
-    select(-contains("gec_gender"), -.data$visit_name_temp)
+    select(-contains("gec_gender"), -"visit_name_temp")
   
   return(trial_data)
 }
@@ -299,7 +299,8 @@ primary_coding_pop_phq8 <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
     mutate(ecu_phq8_sum = calculate_phq8_sum(.data$phq8_1, .data$phq8_2, .data$phq8_3, .data$phq8_4, .data$phq8_5, .data$phq8_6, .data$phq8_7, .data$phq8_8),
-           ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum))
+           ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum),
+           ecu_phq8_cat_2 = categorize_phq8_ecu_2(.data$ecu_phq8_sum))
   
   return(trial_data)
 }
@@ -602,7 +603,7 @@ primary_coding_pop_gpaq_post <- function(trial_data) {
   trial_data <- primary_coding_pop_gpaq_calc(trial_data)
   
   trial_data$surveyfrageboge <- trial_data$surveyfrageboge %>%
-    rename_with(~ paste0(., "_post"), .data$ecu_gpaq_p3:.data$ecu_gpaq_cln_sedentary)
+    rename_with(~ paste0(., "_post"), "ecu_gpaq_p3":"ecu_gpaq_cln_sedentary")
   
   return(trial_data)
   
@@ -625,10 +626,10 @@ primary_coding_pop_6mwt <- function(trial_data, pid) {
   
   needed_vars <- trial_data$geria %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
-    select(pid, .data$visit_name_temp) %>% 
-    left_join(trial_data$erstbefragung %>% select(pid, "gec_demo_age", visit_label_var_name) %>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
-    left_join(trial_data$anthropo %>% select(pid, "gec_height", visit_label_var_name)%>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
-    select(pid, .data$visit_name_temp, .data$gec_demo_age, .data$gec_height)
+    select(all_of(pid), "visit_name_temp") %>% 
+    left_join(trial_data$erstbefragung %>% select(all_of(pid), "gec_demo_age", all_of(visit_label_var_name)) %>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    left_join(trial_data$anthropo %>% select(all_of(pid), "gec_height", all_of(visit_label_var_name)) %>% mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
+    select(all_of(pid), "visit_name_temp", "gec_demo_age", "gec_height")
   
   trial_data$geria <- trial_data$geria %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
@@ -639,7 +640,7 @@ primary_coding_pop_6mwt <- function(trial_data, pid) {
                                               .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ 0),
            ecu_6mwt_soll_erreicht.factor = as.factor(case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ "Ja",
                                                                .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ "Nein"))) %>%
-    select(-.data$visit_name_temp)
+    select(-"visit_name_temp")
   
   return(trial_data)
   
@@ -1043,7 +1044,7 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
                                TRUE ~ 2),
       ecu_gpaq_cln_sedentary = case_when(.data$ecu_gpaq_valid == 1 & .data$ecu_gpaq_p16cln == 1 ~ 1, TRUE ~ 2)
     ) %>%
-    select(-(.data$p1:.data$p16b), -c(.data$p3amin, .data$p3bmin, .data$p6amin, .data$p6bmin, .data$p9amin, .data$p9bmin, .data$p12amin, .data$p12bmin, .data$p15amin, .data$p15bmin, .data$p16amin, .data$p16bmin))
+    select(-("p1":"p16b"), -c("p3amin", "p3bmin", "p6amin", "p6bmin", "p9amin", "p9bmin", "p12amin", "p12bmin", "p15amin", "p15bmin", "p16amin", "p16bmin"))
   
   return(trial_data)
 } 
