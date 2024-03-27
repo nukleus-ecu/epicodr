@@ -22,6 +22,9 @@
     <loc>/pull_request_template.html</loc>
   </url>
   <url>
+    <loc>/reference/build_ards_df.html</loc>
+  </url>
+  <url>
     <loc>/reference/build_pcs_score_suep_df_with_proms.html</loc>
   </url>
   <url>
@@ -61,13 +64,25 @@
     <loc>/reference/calculate_brs_total.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_cfs_seid_sum.html</loc>
+    <loc>/reference/calculate_cfq11_sum.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_days_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_dn4_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_eq5d3l_proxy_index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_eq5d3l_y_index.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_eq5d5l_index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_eq5d5l_y_index.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_facitf_sum.html</loc>
@@ -80,6 +95,9 @@
   </url>
   <url>
     <loc>/reference/calculate_pcs_score_suep.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_phq4_sum.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_phq8_sum.html</loc>
@@ -106,10 +124,13 @@
     <loc>/reference/categorize_brs_ecu.html</loc>
   </url>
   <url>
-    <loc>/reference/categorize_cfs_seid.html</loc>
+    <loc>/reference/categorize_cfq11.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_dds_score_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_dn4_ecu.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_facitf_ecu.html</loc>
@@ -145,7 +166,13 @@
     <loc>/reference/categorize_ph_ecu.html</loc>
   </url>
   <url>
+    <loc>/reference/categorize_phq4_ecu.html</loc>
+  </url>
+  <url>
     <loc>/reference/categorize_phq8_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_phq8_ecu_2.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_pss_ecu.html</loc>
@@ -256,6 +283,9 @@
     <loc>/reference/primary_coding_pop_6ils.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_pop_6mwt.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_pop_abd_overw.html</loc>
   </url>
   <url>
@@ -325,7 +355,13 @@
     <loc>/reference/primary_coding_suep.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_suep_6ils.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_suep_age.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_ards.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_baseline_barthel.html</loc>
@@ -337,13 +373,46 @@
     <loc>/reference/primary_coding_suep_brs.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_coding_suep_cfs_seid.html</loc>
+    <loc>/reference/primary_coding_suep_cfq11.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_clinical_params.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_suep_dn4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_13t18p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_4p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_5t7p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_8p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_8y.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_9t11p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d3l_9t11y.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_suep_eq5d5l.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d5l_12p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d5l_12y.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_eq5d5l_13t18y.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_moca.html</loc>
@@ -353,6 +422,27 @@
   </url>
   <url>
     <loc>/reference/primary_coding_suep_pcs_score.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_phq4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_pss.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_recode_promis_cogn_funct.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_recode_promis_dysp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_recode_promis_phys.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_recode_promis_sleep.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_suep_recode_promis_social.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_suep_who_scale.html</loc>
@@ -370,10 +460,22 @@
     <loc>/reference/recode_brs.html</loc>
   </url>
   <url>
-    <loc>/reference/recode_cfs_seid.html</loc>
+    <loc>/reference/recode_cfq11.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_dn4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_phq.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_promis29_phys_funct.html</loc>
   </url>
   <url>
     <loc>/reference/recode_promis29_sleep.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recode_promis29_social.html</loc>
   </url>
   <url>
     <loc>/reference/recode_promis_cognitive.html</loc>
