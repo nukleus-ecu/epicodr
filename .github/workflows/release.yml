@@ -42,10 +42,11 @@ jobs:
     needs: release-on-push
     if: ${{ needs.release-on-push.outputs.new_version != '' }}
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.MY_PAT }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # This is important to allow pushing to the protected branch
+          token: ${{ secrets.MY_PAT }} # Use the PAT stored as a secret
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
