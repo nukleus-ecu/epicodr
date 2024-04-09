@@ -10,10 +10,10 @@ jobs:
   check-on-push:
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.MY_PAT }}
       R_KEEP_PKG_SOURCE: yes
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-on-push
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.MY_PAT }}
     outputs:
       new_version: ${{ steps.create_release.outputs.version }}
     steps:
@@ -43,7 +43,7 @@ jobs:
     if: ${{ needs.release-on-push.outputs.new_version != '' }}
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.MY_PAT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -63,3 +63,13 @@ jobs:
           git add DESCRIPTION
           git commit -m "Update version in DESCRIPTION [norelease]"
           git push
+        env:
+          # Use the PAT for pushing
+          GIT_ASKPASS: echo ${{ secrets.MY_PAT }}
+
+      - name: Trigger pkgdown Workflow
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.MY_PAT }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -d '{"event_type": "newVersionEvent", "client_payload": {"key": "value"}}'
