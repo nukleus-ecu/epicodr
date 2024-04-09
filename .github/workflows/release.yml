@@ -1,3 +1,5 @@
+name: Release and Update DESCRIPTION
+
 on:
   push:
     branches:
@@ -26,8 +28,38 @@ jobs:
     needs: check-on-push
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      new_version: ${{ steps.create_release.outputs.version }}
     steps:
-      - uses: rymndhng/release-on-push-action@master
+      - name: Create Release
+        id: create_release
+        uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: minor
           use_github_release_notes: true
+
+  update-description:
+    needs: release-on-push
+    if: ${{ needs.release-on-push.outputs.new_version != '' }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Update DESCRIPTION file with the new version
+        run: |
+          new_version="${{ needs.create-release.outputs.new_version }}"
+          Rscript -e "new_version <- '${new_version}'; trimmed_version <- substring(new_version, 2); lines <- readLines('DESCRIPTION'); for (i in 1:length(lines)) { if (grepl('^Version:', lines[i])) { lines[i] <- paste('Version:', trimmed_version); break } }; writeLines(lines, 'DESCRIPTION')"
+          # This R script reads the current DESCRIPTION file, updates the Version field, and writes the changes back
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add DESCRIPTION
+          git commit -m "Update version in DESCRIPTION [norelease]"
+          git push
