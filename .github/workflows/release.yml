@@ -13,7 +13,7 @@ jobs:
       message: ${{ steps.get-commit-message.outputs.message }} # Define job-level output
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Get the commit message
         id: get-commit-message
@@ -29,7 +29,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.MY_PAT }}
       R_KEEP_PKG_SOURCE: yes
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
@@ -59,7 +59,7 @@ jobs:
     if: ${{ needs.release-on-push.outputs.new_version != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           # This is important to allow pushing to the protected branch
           token: ${{ secrets.MY_PAT }} # Use the PAT stored as a secret
@@ -69,7 +69,7 @@ jobs:
 
       - name: Update DESCRIPTION file with the new version
         run: |
-          new_version="${{ needs.create-release.outputs.new_version }}"
+          new_version="${{ needs.release-on-push.outputs.new_version }}"
           Rscript -e "new_version <- '${new_version}'; trimmed_version <- substring(new_version, 2); lines <- readLines('DESCRIPTION'); for (i in 1:length(lines)) { if (grepl('^Version:', lines[i])) { lines[i] <- paste('Version:', trimmed_version); break } }; writeLines(lines, 'DESCRIPTION')"
           # This R script reads the current DESCRIPTION file, updates the Version field, and writes the changes back
 
