@@ -2,8 +2,12 @@
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 # This workflow generates documentation pages by using pkdown package and publishes to the repository GitHub page
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Release and Update DESCRIPTION"]
+    branches:
+      - main
+    types:
+      - completed
   workflow_dispatch:
 permissions:
   contents: write
