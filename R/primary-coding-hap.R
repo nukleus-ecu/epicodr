@@ -83,6 +83,12 @@ primary_coding_hap_age <- function(trial_data) {
                         ecu_age_cat_3 = ecu_age_cat_3(.data$demo_0010))
              }
   
+  labelled::var_label(trial_data[[grep("^_?demo$", table_names)]]) <- list(
+    ecu_age = "",
+    ecu_age_cat_dec = "",
+    ecu_age_cat_3 = ""
+  )
+  
   return(trial_data)
 }
 
@@ -105,6 +111,11 @@ primary_coding_hap_bmi <- function(trial_data) {
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
     mutate(ecu_bmi = calculate_bmi(.data$demo_0031, .data$demo_0041),
            ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi))
+  
+  labelled::var_label(trial_data[[grep("^_?demo$", table_names)]]) <- list(
+    ecu_bmi = "",
+    ecu_bmi_cat = ""
+  )
   
   return(trial_data)
 }
@@ -141,6 +152,17 @@ primary_coding_hap_clinical_params_his <- function(trial_data) {
            ecu_vitals_his_horowitz_cat = categorize_horowitz_index_ecu(.data$vp_0192),
            ecu_vitals_his_ph = categorize_ph_ecu(.data$vp_0171))
   
+  labelled::var_label(trial_data[[grep("^_?vitalhis$", table_names)]]) <- list(
+    ecu_vitals_his_bp = "",
+    ecu_vitals_his_bpm = "",
+    ecu_vitals_his_so2 = "", 
+    ecu_vitals_his_resp_rate = "",
+    ecu_vitals_his_temp = "", 
+    ecu_vitals_his_gcs = "", 
+    ecu_vitals_his_horowitz_cat = "",
+    ecu_vitals_his_ph = ""
+  )
+  
   return(trial_data)
 }
 
@@ -175,6 +197,16 @@ primary_coding_hap_clinical_params <- function(trial_data) {
            ecu_vitals_gcs = categorize_gcs_ecu(.data$vp_0081_ni), 
            ecu_vitals_ph = categorize_ph_ecu(.data$vp_0171))
   
+  labelled::var_label(trial_data[[grep("^_?vitalparam$", table_names)]]) <- list(
+    ecu_vitals_bp = "",
+    ecu_vitals_bpm = "",
+    ecu_vitals_so2 = "", 
+    ecu_vitals_resp_rate = "",
+    ecu_vitals_temp = "", 
+    ecu_vitals_gcs = "", 
+    ecu_vitals_ph = ""
+  )
+  
   return(trial_data)
 }
 
@@ -203,6 +235,10 @@ primary_coding_hap_barthel_pre <- function(trial_data) {
   trial_data[[grep("^_?risiko1$", table_names)]] <- trial_data[[grep("^_?risiko1$", table_names)]] %>%
     mutate(ecu_barthel_cat_pre = categorize_barthel_ecu(.data$risk_0022))
   
+  labelled::var_label(trial_data[[grep("^_?risiko1$", table_names)]]) <- list(
+    ecu_barthel_cat_pre = ""
+  )
+  
   return (trial_data)
 }
 
@@ -222,6 +258,10 @@ primary_coding_hap_barthel_disc <- function(trial_data) {
   
   trial_data[[grep("^_?end$", table_names)]] <- trial_data[[grep("^_?end$", table_names)]] %>%
     mutate(ecu_barthel_cat_disc = categorize_barthel_ecu(.data$out_0062))
+  
+  labelled::var_label(trial_data[[grep("^_?end$", table_names)]]) <- list(
+    ecu_barthel_cat_disc = ""
+  )
   
   return (trial_data)
 }
@@ -244,6 +284,10 @@ primary_coding_hap_eq5d5l <- function(trial_data) {
   trial_data[[grep("^_?eq5d$", table_names)]] <- trial_data[[grep("^_?eq5d$", table_names)]] %>%
     mutate (ecu_eq5d5l_index = calculate_eq5d5l_index (.data$eq5d_0020, .data$eq5d_0030, .data$eq5d_0040, .data$eq5d_0050, .data$eq5d_0060))
   
+  labelled::var_label(trial_data[[grep("^_?eq5d$", table_names)]]) <- list(
+    ecu_eq5d5l_index = ""
+  )
+  
   return(trial_data)
 }
 
@@ -254,13 +298,14 @@ primary_coding_hap_eq5d5l <- function(trial_data) {
 #' ecu_moca_total_score, ecu_moca_cat
 #' 
 #' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_hap_moca <- function(trial_data) {
   
   table_names <- names(trial_data)
   
-  trial_data[[grep("^_?moca$", table_names)]] <- trial_data[[grep("^_?moca$", table_names)]]%>%
+  trial_data[[grep("^_?moca$", table_names)]] <- trial_data[[grep("^_?moca$", table_names)]] %>%
     mutate(ecu_moca_total_score = ifelse(.data$moca_0021 == 1, .data$moca_0022, 0) +
              ifelse(.data$moca_0023 == 1, .data$moca_0024, 0) +
              ifelse(.data$moca_0025 == 1, .data$moca_0026, 0) +
@@ -282,6 +327,11 @@ primary_coding_hap_moca <- function(trial_data) {
              ifelse(.data$moca_0110 >= 0, .data$moca_0110, 0),
            ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) 
   
+  labelled::var_label(trial_data[[grep("^_?moca$", table_names)]]) <- list(
+    ecu_moca_total_score = "",
+    ecu_moca_cat = ""
+  )
+  
   return(trial_data)
 }
 
@@ -299,8 +349,12 @@ primary_coding_hap_news_first <- function(trial_data) {
   
   table_names <- names(trial_data)
   
-  trial_data[[grep("^_?klinscores$", table_names)]] <- trial_data[[grep("^_?klinscores$", table_names)]]%>%
+  trial_data[[grep("^_?klinscores$", table_names)]] <- trial_data[[grep("^_?klinscores$", table_names)]] %>%
     mutate(ecu_news_cat = categorize_news_score_ecu(.data$score_0041))
+  
+  labelled::var_label(trial_data[[grep("^_?klinscores$", table_names)]]) <- list(
+    ecu_news_cat = ""
+  )
   
   return(trial_data)
 }
@@ -322,6 +376,10 @@ primary_coding_hap_apache2 <- function(trial_data) {
   trial_data[[grep("^_?klinscores1$", table_names)]] <- trial_data[[grep("^_?klinscores1$", table_names)]]%>%
     mutate(ecu_apache2_cat = categorize_apache2_score_ecu(.data$icusc_0041))
   
+  labelled::var_label(trial_data[[grep("^_?klinscores$", table_names)]]) <- list(
+    ecu_apache2_cat = ""
+  )
+  
   return(trial_data)
 }
 
@@ -342,6 +400,10 @@ primary_coding_hap_icdsc <- function(trial_data) {
   trial_data[[grep("^_?haemodyn$", table_names)]] <- trial_data[[grep("^_?haemodyn$", table_names)]] %>%
     mutate(ecu_icdsc_cat = categorize_icdsc_score_ecu(.data$ksc_0041))
   
+  labelled::var_label(trial_data[[grep("^_?haemodyn$", table_names)]]) <- list(
+    ecu_icdsc_cat = ""
+  )
+  
   return(trial_data)
 }
 
@@ -361,6 +423,10 @@ primary_coding_hap_dds <- function(trial_data) {
   
   trial_data[[grep("^_?haemodyn$", table_names)]] <- trial_data[[grep("^_?haemodyn$", table_names)]] %>%
     mutate(ecu_dds_cat = categorize_dds_score_ecu(.data$ksc_0051))
+  
+  labelled::var_label(trial_data[[grep("^_?haemodyn$", table_names)]]) <- list(
+    ecu_dds_cat = ""
+  )
   
   return(trial_data)
 }
@@ -401,7 +467,7 @@ primary_coding_hap_who_scale <- function(trial_data) {
 #' adds the following colums to fss
 #' 
 #' @param trial_data A secuTrial data object
-#' @importForm rlang .data
+#' @importFrom rlang .data
 #' @export
 
 primary_coding_hap_fss <- function(trial_data) {
@@ -409,13 +475,23 @@ primary_coding_hap_fss <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?fss$", table_names)]] <- trial_data[[grep("^_?fss$", table_names)]] %>%
-    mutate(ecu_fss_sum = calculate_fss_sum(fss_0021, fss_0022, fss_0023, fss_0024, fss_0025, fss_0026, fss_0027, fss_0028, fss_0029),
-           ecu_fss_cat = categorize_fss_sum_ecu(ecu_fss_sum),
-           ecu_fss_mean = calculate_fss_mean(fss_0021, fss_0022, fss_0023, fss_0024, fss_0025, fss_0026, fss_0027, fss_0028, fss_0029),
-           ecu_fss_cat_2 = categorize_fss_mean_ecu(ecu_fss_mean),
-           ecu_fss_sum_phys = calculate_fss_sum_phys(fss_0022, fss_0024, fss_0026),
-           ecu_fss_sum_mental = calculate_fss_sum_mental(fss_0021, fss_0023, fss_0025, fss_0027, fss_0028, fss_0029),
-           ecu_fss_mental_phys_ratio = round(ecu_fss_sum_mental / ecu_fss_sum_phys, digits = 2))
+    mutate(ecu_fss_sum = calculate_fss_sum(.data$fss_0021, .data$fss_0022, .data$fss_0023, .data$fss_0024, .data$fss_0025, .data$fss_0026, .data$fss_0027, .data$fss_0028, .data$fss_0029),
+           ecu_fss_cat = categorize_fss_sum_ecu(.data$ecu_fss_sum),
+           ecu_fss_mean = calculate_fss_mean(.data$fss_0021, .data$fss_0022, .data$fss_0023, .data$fss_0024, .data$fss_0025, .data$fss_0026, .data$fss_0027, .data$fss_0028, .data$fss_0029),
+           ecu_fss_cat_2 = categorize_fss_mean_ecu(.data$ecu_fss_mean),
+           ecu_fss_sum_phys = calculate_fss_sum_phys(.data$fss_0022, .data$fss_0024, .data$fss_0026),
+           ecu_fss_sum_mental = calculate_fss_sum_mental(.data$fss_0021, .data$fss_0023, .data$fss_0025, .data$fss_0027, .data$fss_0028, .data$fss_0029),
+           ecu_fss_mental_phys_ratio = round(.data$ecu_fss_sum_mental / .data$ecu_fss_sum_phys, digits = 2))
+  
+  labelled::var_label(trial_data[[grep("^_?fss$", table_names)]]) <- list(
+    ecu_fss_sum = "",
+    ecu_fss_cat = "",
+    ecu_fss_mean = "",
+    ecu_fss_cat_2 = "",
+    ecu_fss_sum_phys = "",
+    ecu_fss_sum_mental = "",
+    ecu_fss_mental_phys_ratio = ""
+  )
   
   return(trial_data)
   
@@ -429,8 +505,8 @@ primary_coding_hap_fss <- function(trial_data) {
 #' Wrapper function applying the following primary coding steps to trial_data: 
 #' 
 #' 
-#' @param trial_data The secu trial data object
-#' @return The secu trial data object with primary coded variables
+#' @param trial_data The secuTrial data object
+#' @return The secuTrial data object with primary coded variables
 #' @export
 
 primary_coding_hap <- function(trial_data) {
@@ -559,7 +635,6 @@ build_who_scale_hap <- function(trial_data, pid) {
     ungroup() %>%
     select(!!sym(pid), "ea_0010")
 
-  
   trial_data[[grep("^_?e_?osfci$", table_names)]] <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     left_join(main_diag, by = pid) %>%
     mutate(ecu_who_scale.factor = case_when(is.na(.data$osfci_0021) ~ NA, 
@@ -587,6 +662,12 @@ build_who_scale_hap <- function(trial_data, pid) {
                                                           .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
                                                           .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6)))
   
+  labelled::var_label(trial_data[[grep("^_?e_?osfci$", table_names)]]) <- list(
+    ecu_who_scale.factor = "",
+    ecu_who_scale = "",
+    ecu_who_scale_with_siag.factor = "",
+    ecu_who_scale_with_diag = ""
+  )
   
   #select(-(.data$ea_0010))
   
@@ -599,7 +680,6 @@ build_who_scale_hap <- function(trial_data, pid) {
     rename(ecu_who_scale_max.factor = "ecu_who_scale.factor",
            ecu_who_scale_max = "ecu_who_scale")
 
-  
   who_scale_with_diag_max <-  trial_data[[grep("^_?e_?osfci$", table_names)]] %>%
     select(!!sym(pid), "ecu_who_scale_with_diag", "ecu_who_scale_with_diag.factor") %>%
     group_by(!!sym(pid)) %>%
@@ -609,10 +689,16 @@ build_who_scale_hap <- function(trial_data, pid) {
     rename(ecu_who_scale_max_with_diag.factor = "ecu_who_scale_with_diag.factor",
            ecu_who_scale_max_with_diag = "ecu_who_scale_with_diag")
 
-  
   trial_data[[grep("^_?osfci$", table_names)]] <-  trial_data[[grep("^_?osfci$", table_names)]] %>%
     left_join(who_scale_max, by = pid) %>%
     left_join(who_scale_with_diag_max, by = pid)
+  
+  labelled::var_label(trial_data[[grep("^_?osfci$", table_names)]]) <- list(
+    ecu_who_scale_max = "",
+    ecu_who_scale_max.factor = "",
+    ecu_who_scale_with_diag_max = "",
+    ecu_who_scale_with_diag_max.factor = ""
+  )
   
   return(trial_data)
   
