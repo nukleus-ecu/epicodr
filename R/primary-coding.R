@@ -990,3 +990,136 @@ categorize_dn4_ecu <- function (ecu_dn4_sum) {
                ecu_dn4_sum >= 4 ~ "Neuropathic pain"))
   
 }
+
+
+#' Calculate Fatigue Severity Scale (FSS) sum score
+#' 
+#' @description Calculate sum score of FSS
+#' 
+#' @param fss_1 vector for item "My motivation is lower when I am fatigued."
+#' @param fss_2 vector for item "Exercise brings on my fatigue."
+#' @param fss_3 vector for item "I am easily fatigued."
+#' @param fss_4 vector for item "Fatigue interferes with my physical functioning."
+#' @param fss_5 vector for item "Fatigue causes frequent problems for me."
+#' @param fss_6 vector for item "My fatigue prevents sustained physical functioning."
+#' @param fss_7 vector for item "Fatigue interferes with carrying out certain duties and responsibilities."
+#' @param fss_8 vector for item "Fatigue is among my three most disabling symptoms."
+#' @param fss_9 vector for item "Fatigue interferes with my work, family or social life."
+#' 
+#' @return A numeric vector with sum score of FSS
+#' @export
+
+calculate_fss_sum <- function(fss_1, fss_2, fss_3, fss_4, fss_5, fss_6, fss_7, fss_8, fss_9) {
+  
+  ecu_fss_sum <- fss_1 + fss_2 + fss_3 + fss_4 + fss_5 + fss_6 + fss_7 + fss_8 + fss_9
+  
+  return(ecu_fss_sum)
+  
+}
+
+
+#' Calculate Fatigue Severity Scale (FSS) sum score for sub component "general and mental fatigue"
+#' 
+#' @description Calculate sum score of FSS sub component "general and mental fatigue"
+#' 
+#' @param fss_1 vector for item "My motivation is lower when I am fatigued."
+#' @param fss_3 vector for item "I am easily fatigued."
+#' @param fss_5 vector for item "Fatigue causes frequent problems for me."
+#' @param fss_7 vector for item "Fatigue interferes with carrying out certain duties and responsibilities."
+#' @param fss_8 vector for item "Fatigue is among my three most disabling symptoms."
+#' @param fss_9 vector for item "Fatigue interferes with my work, family or social life."
+#'  
+#' @return A numeric vector with sum score of FSS for sub component "general and mental fatigue"
+#' @export
+
+calculate_fss_sum_mental <- function(fss_1, fss_3, fss_5, fss_7, fss_8, fss_9) {
+  
+  ecu_fss_sum_mental <- fss_1 + fss_3 + fss_5 + fss_7 + fss_8 + fss_9
+  
+  return(ecu_fss_sum_mental)
+  
+}
+
+#' Calculate Fatigue Severity Scale (FSS) sum score for sub component "physical fatigue"
+#' 
+#' @description Calculate sum score of FSS sub component "physical fatigue"
+#' 
+#' @param fss_2 vector for item "Exercise brings on my fatigue."
+#' @param fss_4 vector for item "Fatigue interferes with my physical functioning."
+#' @param fss_6 vector for item "My fatigue prevents sustained physical functioning."
+#' 
+#' @return A numeric vector with sum score of FSS for sub component "physical fatigue"
+#' @export
+
+calculate_fss_sum_phys <- function(fss_2, fss_4, fss_6) {
+  
+  ecu_fss_sum_phys <- fss_2 + fss_4 + fss_6
+  
+  return(ecu_fss_sum_phys)
+  
+}
+
+
+#' Categorize Fatigue Severity Scale (FSS) Sum Score
+#' 
+#' @description Categorize FSS
+#' 
+#' @param ecu_fss_sum A numerical vector with FSS sum score
+#' 
+#' @return A factor /w levels "No to mild fatigue", "Moderate fatigue" and "Severe fatigue"
+#' @export
+
+categorize_fss_sum_ecu <- function(ecu_fss_sum) {
+  
+  ecu_fss_cat <- case_when(ecu_fss_sum < 36 ~ "No to mild fatigue",
+                           ecu_fss_sum >= 36 & ecu_fss_sum <= 52 ~ "Moderate fatigue",
+                           ecu_fss_sum > 52 ~ "Severe fatigue")
+  
+  return(ecu_fss_cat)
+  
+}
+
+
+#' Calculate Fatigue Severity Scale (FSS) mean score
+#' 
+#' @description Calculate mean score of FSS
+#' 
+#' @param fss_1 vector for item "My motivation is lower when I am fatigued."
+#' @param fss_2 vector for item "Exercise brings on my fatigue."
+#' @param fss_3 vector for item "I am easily fatigued."
+#' @param fss_4 vector for item "Fatigue interferes with my physical functioning."
+#' @param fss_5 vector for item "Fatigue causes frequent problems for me."
+#' @param fss_6 vector for item "My fatigue prevents sustained physical functioning."
+#' @param fss_7 vector for item "Fatigue interferes with carrying out certain duties and responsibilities."
+#' @param fss_8 vector for item "Fatigue is among my three most disabling symptoms."
+#' @param fss_9 vector for item "Fatigue interferes with my work, family or social life."
+#' 
+#' @return A numeric vector with sum score of FSS
+#' @export
+
+calculate_fss_mean <- function(fss_1, fss_2, fss_3, fss_4, fss_5, fss_6, fss_7, fss_8, fss_9) {
+  
+  ecu_fss_mean <- round((fss_1 + fss_2 + fss_3 + fss_4 + fss_5 + fss_6 + fss_7 + fss_8 + fss_9) / 9, digits = 2)
+  
+  return(ecu_fss_mean)
+  
+}
+
+
+#' Categorize Fatigue Severity Scale (FSS) Mean Score 
+#' 
+#' @description Categorize FSS
+#' 
+#' @param ecu_fss_mean A numerical vector with FSS sum score
+#' 
+#' @return A factor /w levels "No relevant fatigue" and "Relevant fatigue"
+#' @export
+
+categorize_fss_mean_ecu <- function(ecu_fss_mean) {
+  
+  ecu_fss_cat_2 <- case_when(ecu_fss_mean < 4 ~ "No  relevant fatigue",
+                           ecu_fss_mean >= 4 ~ "Relevant fatigue")
+  
+  return(ecu_fss_cat_2)
+  
+}

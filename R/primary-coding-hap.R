@@ -396,6 +396,32 @@ primary_coding_hap_who_scale <- function(trial_data) {
 }
 
 
+#' Primary coding Fatigue Severity Scale (FSS)
+#' 
+#' adds the following colums to fss
+#' 
+#' @param trial_data A secuTrial data object
+#' @importForm rlang .data
+#' @export
+
+primary_coding_hap_fss <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?fss$", table_names)]] <- trial_data[[grep("^_?fss$", table_names)]] %>%
+    mutate(ecu_fss_sum = calculate_fss_sum(fss_0021, fss_0022, fss_0023, fss_0024, fss_0025, fss_0026, fss_0027, fss_0028, fss_0029),
+           ecu_fss_cat = categorize_fss_sum_ecu(ecu_fss_sum),
+           ecu_fss_mean = calculate_fss_mean(fss_0021, fss_0022, fss_0023, fss_0024, fss_0025, fss_0026, fss_0027, fss_0028, fss_0029),
+           ecu_fss_cat_2 = categorize_fss_mean_ecu(ecu_fss_mean),
+           ecu_fss_sum_phys = calculate_fss_sum_phys(fss_0022, fss_0024, fss_0026),
+           ecu_fss_sum_mental = calculate_fss_sum_mental(fss_0021, fss_0023, fss_0025, fss_0027, fss_0028, fss_0029),
+           ecu_fss_mental_phys_ratio = round(ecu_fss_sum_mental / ecu_fss_sum_phys, digits = 2))
+  
+  return(trial_data)
+  
+}
+
+
 # HAP Wrapper primary coding ==================================================
 
 #' Primary coding HAP Data
@@ -491,6 +517,11 @@ primary_coding_hap <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_who_scale() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### Fatigue Severity Scale ================================================================
+  tryCatch(expr = {trial_data <- primary_coding_hap_fss(trial_data)},
+           error = function(e) {
+             warning("primary_coding_hap_fss() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
