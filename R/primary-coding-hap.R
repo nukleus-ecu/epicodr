@@ -65,16 +65,23 @@ primary_coding_hap_age <- function(trial_data) {
   
   table_names <- names(trial_data)
   
-  trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
-    # HAP already has an age in years vector, simply copy it
-    mutate(ecu_age = .data$demo_0010,
-           ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0011/12, .data$ecu_age),
-           ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0012/52, .data$ecu_age),
-           ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0013/365, .data$ecu_age),
-           # demo_0014 enthält 3 Alterskategorien kleiner-gleich 3 Jahre, aber hier nicht relevant. daher pauschal 3 Jahre
-           ecu_age = ifelse(is.na(.data$ecu_age) & !is.na(.data$demo_0014), 3, .data$ecu_age)) %>%
-    mutate(ecu_age_cat_dec = ecu_age_cat_dec(.data$demo_0010),
-           ecu_age_cat_3 = ecu_age_cat_3(.data$demo_0010))
+  if ("demo_0011" %in% names(trial_data[[grep("^_?demo$", table_names)]]) & "demo_0012" %in% names(trial_data[[grep("^_?demo$", table_names)]]) & 
+      "demo_0013" %in% names(trial_data[[grep("^_?demo$", table_names)]]) & "demo_0014" %in% names(trial_data[[grep("^_?demo$", table_names)]])) {trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
+      # HAP already has an age in years vector, simply copy it
+      mutate(ecu_age = .data$demo_0010,
+             ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0011/12, .data$ecu_age),
+             ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0012/52, .data$ecu_age),
+             ecu_age = ifelse(is.na(.data$ecu_age), .data$demo_0013/365, .data$ecu_age),
+             # demo_0014 enthält 3 Alterskategorien kleiner-gleich 3 Jahre, aber hier nicht relevant. daher pauschal 3 Jahre
+             ecu_age = ifelse(is.na(.data$ecu_age) & !is.na(.data$demo_0014), 3, .data$ecu_age)) %>%
+      mutate(ecu_age_cat_dec = ecu_age_cat_dec(.data$demo_0010),
+             ecu_age_cat_3 = ecu_age_cat_3(.data$demo_0010))} else {
+               trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
+                 # HAP already has an age in years vector, simply copy it
+                 mutate(ecu_age = .data$demo_0010,
+                        ecu_age_cat_dec = ecu_age_cat_dec(.data$demo_0010),
+                        ecu_age_cat_3 = ecu_age_cat_3(.data$demo_0010))
+             }
   
   return(trial_data)
 }
@@ -368,11 +375,10 @@ primary_coding_hap_dds <- function(trial_data) {
 #' ecu_who_scale_max.factor, ecu_who_scale_max
 #'
 #' @param trial_data A secuTrial data object
-#' @param pid column name of patient ID in trial_data
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_hap_who_scale <- function(trial_data, pid) {
+primary_coding_hap_who_scale <- function(trial_data) {
   
   if (!("id_names" %in% names(trial_data$export_options))) {
     trial_data <- set_id_names(trial_data)
@@ -383,8 +389,6 @@ primary_coding_hap_who_scale <- function(trial_data, pid) {
   }
   
   pid <- trial_data$export_options$id_names$pid 
-  
-  table_names <- names(trial_data)
   
   trial_data <- build_who_scale_hap(trial_data, pid)
   
@@ -419,7 +423,7 @@ primary_coding_hap <- function(trial_data) {
   
   table_names <- names(trial_data)
   
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?visit_02$", table_names)]]), "mnpvislabel", "visit_name")
   
   ## Demographics ==============================================================
   ### Age ======================================================================
@@ -484,7 +488,7 @@ primary_coding_hap <- function(trial_data) {
              warning("primary_coding_hap_dds() did not work. This is likely due to missing variables.")
              print(e)})
   ### WHO-Scale ================================================================
-  tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data, pid)},
+  tryCatch(expr = {trial_data <- primary_coding_hap_who_scale(trial_data)},
            error = function(e) {
              warning("primary_coding_hap_who_scale() did not work. This is likely due to missing variables.")
              print(e)})
@@ -515,7 +519,7 @@ primary_coding_hap <- function(trial_data) {
 build_who_scale_hap <- function(trial_data, pid) {
   
   table_names <- names(trial_data)
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(grep("^_?visit_02$", table_names)), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?visit_02$", table_names)]]), "mnpvislabel", "visit_name")
   
   main_diag <-  trial_data[[grep("^_?visit_02$", table_names)]] %>%
     filter(!!sym(visit_label_var_name) == "Screening / V1") %>%
