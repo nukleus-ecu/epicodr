@@ -376,7 +376,7 @@ primary_coding_hap_apache2 <- function(trial_data) {
   trial_data[[grep("^_?klinscores1$", table_names)]] <- trial_data[[grep("^_?klinscores1$", table_names)]]%>%
     mutate(ecu_apache2_cat = categorize_apache2_score_ecu(.data$icusc_0041))
   
-  labelled::var_label(trial_data[[grep("^_?klinscores$", table_names)]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?klinscores1$", table_names)]]) <- list(
     ecu_apache2_cat = ""
   )
   
@@ -665,7 +665,7 @@ build_who_scale_hap <- function(trial_data, pid) {
   labelled::var_label(trial_data[[grep("^_?e_?osfci$", table_names)]]) <- list(
     ecu_who_scale.factor = "",
     ecu_who_scale = "",
-    ecu_who_scale_with_siag.factor = "",
+    ecu_who_scale_with_diag.factor = "",
     ecu_who_scale_with_diag = ""
   )
   
@@ -696,8 +696,8 @@ build_who_scale_hap <- function(trial_data, pid) {
   labelled::var_label(trial_data[[grep("^_?osfci$", table_names)]]) <- list(
     ecu_who_scale_max = "",
     ecu_who_scale_max.factor = "",
-    ecu_who_scale_with_diag_max = "",
-    ecu_who_scale_with_diag_max.factor = ""
+    ecu_who_scale_max_with_diag = "",
+    ecu_who_scale_max_with_diag.factor = ""
   )
   
   return(trial_data)
