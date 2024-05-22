@@ -1909,8 +1909,9 @@ build_suep_long_symptom_df <- function(trial_data, pid){
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   # Date of Screening visit
-  scv_date <- trial_data$scv %>%
-    select("gec_pr_incl_date.date", all_of(pid))
+  if("gec_pr_incl_date.date" %in% names(trial_data$scv)) {scv_date <- trial_data$scv %>%
+    select("gec_pr_incl_date.date", all_of(pid))} else {scv_date <- trial_data$scv %>%
+      select("pr_incl_date.date", all_of(pid))}
   
   # Date of Study visits
   visit_date <- trial_data$m2 %>%
