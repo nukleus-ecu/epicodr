@@ -18,8 +18,17 @@ jobs:
       - name: Get the commit message
         id: get-commit-message
         run: |
-          echo "message=$(git log --format=%B -n 1 ${{ github.event.after }})" >> $GITHUB_OUTPUT
-
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            COMMIT_SHA="${{ github.event.after }}"
+          elif [[ "${{ github.eventname }}" == "pull_request" ]]; then
+            COMMIT_SHA="${{ github.event.pull_request.head.sha }}"
+          fi
+          message=$(git log --format=%B -n 1 $COMMIT_SHA)
+          echo "$message"
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo "$message" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
           
   check-on-push:
     runs-on: ubuntu-latest
