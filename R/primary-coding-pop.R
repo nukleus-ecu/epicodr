@@ -67,6 +67,11 @@ primary_coding_pop_age <- function(trial_data) {
     mutate(ecu_age_cat_dec = ecu_age_cat_dec(.data$gec_demo_age),
            ecu_age_cat_3 = ecu_age_cat_3(.data$gec_demo_age))
   
+  labelled::var_label(trial_data[["erstbefragung"]]) <- list(
+    ecu_age_cat_3 = "",
+    ecu_age_cat_dec = ""
+  )
+  
   return(trial_data)
 }
 
@@ -86,6 +91,10 @@ primary_coding_pop_migration <- function(trial_data) {
   
   trial_data[["erstbefragung"]] <- trial_data[["erstbefragung"]] %>%
     mutate(ecu_migration_background = get_ecu_background_pop(.data$staatsang, .data$gebland, .data$gebland2))
+  
+  labelled::var_label(trial_data[["erstbefragung"]]) <- list(
+    ecu_migration_background = ""
+  )
   
   return(trial_data)
 }
@@ -111,6 +120,12 @@ primary_coding_pop_bmi <- function(trial_data) {
            ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
                                                                                     Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
                                                                                     Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
+  
+  labelled::var_label(trial_data[["anthropo"]]) <- list(
+    ecu_bmi = "",
+    ecu_bmi_cat = "",
+    ecu_bmi_adipositas = ""
+  )
   
   return (trial_data)
 }
@@ -148,6 +163,10 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
                                  .data$gec_gender.factor == "M\u00e4nnlich" & .data$taillumfang > 102 ~ "Abdominal overweight")) %>%
     select(-contains("gec_gender"), -"visit_name_temp")
   
+  labelled::var_label(trial_data[["anthropo"]]) <- list(
+    ecu_waist = ""
+  )
+  
   return(trial_data)
 }
 
@@ -174,8 +193,19 @@ primary_coding_pop_clinical_params <- function(trial_data) {
            ecu_dbp = (.data$gec_vitals_pdias + .data$gec_vitals_pdias_2)/2,
            ecu_dbp = coalesce(.data$ecu_dbp, .data$gec_vitals_pdias),
            ecu_bp = categorize_bloodpressure_ecu(.data$ecu_sbp, .data$ecu_dbp),
-           ecu_resp_rate = categorize_resp_rate_ecu(.data$gec_vitals_resp)
-    )
+           ecu_resp_rate = categorize_resp_rate_ecu(.data$gec_vitals_resp))
+  
+  labelled::var_label(trial_data[["anthropo"]]) <- list(
+    ecu_vitals_temp = "",
+    ecu_vitals_temp = "",
+    ecu_temp = "",
+    ecu_sbp = "",
+    ecu_sbp = "",
+    ecu_dbp = "",
+    ecu_dbp = "",
+    ecu_bp = "",
+    ecu_resp_rate = ""
+  )
   
   return (trial_data)
 }
@@ -196,6 +226,10 @@ primary_coding_pop_cardio_params <- function(trial_data) {
   trial_data[["kardio"]] <- trial_data[["kardio"]] %>%
     mutate(ecu_bpm = categorize_heartfrequency_ecu(.data$gec_vitals_hf))
   
+  labelled::var_label(trial_data[["kardio"]]) <- list(
+    ecu_bpm = ""
+  )
+  
   return(trial_data)
 }
 
@@ -215,6 +249,10 @@ primary_coding_pop_pneumo_params <- function(trial_data) {
   
   trial_data[["pneumo"]] <- trial_data[["pneumo"]] %>%
     mutate(ecu_spo2 = categorize_oxigensaturation_ecu(.data$gec_vitals_so2))
+  
+  labelled::var_label(trial_data[["pneumo"]]) <- list(
+    ecu_spo2 = ""
+  )
   
   return(trial_data)
 }
@@ -243,6 +281,10 @@ primary_coding_pop_eq5d5l <- function(trial_data) {
   trial_data[["erstbefragung"]] <- trial_data[["erstbefragung"]] %>%
     mutate (ecu_eq5d5l_index = calculate_eq5d5l_index(.data$eq5d5l1, .data$eq5d5l2, .data$eq5d5l3, .data$eq5d5l4, .data$eq5d5l5))
   
+  labelled::var_label(trial_data[["erstbefragung"]]) <- list(
+    ecu_eq5d5l_index = ""
+  )
+  
   return(trial_data)
 }
 
@@ -260,8 +302,12 @@ primary_coding_pop_moca <- function(trial_data) {
   trial_data[["neuro"]] <- trial_data[["neuro"]] %>%
     mutate(ecu_moca_total_score = .data$moca_tmt + .data$moca_figure + .data$moca_clock + .data$moca_naming + .data$moca_attention + .data$moca_speech + 
              .data$moca_abstract + .data$moca_recall_number + .data$moca_orientation + .data$moca_education,
-           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)
-    ) 
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) 
+  
+  labelled::var_label(trial_data[["neuro"]]) <- list(
+    ecu_moca_total_score = "",
+    ecu_moca_cat = ""
+  )
   
   return(trial_data)
 }
@@ -281,6 +327,10 @@ primary_coding_pop_mmrc <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
     mutate (ecu_mmrc = categorize_mmrc_ecu(.data$mmrc_grad.factor)) 
+  
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_mmrc = ""
+  )
   
   return(trial_data)
 }
@@ -302,6 +352,12 @@ primary_coding_pop_phq8 <- function(trial_data) {
            ecu_phq8_cat = categorize_phq8_ecu(.data$ecu_phq8_sum),
            ecu_phq8_cat_2 = categorize_phq8_ecu_2(.data$ecu_phq8_sum))
   
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_phq8_sum = "",
+    ecu_phq8_cat = "",
+    ecu_phq8_cat_2 = ""
+  )
+  
   return(trial_data)
 }
 
@@ -322,6 +378,11 @@ primary_coding_pop_gad7 <- function(trial_data) {
     mutate(ecu_gad7_sum = calculate_gad7_sum(.data$gad7_1, .data$gad7_2, .data$gad7_3, .data$gad7_4, .data$gad7_5, .data$gad7_6, .data$gad7_7),
            ecu_gad7_cat = categorize_gad7_ecu(.data$ecu_gad7_sum))
   
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_gad7_sum = "",
+    ecu_gad7_cat = ""
+  )
+  
   return(trial_data)
 }
 
@@ -341,6 +402,11 @@ primary_coding_pop_facitf <- function(trial_data) {
     mutate(ecu_facitf_sum = calculate_facitf_sum(.data$facitf1, .data$facitf2, .data$facitf3, .data$facitf4, .data$facitf5, .data$facitf6, .data$facitf7, 
                                                  .data$facitf8, .data$facitf9, .data$facitf10, .data$facitf11, .data$facitf12, .data$facitf13),
            ecu_facitf_cat = categorize_facitf_ecu(.data$ecu_facitf_sum)) 
+  
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_facitf_sum = "",
+    ecu_facitf_cat = ""
+  )
   
   return(trial_data)
 }
@@ -363,6 +429,13 @@ primary_coding_pop_brs <- function(trial_data) {
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) 
   
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_brs_sum = "",
+    ecu_brs_n = "",
+    ecu_brs_total = "",
+    ecu_brs_cat = ""
+  )
+  
   return(trial_data)
 }
 
@@ -380,7 +453,25 @@ primary_coding_pop_brs <- function(trial_data) {
 primary_coding_pop_psqi <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    mutate(ecu_psqi_comp_1 = .data$psqi6,
+    mutate(psqi1 = as.numeric(.data$psqi1),
+           psqi2 = as.numeric(.data$psqi2),
+           psqi3 = as.numeric(.data$psqi3),
+           psqi4 = as.numeric(.data$psqi4),
+           psqi5a = as.numeric(.data$psqi5a),
+           psqi5b = as.numeric(.data$psqi5b),
+           psqi5c = as.numeric(.data$psqi5c),
+           psqi5d = as.numeric(.data$psqi5d),
+           psqi5e = as.numeric(.data$psqi5e),
+           psqi5f = as.numeric(.data$psqi5f),
+           psqi5g = as.numeric(.data$psqi5g),
+           psqi5h = as.numeric(.data$psqi5h),
+           psqi5i = as.numeric(.data$psqi5i),
+           psqi5j = as.numeric(.data$psqi5j),
+           psqi6 = as.numeric(.data$psqi6),
+           psqi7 = as.numeric(.data$psqi7),
+           psqi8 = as.numeric(.data$psqi8),
+           psqi9 = as.numeric(.data$psqi9),
+           ecu_psqi_comp_1 = .data$psqi6,
            ecu_psqi_comp_2_sum = case_when(.data$psqi2 <= 15 ~ 0,
                                            .data$psqi2 >= 16 & .data$psqi2 <= 30 ~ 1,
                                            .data$psqi2 >= 31 & .data$psqi2 <= 60 ~ 2,
@@ -411,6 +502,20 @@ primary_coding_pop_psqi <- function(trial_data) {
                                        .data$ecu_psqi_comp_7_sum >= 5 ~ 3),
            ecu_psqi_global_score = .data$ecu_psqi_comp_1 + .data$ecu_psqi_comp_2 + .data$ecu_psqi_comp_3 + .data$ecu_psqi_comp_4 + .data$ecu_psqi_comp_5 + 
              .data$ecu_psqi_comp_6 + .data$ecu_psqi_comp_7) 
+  
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_psqi_comp_1 = "",
+    ecu_psqi_comp_2_sum = "",
+    ecu_psqi_comp_2 = "",
+    ecu_psqi_comp_3 = "", 
+    ecu_psqi_comp_4 = "",
+    ecu_psqi_comp_5_sum = "",
+    ecu_psqi_comp_5 = "",
+    ecu_psqi_comp_6 = "",
+    ecu_psqi_comp_7_sum = "",
+    ecu_psqi_comp_7 = "",
+    ecu_psqi_global_score = ""
+  )
   
   return(trial_data)
 }
@@ -491,6 +596,46 @@ primary_coding_pop_kccq <- function(trial_data){
       ecu_kccq_total = round(mean(c(.data$ecu_kccq_phys_score, .data$ecu_kccq_sy_freq_score, .data$ecu_kccq_sy_sev_score, .data$ecu_kccq_qol_score, .data$ecu_kccq_sl_score), na.rm = TRUE), digits = 2)) %>%
     ungroup()
   
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    kccq_1_1 = "",
+    kccq_1_2 = "",
+    kccq_1_3 = "",
+    kccq_1_4 = "",
+    kccq_1_5 = "",
+    kccq_1_6 = "",
+    ecu_kccq_phys_mean = "",
+    ecu_kccq_phys_score = "",
+    ecu_kccq_sy_ch = "",
+    ecu_kccq_sy_ch_score = "",
+    kccq_3 = "",
+    kccq_5 = "",
+    kccq_7 = "",
+    kccq_9 = "",
+    ecu_kccq_3_score = "",
+    ecu_kccq_5_score = "",
+    ecu_kccq_7_score = "",
+    ecu_kccq_9_score = "",
+    ecu_kccq_sy_freq_score = "",
+    kccq_4 = "",
+    kccq_6 = "",
+    kccq_8 = "",
+    ecu_kccq_sy_sev_mean = "",
+    ecu_kccq_sy_sev_score = "",
+    ecu_kccq_sy_mean = "",
+    ecu_kccq_sy_score = "",
+    ecu_kccq_se_mean = "",
+    ecu_kccq_se_score = "",
+    ecu_kccq_qol_mean = "",
+    ecu_kccq_qol_score = "",
+    kccq_15_1 = "",
+    kccq_15_2 = "",
+    kccq_15_3 = "",
+    kccq_15_4 = "",
+    ecu_kccq_sl_mean = "",
+    ecu_kccq_sl_score = "",
+    ecu_kccq_total = ""
+  )
+  
   return(trial_data)
   
 }
@@ -516,6 +661,17 @@ primary_coding_pop_6ils <- function(trial_data) {
            ecu_six_ils6 = recode_6ils(.data$six_ils6.factor, version = "neg"),
            ecu_six_ils_total = calculate_6ils_total(.data$ecu_six_ils1, .data$ecu_six_ils2, .data$ecu_six_ils3, .data$ecu_six_ils4, .data$ecu_six_ils5, .data$ecu_six_ils6),
            ecu_six_ils_cat = categorize_6ils_ecu(.data$ecu_six_ils_total)) 
+  
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_six_ils1 = "",
+    ecu_six_ils2 = "",
+    ecu_six_ils3 = "",
+    ecu_six_ils4 = "",
+    ecu_six_ils5 = "",
+    ecu_six_ils6 = "",
+    ecu_six_ils_total = "",
+    ecu_six_ils_cat = ""
+  )
   
   return(trial_data)
 }
@@ -546,6 +702,21 @@ primary_coding_pop_pss <- function(trial_data) {
            ecu_pss_total = calculate_pss_total(.data$ecu_pss1,.data$ecu_pss2, .data$ecu_pss3, .data$ecu_pss4, .data$ecu_pss5, .data$ecu_pss6, 
                                                .data$ecu_pss7, .data$ecu_pss8, .data$ecu_pss9, .data$ecu_pss10),
            ecu_pss_cat = categorize_pss_ecu(.data$ecu_pss_total)) 
+  
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_pss1 = "",
+    ecu_pss2 = "",
+    ecu_pss3 = "",
+    ecu_pss4 = "",
+    ecu_pss5 = "",
+    ecu_pss6 = "",
+    ecu_pss7 = "",
+    ecu_pss8 = "",
+    ecu_pss9 = "",
+    ecu_pss10 = "",
+    ecu_pss_total = "",
+    ecu_pss_cat = ""
+  )
   
   return(trial_data)
   
@@ -641,6 +812,12 @@ primary_coding_pop_6mwt <- function(trial_data, pid) {
            ecu_6mwt_soll_erreicht.factor = as.factor(case_when(.data$bew_6mwt_gesamtstr >= .data$ecu_6mwt_soll ~ "Ja",
                                                                .data$bew_6mwt_gesamtstr < .data$ecu_6mwt_soll ~ "Nein"))) %>%
     select(-"visit_name_temp")
+  
+  labelled::var_label(trial_data[["geria"]]) <- list(
+    ecu_6mwt_soll = "",
+    ecu_6mwt_soll_erreicht = "",
+    ecu_6mwt_soll_erreicht.factor = ""
+  )
   
   return(trial_data)
   
@@ -1045,6 +1222,67 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       ecu_gpaq_cln_sedentary = case_when(.data$ecu_gpaq_valid == 1 & .data$ecu_gpaq_p16cln == 1 ~ 1, TRUE ~ 2)
     ) %>%
     select(-("p1":"p16b"), -c("p3amin", "p3bmin", "p6amin", "p6bmin", "p9amin", "p9bmin", "p12amin", "p12bmin", "p15amin", "p15bmin", "p16amin", "p16bmin"))
+  
+  labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
+    ecu_gpaq_p3 = "",
+    ecu_gpaq_p6 = "", 
+    ecu_gpaq_p9 = "",
+    ecu_gpaq_p12 = "", 
+    ecu_gpaq_p15 = "", 
+    ecu_gpaq_p16 = "",
+    ecu_gpaq_p2cln = "",
+    ecu_gpaq_p3cln = "",
+    ecu_gpaq_p5cln = "",
+    ecu_gpaq_p6cln = "",
+    ecu_gpaq_p8cln = "",
+    ecu_gpaq_p9cln = "",
+    ecu_gpaq_p11cln = "",
+    ecu_gpaq_p12cln = "",
+    ecu_gpaq_p14cln = "",
+    ecu_gpaq_p15cln = "",
+    ecu_gpaq_valid = "",
+    ecu_gpaq_p1t3cln = "",
+    ecu_gpaq_p4t6cln = "",
+    ecu_gpaq_p7t9cln = "",
+    ecu_gpaq_p10t12cln = "",
+    ecu_gpaq_p13t15cln = "",
+    ecu_gpaq_p16cln = "",
+    ecu_gpaq_p1t3_met = "",
+    ecu_gpaq_p4t6_met = "",
+    ecu_gpaq_p7t9_met = "",
+    ecu_gpaq_p10t12_met = "",
+    ecu_gpaq_p13t15_met = "",
+    ecu_gpaq_ptotal_met = "",
+    ecu_gpaq_ptotal_met = "",
+    ecu_gpaq_ptotalday_met = "",
+    ecu_gpaq_pworkday_met = "",
+    ecu_gpaq_ptravelday_met = "",
+    ecu_gpaq_precday_met = "",
+    ecu_gpaq_per_work_met = "",
+    ecu_gpaq_per_trans_met = "",
+    ecu_gpaq_per_rec_met = "",
+    ecu_gpaq_met_who = "",
+    ecu_gpaq_p1t3_uw = "",
+    ecu_gpaq_p4t6_uw = "",
+    ecu_gpaq_p7t9_uw = "",
+    ecu_gpaq_p10t12_uw = "",
+    ecu_gpaq_p13t15_uw = "",
+    ecu_gpaq_ptotal_uw = "",
+    ecu_gpaq_ptotal_uw = "",
+    ecu_gpaq_ptotalday_uw = "",
+    ecu_gpaq_pworkday_uw = "",
+    ecu_gpaq_ptravelday_uw = "",
+    ecu_gpaq_precday_uw = "",
+    ecu_gpaq_per_work_uw = "",
+    ecu_gpaq_per_trans_uw = "",
+    ecu_gpaq_per_rec_uw = "",
+    ecu_gpaq_work = "",
+    ecu_gpaq_trans = "", 
+    ecu_gpaq_rec = "",
+    ecu_gpaq_vig_activ = "",
+    ecu_gpaq_cln = "",
+    ecu_gpaq_cln_sedentary = ""
+  )
   
   return(trial_data)
 } 

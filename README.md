@@ -41,11 +41,12 @@ data_primary_coded <- data %>%
   # place coding function accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop()
   primary_coding_suep()
   
-# Execute Post-COVID-Syndrom Score (PCS score) for SUEP data
+# Execute Post-COVID-Syndrom Score (PCS score) for SUEP and HAP data
 # if you only want to use the primary-coding function for the PCS score, use line 49
 # if you already primary-coded your data using lines 40-42, use line 51
 # please specify if you want the PCS score with (prom = "Yes") or without (prom = "No") patient reported outcome measures (PROMs)
-# for detailed information abou PCS score with and without PROMs see primary-coding manual for SUEP (link below)
+# for detailed information abou PCS score with and without PROMs see primary-coding manual for SUEP or HAP (link below)
+ # place coding function accordingly, e.g., primary_coding_suep_pcs_score() or primary_coding_hap_pcs_score()
 data_primary_coded_pcs <- primary_coding_suep_pcs_score(data, prom = "No")
 
 data_primary_coded_pcs <- primary_coding_suep_pcs_score(data_primary_coded, prom = "No")

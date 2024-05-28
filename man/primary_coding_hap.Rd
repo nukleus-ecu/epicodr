@@ -7,10 +7,10 @@
 primary_coding_hap(trial_data)
 }
 \arguments{
-\item{trial_data}{The secu trial data object}
+\item{trial_data}{The secuTrial data object}
 }
 \value{
-The secu trial data object with primary coded variables
+The secuTrial data object with primary coded variables
 }
 \description{
 Wrapper function applying the following primary coding steps to trial_data:

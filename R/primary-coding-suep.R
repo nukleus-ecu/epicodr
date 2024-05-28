@@ -89,7 +89,8 @@ primary_coding_suep_age <- function(trial_data, pid, visitid) {
       ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
       ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age)
     ) %>%
-    select(matches(visitid), "ecu_age", "ecu_age_cat_dec", "ecu_age_cat_3")
+    select(matches(visitid), "ecu_age", "ecu_age_cat_dec", "ecu_age_cat_3") %>%
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -134,7 +135,8 @@ primary_coding_suep_bmi <- function(trial_data, pid, visitid) {
            ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi, .data$gec_height_uk.factor, .data$gec_weight_uk.factor),
            ecu_bmi_est_cat = categorize_bmi_ecu(.data$ecu_bmi_est, .data$gec_height_uk.factor, .data$weight_estimated_uk.factor )
     )%>% 
-    select(matches(visitid), "ecu_bmi", "ecu_bmi_est", "ecu_bmi_cat", "ecu_bmi_est_cat")
+    select(matches(visitid), "ecu_bmi", "ecu_bmi_est", "ecu_bmi_cat", "ecu_bmi_est_cat") %>%
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -234,7 +236,8 @@ primary_coding_suep_baseline_barthel <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_bl_barthel_cat = categorize_barthel_ecu(.data$bl_disab_barthel)
     )%>% 
-    select(matches(visitid), "ecu_bl_barthel_cat")
+    select(matches(visitid), "ecu_bl_barthel_cat") %>%
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -271,7 +274,8 @@ primary_coding_suep_patient_barthel <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_patient_barthel_cat = categorize_barthel_ecu(.data$disab_barthel)
     )%>% 
-    select(matches(visitid), "ecu_patient_barthel_cat")
+    select(matches(visitid), "ecu_patient_barthel_cat") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -308,7 +312,8 @@ primary_coding_suep_moca <- function(trial_data, pid, visitid) {
   
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_moca_cat = categorize_moca_ecu(.data$ne_moca))%>% 
-    select(matches(visitid), "ecu_moca_cat")
+    select(matches(visitid), "ecu_moca_cat") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -346,7 +351,8 @@ primary_coding_suep_eq5d5l <- function(trial_data, pid, visitid) {
   
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d5l_index = calculate_eq5d5l_index(.data$eq5d_mob, .data$eq5d_care, .data$eq5d_act, .data$eq5d_pain, .data$eq5d_anx)) %>% 
-    select(matches(visitid), "ecu_eq5d5l_index")
+    select(matches(visitid), "ecu_eq5d5l_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -385,7 +391,8 @@ primary_coding_suep_eq5d3l_4p <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom4_eq5d_par1, .data$p_prom4_eq5d_par2, .data$p_prom4_eq5d_par3, .data$p_prom4_eq5d_par4,
                                                                  .data$p_prom4_eq5d_par5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_proxy_index")
+    select(matches(visitid), "ecu_eq5d3l_proxy_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -424,7 +431,8 @@ primary_coding_suep_eq5d3l_5t7p <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom5_eq5d_par1, .data$p_prom5_eq5d_par2, .data$p_prom5_eq5d_par3, .data$p_prom5_eq5d_par4,
                                                                  .data$p_prom5_eq5d_par5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_proxy_index")
+    select(matches(visitid), "ecu_eq5d3l_proxy_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -463,7 +471,8 @@ primary_coding_suep_eq5d3l_8p <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom8_eq5d_par1, .data$p_prom8_eq5d_par2, .data$p_prom8_eq5d_par3, .data$p_prom8_eq5d_par4,
                                                                  .data$p_prom8_eq5d_par5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_proxy_index")
+    select(matches(visitid), "ecu_eq5d3l_proxy_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -502,7 +511,8 @@ primary_coding_suep_eq5d3l_8y <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_y_index = calculate_eq5d3l_y_index(.data$p_prom8_eq5d_kid1, .data$p_prom8_eq5d_kid2, .data$p_prom8_eq5d_kid3, .data$p_prom8_eq5d_kid4,
                                                          .data$p_prom8_eq5d_kid5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_y_index")
+    select(matches(visitid), "ecu_eq5d3l_y_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -541,7 +551,8 @@ primary_coding_suep_eq5d3l_9t11p <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom9_eq5d_par1, .data$p_prom9_eq5d_par2, .data$p_prom9_eq5d_par3, .data$p_prom9_eq5d_par4,
                                                                  .data$p_prom9_eq5d_par5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_proxy_index")
+    select(matches(visitid), "ecu_eq5d3l_proxy_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -580,7 +591,8 @@ primary_coding_suep_eq5d3l_9t11y <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_y_index = calculate_eq5d3l_y_index(.data$p_prom9_eq5d_kid1, .data$p_prom9_eq5d_kid2, .data$p_prom9_eq5d_kid3, .data$p_prom9_eq5d_kid4,
                                                          .data$p_prom9_eq5d_kid5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_y_index")
+    select(matches(visitid), "ecu_eq5d3l_y_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -619,7 +631,8 @@ primary_coding_suep_eq5d5l_12p <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d5l_proxy_index = calculate_eq5d5l_index(.data$p_prom12_eq5d_par1, .data$p_prom12_eq5d_par2, .data$p_prom12_eq5d_par3, .data$p_prom12_eq5d_par4,
                                                            .data$p_prom12_eq5d_par5)) %>% 
-    select(matches(visitid), "ecu_eq5d5l_proxy_index")
+    select(matches(visitid), "ecu_eq5d5l_proxy_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -658,7 +671,8 @@ primary_coding_suep_eq5d5l_12y <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d5l_y_index = calculate_eq5d5l_y_index(.data$p_prom12_eq5d_t_kid1, .data$p_prom12_eq5d_t_kid2, .data$p_prom12_eq5d_t_kid3, 
                                                          .data$p_prom12_eq5d_t_kid4, .data$p_prom12_eq5d_t_kid5)) %>% 
-    select(matches(visitid), "ecu_eq5d5l_y_index")
+    select(matches(visitid), "ecu_eq5d5l_y_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -697,7 +711,8 @@ primary_coding_suep_eq5d3l_13t18p <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d3l_proxy_index = calculate_eq5d3l_proxy_index(.data$p_prom13_eq5d_p1, .data$p_prom13_eq5d_p2, .data$p_prom13_eq5d_p3, .data$p_prom13_eq5d_p4,
                                                                  .data$p_prom13_eq5d_p5)) %>% 
-    select(matches(visitid), "ecu_eq5d3l_proxy_index")
+    select(matches(visitid), "ecu_eq5d3l_proxy_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -736,7 +751,8 @@ primary_coding_suep_eq5d5l_13t18y <- function(trial_data, pid, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_eq5d5l_y_index = calculate_eq5d5l_y_index(.data$p_prom13_eq5d_t_kid1, .data$p_prom13_eq5d_t_kid2, .data$p_prom13_eq5d_t_kid3, 
                                                          .data$p_prom13_eq5d_t_kid4, .data$p_prom13_eq5d_t_kid5)) %>% 
-    select(matches(visitid), "ecu_eq5d5l_y_index")
+    select(matches(visitid), "ecu_eq5d5l_y_index") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -779,7 +795,8 @@ primary_coding_suep_brs <- function(trial_data, visitid) {
            ecu_brs_n = calculate_brs_n(.data$brs_1, .data$ecu_brs_2, .data$brs_3, .data$ecu_brs_4, .data$brs_5, .data$ecu_brs_6),
            ecu_brs_total = calculate_brs_total(.data$ecu_brs_sum, .data$ecu_brs_n),
            ecu_brs_cat = categorize_brs_ecu(.data$ecu_brs_total)) %>%
-    select(matches(visitid), contains("ecu_brs"))
+    select(matches(visitid), contains("ecu_brs")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -821,7 +838,8 @@ primary_coding_suep_6ils <- function(trial_data) {
            ecu_six_ils6 = recode_6ils(.data$lonely_6.factor, version = "neg"),
            ecu_six_ils_total = calculate_6ils_total(.data$ecu_six_ils1, .data$ecu_six_ils2, .data$ecu_six_ils3, .data$ecu_six_ils4, .data$ecu_six_ils5, .data$ecu_six_ils6),
            ecu_six_ils_cat = categorize_6ils_ecu(.data$ecu_six_ils_total)) %>%
-    select(matches(visitid), contains("ecu_six_ils"))
+    select(matches(visitid), contains("ecu_six_ils")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -860,7 +878,8 @@ primary_coding_suep_pss <- function(trial_data) {
            ecu_pss3 = recode_pss(.data$pss_3.factor, version = 2),
            ecu_pss4 = recode_pss(.data$pss_4.factor, version = 1),
            ecu_pss_total = calculate_pss_total(.data$ecu_pss1, .data$ecu_pss2, .data$ecu_pss3, .data$ecu_pss4, pss5 = 0, pss6 = 0, pss7 = 0, pss8 = 0, pss9 = 0, pss10 = 0)) %>%
-    select(matches(visitid), contains("ecu_pss"))
+    select(matches(visitid), contains("ecu_pss")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -912,7 +931,8 @@ primary_coding_suep_cfq11 <- function(trial_data, visitid) {
                                                .data$ecu_cfq11_9, .data$ecu_cfq11_10, .data$ecu_cfq11_11),
            ecu_cfq11_cat = categorize_cfq11(.data$ecu_cfq11_sum)
     ) %>%
-    select(matches(visitid), contains("ecu_cfq11"))
+    select(matches(visitid), contains("ecu_cfq11")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by = visitid)
   
@@ -948,7 +968,8 @@ primary_coding_suep_who_scale <- function(trial_data, pid, visitid) {
   pid <- trial_data$export_options$id_names$pid
   visitid <- trial_data$export_options$id_names$visitid
   
-  trial_data[["ecu_who_scale_per_visit_data"]] <- build_who_scale_suep_df(trial_data, pid, visitid)
+  trial_data[["ecu_who_scale_per_visit_data"]] <- build_who_scale_suep_df(trial_data, pid, visitid) %>% 
+    labelled::remove_var_label()
   trial_data <- summarize_who_scale(trial_data, pid)
   
   return(trial_data)
@@ -982,8 +1003,10 @@ primary_coding_suep_pcs_score <- function(trial_data, prom = "No") {
   
   trial_data[["ecu_long_symptom_data"]] <- build_suep_long_symptom_df(trial_data, pid)
   
-  if (prom == "No") {trial_data[["ecu_pcs_score"]] <- build_pcs_score_suep_df_without_proms(trial_data, pid)}
-  else if (prom == "Yes") {trial_data[["ecu_pcs_score"]] <- build_pcs_score_suep_df_with_proms(trial_data, pid)}
+  if (prom == "No") {trial_data[["ecu_pcs_score"]] <- build_pcs_score_suep_df_without_proms(trial_data, pid) %>% 
+    labelled::remove_var_label()}
+  else if (prom == "Yes") {trial_data[["ecu_pcs_score"]] <- build_pcs_score_suep_df_with_proms(trial_data, pid) %>% 
+    labelled::remove_var_label()}
   
   return(trial_data)
 }
@@ -1021,7 +1044,8 @@ primary_coding_suep_phq4 <- function(trial_data) {
            ecu_phq4_4 = recode_phq(.data$phq4_4.factor),
            ecu_phq4_sum = calculate_phq4_sum(.data$ecu_phq4_1, .data$ecu_phq4_2, .data$ecu_phq4_3, .data$ecu_phq4_4),
            ecu_phq4_cat = categorize_phq4_ecu(.data$ecu_phq4_sum)) %>%
-    select(matches(visitid), contains("ecu_phq4"))
+    select(matches(visitid), contains("ecu_phq4")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1065,7 +1089,8 @@ primary_coding_suep_dn4 <- function(trial_data) {
            ecu_dn4_7 = recode_dn4(.data$pain_dn2_7),
            ecu_dn4_sum = calculate_dn4_sum(.data$ecu_dn4_1, .data$ecu_dn4_2, .data$ecu_dn4_3, .data$ecu_dn4_4, .data$ecu_dn4_5, .data$ecu_dn4_6, .data$ecu_dn4_7),
            ecu_dn4_cat = categorize_dn4_ecu(.data$ecu_dn4_sum)) %>%
-    select(matches(visitid), contains("ecu_dn4"))
+    select(matches(visitid), contains("ecu_dn4")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1097,7 +1122,8 @@ primary_coding_suep_ards <- function(trial_data) {
   
   pid <- trial_data$export_options$id_names$pid 
   
-  trial_data[["ecu_ards"]] <- build_ards_df(trial_data, pid)
+  trial_data[["ecu_ards"]] <- build_ards_df(trial_data, pid) %>% 
+    labelled::remove_var_label()
   
   return(trial_data)
 }
@@ -1144,7 +1170,8 @@ primary_coding_suep_recode_promis_dysp <- function(trial_data, visitid) {
            ecu_pro_dysp_8 = recode_promis_dyspnoe(.data$pro_dysfl008.factor),
            ecu_pro_dysp_9 = recode_promis_dyspnoe(.data$pro_dysfl009.factor),
            ecu_pro_dysp_10 = recode_promis_dyspnoe(.data$pro_dysfl10.factor)) %>%
-    select(matches(visitid), contains("ecu_pro_dysp"))
+    select(matches(visitid), contains("ecu_pro_dysp")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1183,7 +1210,8 @@ primary_coding_suep_recode_promis_cogn_funct <- function(trial_data, visitid) {
            ecu_pro_cogn_2 = recode_promis_cognitive(.data$pro_pc35r.factor),
            ecu_pro_cogn_3 = recode_promis_cognitive(.data$pro_pc36r.factor),
            ecu_pro_cogn_4 = recode_promis_cognitive(.data$pro_pc42r.factor)) %>%
-    select(matches(visitid), contains("ecu_pro_cogn"))
+    select(matches(visitid), contains("ecu_pro_cogn")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1221,7 +1249,8 @@ primary_coding_suep_recode_promis_sleep <- function(trial_data, visitid) {
   new_vars_to_add <- form_to_add_vars %>%
     mutate(ecu_pro29_sleep_1 = recode_promis29_sleep(.data$pro_29_sleep109.factor), 
            ecu_pro29_sleep_2 = recode_promis29_sleep(.data$pro_29_sleep116.factor)) %>%
-    select(matches(visitid), "ecu_pro29_sleep_1", "ecu_pro29_sleep_2")
+    select(matches(visitid), "ecu_pro29_sleep_1", "ecu_pro29_sleep_2") %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1261,7 +1290,8 @@ primary_coding_suep_recode_promis_phys <- function(trial_data, visitid) {
            ecu_pro29_phys_funct_2 = recode_promis29_phys_funct(.data$pro_29_pfa21.factor),
            ecu_pro29_phys_funct_3 = recode_promis29_phys_funct(.data$pro_29_pfa23.factor),
            ecu_pro29_phys_funct_4 = recode_promis29_phys_funct(.data$pro_29_pfa53.factor)) %>%
-    select(matches(visitid), contains("ecu_pro29_phys_funct"))
+    select(matches(visitid), contains("ecu_pro29_phys_funct")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1301,7 +1331,8 @@ primary_coding_suep_recode_promis_social <- function(trial_data, visitid) {
            ecu_pro29_social_2 = recode_promis29_social(.data$pro_29_srpper18_caps.factor),
            ecu_pro29_social_3 = recode_promis29_social(.data$pro_29_srpper23_caps.factor),
            ecu_pro29_social_4 = recode_promis29_social(.data$pro_29_srpper46_caps.factor)) %>%
-    select(matches(visitid), contains("ecu_pro29_social"))
+    select(matches(visitid), contains("ecu_pro29_social")) %>% 
+    labelled::remove_var_label()
   
   trial_data[[formname_to_add_vars]] <- left_join(trial_data[[formname_to_add_vars]], new_vars_to_add, by=visitid)
   
@@ -1878,8 +1909,9 @@ build_suep_long_symptom_df <- function(trial_data, pid){
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
   # Date of Screening visit
-  scv_date <- trial_data$scv %>%
-    select("gec_pr_incl_date.date", all_of(pid))
+  if("gec_pr_incl_date.date" %in% names(trial_data$scv)) {scv_date <- trial_data$scv %>%
+    select("gec_pr_incl_date.date", all_of(pid))} else {scv_date <- trial_data$scv %>%
+      select("pr_incl_date.date", all_of(pid))}
   
   # Date of Study visits
   visit_date <- trial_data$m2 %>%
