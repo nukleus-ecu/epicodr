@@ -19,10 +19,16 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/pull_request_template.html</loc>
+    <loc>/reference/build_ards_df.html</loc>
   </url>
   <url>
-    <loc>/reference/build_ards_df.html</loc>
+    <loc>/reference/build_hap_long_symptom_df.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_hap_pcs_score_df_with_proms.html</loc>
+  </url>
+  <url>
+    <loc>/reference/build_hap_pcs_score_df_without_proms.html</loc>
   </url>
   <url>
     <loc>/reference/build_pcs_score_suep_df_with_proms.html</loc>
@@ -88,10 +94,25 @@
     <loc>/reference/calculate_facitf_sum.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_fss_mean.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_fss_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_fss_sum_mental.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_fss_sum_phys.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_full_years.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_gad7_sum.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_pcs_score_hap.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_pcs_score_suep.html</loc>
@@ -134,6 +155,12 @@
   </url>
   <url>
     <loc>/reference/categorize_facitf_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_fss_mean_ecu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/categorize_fss_sum_ecu.html</loc>
   </url>
   <url>
     <loc>/reference/categorize_gad7_ecu.html</loc>
@@ -205,6 +232,9 @@
     <loc>/reference/detect_symptom_complex.html</loc>
   </url>
   <url>
+    <loc>/reference/detect_symptom_complex_hap.html</loc>
+  </url>
+  <url>
     <loc>/reference/ecu_age_cat_3.html</loc>
   </url>
   <url>
@@ -265,6 +295,9 @@
     <loc>/reference/primary_coding_hap_eq5d5l.html</loc>
   </url>
   <url>
+    <loc>/reference/primary_coding_hap_fss.html</loc>
+  </url>
+  <url>
     <loc>/reference/primary_coding_hap_icdsc.html</loc>
   </url>
   <url>
@@ -272,6 +305,9 @@
   </url>
   <url>
     <loc>/reference/primary_coding_hap_news_first.html</loc>
+  </url>
+  <url>
+    <loc>/reference/primary_coding_hap_pcs_score.html</loc>
   </url>
   <url>
     <loc>/reference/primary_coding_hap_who_scale.html</loc>
