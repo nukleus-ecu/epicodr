@@ -1058,6 +1058,8 @@ primary_coding_pop_gpaq_vars_post <- function(trial_data) {
 
 primary_coding_pop_gpaq_calc <- function(trial_data) {
   
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
+  
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
     
     mutate (
@@ -1112,13 +1114,23 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       ecu_gpaq_p15cln = case_when((.data$ecu_gpaq_p14cln == 1 & .data$p14 > 0 & .data$p14 < 8 & .data$ecu_gpaq_p15 > 9 & .data$ecu_gpaq_p15 < 961) | 
                                     (.data$ecu_gpaq_p14cln == 1 & (.data$p14 == 0 | is.na(.data$p14)) & .data$ecu_gpaq_p15 == 0) ~ 1, TRUE ~ 2),
       
-      # check whether at least one sub-domain has a valid answer (either no activity ("0") or activity ("1") with information about days and minutes per week)
-      ecu_gpaq_valid = case_when((.data$ecu_gpaq_p2cln == 1 & .data$ecu_gpaq_p3cln == 1) | # vigorous work activity with days and minutes per week or no vigorous work activity AND less than 960 minutes per week 
-                                   (.data$ecu_gpaq_p5cln == 1 & .data$ecu_gpaq_p6cln == 1) | # moderate work activity days and with minutes per week or no moderate work activity AND less than 960 minutes per week 
-                                   (.data$ecu_gpaq_p8cln == 1 & .data$ecu_gpaq_p9cln == 1) | # travel activity with days and minutes per week or no travel activity AND less than 960 minutes per week 
-                                   (.data$ecu_gpaq_p11cln == 1 & .data$ecu_gpaq_p12cln == 1) | # vigorous recreation activity with days and minutes per week or no vigorous recreation activity AND less than 960 minutes per week 
-                                   (.data$ecu_gpaq_p14cln == 1 & .data$ecu_gpaq_p15cln == 1) ~ 1, # moderate recreation activity with days and minutes per week oder no moderate recreation activity AND less than 960 minutes per week 
-                                 TRUE ~ 2),
+      # check for valid answers
+      ecu_gpaq_valid = case_when(
+        # check whether at least one sub-domain has a value of > 16 hours (960 minutes), if yes, exclude from analysis
+        .data$ecu_gpaq_p3 > 960 | .data$ecu_gpaq_p6 > 960 | .data$ecu_gpaq_p9 > 960 | .data$ecu_gpaq_p12 > 960 | .data$ecu_gpaq_p15 > 960 ~ 2,
+        ((ifelse(is.na(.data$p2) | is.na(.data$ecu_gpaq_p3), 0, .data$p2 * .data$ecu_gpaq_p3) + 
+            ifelse(is.na(.data$p5) | is.na(.data$ecu_gpaq_p6), 0, .data$p5 * .data$ecu_gpaq_p6) + 
+            ifelse(is.na(.data$p8) | is.na(.data$ecu_gpaq_p9), 0, .data$p8 * .data$ecu_gpaq_p9) + 
+            ifelse(is.na(.data$p11) | is.na(.data$ecu_gpaq_p12), 0, .data$p11 * .data$ecu_gpaq_p12) + 
+            ifelse(is.na(.data$p14) | is.na(.data$ecu_gpaq_p15), 0, .data$p14 * .data$ecu_gpaq_p15)) / 7) > 960 ~ 2,
+        # check whether at least one sub-domain has a valid answer (either no activity ("0") or activity ("1") with information about days and minutes per week)
+        (.data$ecu_gpaq_p2cln == 1 & .data$ecu_gpaq_p3cln == 1) | # vigorous work activity with days and minutes per week or no vigorous work activity AND less than 960 minutes per week 
+          (.data$ecu_gpaq_p5cln == 1 & .data$ecu_gpaq_p6cln == 1) | # moderate work activity days and with minutes per week or no moderate work activity AND less than 960 minutes per week 
+          (.data$ecu_gpaq_p8cln == 1 & .data$ecu_gpaq_p9cln == 1) | # travel activity with days and minutes per week or no travel activity AND less than 960 minutes per week 
+          (.data$ecu_gpaq_p11cln == 1 & .data$ecu_gpaq_p12cln == 1) | # vigorous recreation activity with days and minutes per week or no vigorous recreation activity AND less than 960 minutes per week 
+          (.data$ecu_gpaq_p14cln == 1 & .data$ecu_gpaq_p15cln == 1) ~ 1, # moderate recreation activity with days and minutes per week oder no moderate recreation activity AND less than 960 minutes per week 
+        !str_detect(visit_label_var_name, "Visite 1-VO") ~ NA_real_,
+        TRUE ~ 2),
       # check for valid response to p1 through p3a & p3b
       ecu_gpaq_p1t3cln = case_when((.data$ecu_gpaq_p3cln == 1 & .data$ecu_gpaq_valid == 1) | (is.na(.data$p1) & (.data$p2 == 0 | is.na(.data$p2)) & .data$ecu_gpaq_p3 == 0 & .data$ecu_gpaq_valid == 1) ~ 1, TRUE ~ 2),
       # check for valid response to p4 through p6a & p6b
@@ -1144,12 +1156,11 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       ## MET value for moderate recreation activity per week
       ecu_gpaq_p13t15_met = case_when(.data$ecu_gpaq_p13t15cln == 1 ~ .data$p14 * .data$ecu_gpaq_p15 * 4, TRUE ~ NA_real_),
       ## MET value for total activity per week 
-      ecu_gpaq_ptotal_met = ifelse(is.na(.data$ecu_gpaq_p1t3_met), 0, .data$ecu_gpaq_p1t3_met) +
+      ecu_gpaq_ptotal_met = ifelse(.data$ecu_gpaq_valid == 2, NA_real_, ifelse(is.na(.data$ecu_gpaq_p1t3_met), 0, .data$ecu_gpaq_p1t3_met) +
         ifelse(is.na(.data$ecu_gpaq_p4t6_met), 0, .data$ecu_gpaq_p4t6_met) +
         ifelse(is.na(.data$ecu_gpaq_p7t9_met), 0, .data$ecu_gpaq_p7t9_met) +
         ifelse(is.na(.data$ecu_gpaq_p10t12_met), 0, .data$ecu_gpaq_p10t12_met) +
-        ifelse(is.na(.data$ecu_gpaq_p13t15_met), 0, .data$ecu_gpaq_p13t15_met),
-      ecu_gpaq_ptotal_met = case_when(.data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ .data$ecu_gpaq_ptotal_met),
+        ifelse(is.na(.data$ecu_gpaq_p13t15_met), 0, .data$ecu_gpaq_p13t15_met)),
       ## MET value for average activity per day
       ecu_gpaq_ptotalday_met = .data$ecu_gpaq_ptotal_met / 7,
       ## MET value for average work-related activity per day
@@ -1171,22 +1182,21 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       
       # built unweighted value variables for activity per week
       ## unweighted value for vigorous work activity per week 
-      ecu_gpaq_p1t3_uw = case_when(.data$ecu_gpaq_p1t3cln == 1 ~ .data$p2 * .data$ecu_gpaq_p3, TRUE ~ NA),
+      ecu_gpaq_p1t3_uw = case_when(.data$ecu_gpaq_p1t3cln == 1 ~ .data$p2 * .data$ecu_gpaq_p3, TRUE ~ NA_real_),
       ## unweighted value for moderate work activity per week
-      ecu_gpaq_p4t6_uw = case_when(.data$ecu_gpaq_p4t6cln == 1 ~ .data$p5 * .data$ecu_gpaq_p6, TRUE ~ NA),
+      ecu_gpaq_p4t6_uw = case_when(.data$ecu_gpaq_p4t6cln == 1 ~ .data$p5 * .data$ecu_gpaq_p6, TRUE ~ NA_real_),
       ## unweighted value for travel activity per week
-      ecu_gpaq_p7t9_uw = case_when(.data$ecu_gpaq_p7t9cln == 1 ~ .data$p8 * .data$ecu_gpaq_p9, TRUE ~ NA),
+      ecu_gpaq_p7t9_uw = case_when(.data$ecu_gpaq_p7t9cln == 1 ~ .data$p8 * .data$ecu_gpaq_p9, TRUE ~ NA_real_),
       ## unweighted value for vigorous recreation activity per week 
-      ecu_gpaq_p10t12_uw = case_when(.data$ecu_gpaq_p10t12cln == 1 ~ .data$p11 * .data$ecu_gpaq_p12, TRUE ~ NA),
+      ecu_gpaq_p10t12_uw = case_when(.data$ecu_gpaq_p10t12cln == 1 ~ .data$p11 * .data$ecu_gpaq_p12, TRUE ~ NA_real_),
       ## unweighted value for moderate recreation activity per week
-      ecu_gpaq_p13t15_uw = case_when(.data$ecu_gpaq_p13t15cln == 1 ~ .data$p14 * .data$ecu_gpaq_p15, TRUE ~ NA),
+      ecu_gpaq_p13t15_uw = case_when(.data$ecu_gpaq_p13t15cln == 1 ~ .data$p14 * .data$ecu_gpaq_p15, TRUE ~ NA_real_),
       ## unweighted value for total activity per week
-      ecu_gpaq_ptotal_uw = ifelse(is.na(.data$ecu_gpaq_p1t3_uw), 0, .data$ecu_gpaq_p1t3_uw) +
+      ecu_gpaq_ptotal_uw = ifelse(.data$ecu_gpaq_valid == 2, NA_real_, ifelse(is.na(.data$ecu_gpaq_p1t3_uw), 0, .data$ecu_gpaq_p1t3_uw) +
         ifelse(is.na(.data$ecu_gpaq_p4t6_uw), 0, .data$ecu_gpaq_p4t6_uw) +
         ifelse(is.na(.data$ecu_gpaq_p7t9_uw), 0, .data$ecu_gpaq_p7t9_uw) +
         ifelse(is.na(.data$ecu_gpaq_p10t12_uw), 0, .data$ecu_gpaq_p10t12_uw) +
-        ifelse(is.na(.data$ecu_gpaq_p13t15_uw), 0, .data$ecu_gpaq_p13t15_uw),
-      ecu_gpaq_ptotal_uw = case_when(.data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ .data$ecu_gpaq_ptotal_uw), 
+        ifelse(is.na(.data$ecu_gpaq_p13t15_uw), 0, .data$ecu_gpaq_p13t15_uw)),
       ## unweighted value for average activity per day
       ecu_gpaq_ptotalday_uw = .data$ecu_gpaq_ptotal_uw / 7,
       ## unweighted value for average work-related activity per day
@@ -1205,14 +1215,14 @@ primary_coding_pop_gpaq_calc <- function(trial_data) {
       # check if respondent did any activity per subdomain
       # TODO: wenn valid == 0 (nicht valid), dann NA (sonst bekommen auch diese ein Label)
       ## indicator for any work-related activity
-      ecu_gpaq_work = case_when(.data$p1 == 1 | .data$p4 == 1 ~ "Did work activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no work activity"),
+      ecu_gpaq_work = case_when(.data$ecu_gpaq_valid == 2 ~ NA, .data$p1 == 1 | .data$p4 == 1 ~ "Did work activity", TRUE ~ "Did no work activity"),
       ## indicator for any transportation-related activity
-      ecu_gpaq_trans = case_when(.data$p7 == 1 ~ "Did transport activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no transport activity"),
+      ecu_gpaq_trans = case_when(.data$ecu_gpaq_valid == 2 ~ NA, .data$p7 == 1 ~ "Did transport activity", TRUE ~ "Did no transport activity"),
       ## indicator for any recreation-related activity
-      ecu_gpaq_rec = case_when(.data$p10 == 1 | .data$p13 == 1 ~ "Did recreation activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no recreation activity"),
+      ecu_gpaq_rec = case_when(.data$ecu_gpaq_valid == 2 ~ NA, .data$p10 == 1 | .data$p13 == 1 ~ "Did recreation activity", TRUE ~ "Did no recreation activity"),
       
       # check if respondents did any vigorous physical activity
-      ecu_gpaq_vig_activ = case_when(.data$p1 == 1 | .data$p10 == 1 ~ "Did vigorous physical activity", .data$ecu_gpaq_valid == 0 ~ NA, TRUE ~ "Did no vigorous physical activity"),
+      ecu_gpaq_vig_activ = case_when(.data$ecu_gpaq_valid == 2 ~ NA, .data$p1 == 1 | .data$p10 == 1 ~ "Did vigorous physical activity", TRUE ~ "Did no vigorous physical activity"),
       
       # check to see if all physical activitiy responses, as a combined set, are valid 
       # (all subsets of respones must be clean and at least one subset of responses must have a resonse (not missing))
