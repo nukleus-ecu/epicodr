@@ -1,567 +1,191 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_ards_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_hap_long_symptom_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_hap_pcs_score_df_with_proms.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_hap_pcs_score_df_without_proms.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_pcs_score_suep_df_with_proms.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_pcs_score_suep_df_without_proms.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_suep_long_symptom_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_sy_parentform_merged_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_sy_parents_children_merged_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_sy_subform_merged_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_who_scale_hap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/build_who_scale_suep_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_6ils_total.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_bmi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_brs_n.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_brs_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_brs_total.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_cfq11_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_days_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_dn4_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_eq5d3l_proxy_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_eq5d3l_y_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_eq5d5l_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_eq5d5l_y_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_facitf_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_fss_mean.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_fss_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_fss_sum_mental.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_fss_sum_phys.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_full_years.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_gad7_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_pcs_score_hap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_pcs_score_suep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_phq4_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_phq8_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_pss_total.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_6ils_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_apache2_score_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_barthel_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_bloodpressure_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_bmi_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_brs_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_cfq11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_dds_score_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_dn4_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_facitf_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_fss_mean_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_fss_sum_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_gad7_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_gcs_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_heartfrequency_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_horowitz_index_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_icdsc_score_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_mmrc_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_moca_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_news_score_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_oxigensaturation_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_ph_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_phq4_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_phq8_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_phq8_ecu_2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_pss_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_resp_rate_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/categorize_temp_ecu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/create_date_lookup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/create_missing_lookup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dates_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/defactorize_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/defactorize_tsExport_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/detect_other_symptom_of_complex.html</loc>
-  </url>
-  <url>
-    <loc>/reference/detect_symptom_complex.html</loc>
-  </url>
-  <url>
-    <loc>/reference/detect_symptom_complex_hap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ecu_age_cat_3.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ecu_age_cat_dec.html</loc>
-  </url>
-  <url>
-    <loc>/reference/factorize_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_ecu_background_pop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/label_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/missing_labels_default.html</loc>
-  </url>
-  <url>
-    <loc>/reference/missing_values_default.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prepare_spss_export.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_age.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_apache2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_barthel_disc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_barthel_pre.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_bmi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_clinical_params.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_clinical_params_his.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_dds.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_eq5d5l.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_fss.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_icdsc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_moca.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_news_first.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_pcs_score.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_hap_who_scale.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_6ils.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_6mwt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_abd_overw.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_age.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_bmi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_brs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_cardio_params.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_clinical_params.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_eq5d5l.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_facitf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_gad7.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_gpaq_calc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_gpaq_post.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_gpaq_pre.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_gpaq_vars_post.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_gpaq_vars_pre.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_kccq.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_migration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_mmrc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_moca.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_phq8.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_pneumo_params.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_psqi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_pop_pss.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_6ils.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_age.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_ards.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_baseline_barthel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_bmi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_brs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_cfq11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_clinical_params.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_dn4.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_13t18p.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_4p.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_5t7p.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_8p.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_8y.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_9t11p.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d3l_9t11y.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d5l.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d5l_12p.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d5l_12y.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_eq5d5l_13t18y.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_moca.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_patient_barthel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_pcs_score.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_phq4.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_pss.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_recode_promis_cogn_funct.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_recode_promis_dysp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_recode_promis_phys.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_recode_promis_sleep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_recode_promis_social.html</loc>
-  </url>
-  <url>
-    <loc>/reference/primary_coding_suep_who_scale.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_tsExport_raw.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_6ils.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_brs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_cfq11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_dn4.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_phq.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_promis29_phys_funct.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_promis29_sleep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_promis29_social.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_promis_cognitive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_promis_dyspnoe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/recode_pss.html</loc>
-  </url>
-  <url>
-    <loc>/reference/remove_st_dates_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/remove_st_dates_tsExport_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return_child_table_names_of_parent.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return_children_table_names_of_parents.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return_parent_child_pairs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/set_id_names.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spss_labelled_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spss_labelled_tsExport_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spss_missings_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spss_missings_tsExport_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summarize_who_scale.html</loc>
-  </url>
-  <url>
-    <loc>/reference/valuelabels_tsExport.html</loc>
-  </url>
-  <url>
-    <loc>/reference/valuelabels_tsExport_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_tsExport.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/CONTRIBUTING.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/build_ards_df.html</loc></url>
+<url><loc>/reference/build_hap_long_symptom_df.html</loc></url>
+<url><loc>/reference/build_hap_pcs_score_df_with_proms.html</loc></url>
+<url><loc>/reference/build_hap_pcs_score_df_without_proms.html</loc></url>
+<url><loc>/reference/build_pcs_score_suep_df_with_proms.html</loc></url>
+<url><loc>/reference/build_pcs_score_suep_df_without_proms.html</loc></url>
+<url><loc>/reference/build_suep_long_symptom_df.html</loc></url>
+<url><loc>/reference/build_sy_parentform_merged_df.html</loc></url>
+<url><loc>/reference/build_sy_parents_children_merged_df.html</loc></url>
+<url><loc>/reference/build_sy_subform_merged_df.html</loc></url>
+<url><loc>/reference/build_who_scale_hap.html</loc></url>
+<url><loc>/reference/build_who_scale_suep_df.html</loc></url>
+<url><loc>/reference/calculate_6ils_total.html</loc></url>
+<url><loc>/reference/calculate_bmi.html</loc></url>
+<url><loc>/reference/calculate_brs_n.html</loc></url>
+<url><loc>/reference/calculate_brs_sum.html</loc></url>
+<url><loc>/reference/calculate_brs_total.html</loc></url>
+<url><loc>/reference/calculate_cfq11_sum.html</loc></url>
+<url><loc>/reference/calculate_days_ecu.html</loc></url>
+<url><loc>/reference/calculate_dn4_sum.html</loc></url>
+<url><loc>/reference/calculate_eq5d3l_proxy_index.html</loc></url>
+<url><loc>/reference/calculate_eq5d3l_y_index.html</loc></url>
+<url><loc>/reference/calculate_eq5d5l_index.html</loc></url>
+<url><loc>/reference/calculate_eq5d5l_y_index.html</loc></url>
+<url><loc>/reference/calculate_facitf_sum.html</loc></url>
+<url><loc>/reference/calculate_fss_mean.html</loc></url>
+<url><loc>/reference/calculate_fss_sum.html</loc></url>
+<url><loc>/reference/calculate_fss_sum_mental.html</loc></url>
+<url><loc>/reference/calculate_fss_sum_phys.html</loc></url>
+<url><loc>/reference/calculate_full_years.html</loc></url>
+<url><loc>/reference/calculate_gad7_sum.html</loc></url>
+<url><loc>/reference/calculate_pcs_score_hap.html</loc></url>
+<url><loc>/reference/calculate_pcs_score_suep.html</loc></url>
+<url><loc>/reference/calculate_phq4_sum.html</loc></url>
+<url><loc>/reference/calculate_phq8_sum.html</loc></url>
+<url><loc>/reference/calculate_pss_total.html</loc></url>
+<url><loc>/reference/categorize_6ils_ecu.html</loc></url>
+<url><loc>/reference/categorize_apache2_score_ecu.html</loc></url>
+<url><loc>/reference/categorize_barthel_ecu.html</loc></url>
+<url><loc>/reference/categorize_bloodpressure_ecu.html</loc></url>
+<url><loc>/reference/categorize_bmi_ecu.html</loc></url>
+<url><loc>/reference/categorize_brs_ecu.html</loc></url>
+<url><loc>/reference/categorize_cfq11.html</loc></url>
+<url><loc>/reference/categorize_dds_score_ecu.html</loc></url>
+<url><loc>/reference/categorize_dn4_ecu.html</loc></url>
+<url><loc>/reference/categorize_facitf_ecu.html</loc></url>
+<url><loc>/reference/categorize_fss_mean_ecu.html</loc></url>
+<url><loc>/reference/categorize_fss_sum_ecu.html</loc></url>
+<url><loc>/reference/categorize_gad7_ecu.html</loc></url>
+<url><loc>/reference/categorize_gcs_ecu.html</loc></url>
+<url><loc>/reference/categorize_heartfrequency_ecu.html</loc></url>
+<url><loc>/reference/categorize_horowitz_index_ecu.html</loc></url>
+<url><loc>/reference/categorize_icdsc_score_ecu.html</loc></url>
+<url><loc>/reference/categorize_mmrc_ecu.html</loc></url>
+<url><loc>/reference/categorize_moca_ecu.html</loc></url>
+<url><loc>/reference/categorize_news_score_ecu.html</loc></url>
+<url><loc>/reference/categorize_oxigensaturation_ecu.html</loc></url>
+<url><loc>/reference/categorize_ph_ecu.html</loc></url>
+<url><loc>/reference/categorize_phq4_ecu.html</loc></url>
+<url><loc>/reference/categorize_phq8_ecu.html</loc></url>
+<url><loc>/reference/categorize_phq8_ecu_2.html</loc></url>
+<url><loc>/reference/categorize_pss_ecu.html</loc></url>
+<url><loc>/reference/categorize_resp_rate_ecu.html</loc></url>
+<url><loc>/reference/categorize_temp_ecu.html</loc></url>
+<url><loc>/reference/create_date_lookup.html</loc></url>
+<url><loc>/reference/create_missing_lookup.html</loc></url>
+<url><loc>/reference/dates_tsExport.html</loc></url>
+<url><loc>/reference/defactorize_tsExport.html</loc></url>
+<url><loc>/reference/defactorize_tsExport_table.html</loc></url>
+<url><loc>/reference/detect_other_symptom_of_complex.html</loc></url>
+<url><loc>/reference/detect_symptom_complex.html</loc></url>
+<url><loc>/reference/detect_symptom_complex_hap.html</loc></url>
+<url><loc>/reference/ecu_age_cat_3.html</loc></url>
+<url><loc>/reference/ecu_age_cat_dec.html</loc></url>
+<url><loc>/reference/factorize_tsExport.html</loc></url>
+<url><loc>/reference/get_ecu_background_pop.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/label_tsExport.html</loc></url>
+<url><loc>/reference/missing_labels_default.html</loc></url>
+<url><loc>/reference/missing_values_default.html</loc></url>
+<url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/prepare_spss_export.html</loc></url>
+<url><loc>/reference/primary_coding_hap.html</loc></url>
+<url><loc>/reference/primary_coding_hap_age.html</loc></url>
+<url><loc>/reference/primary_coding_hap_apache2.html</loc></url>
+<url><loc>/reference/primary_coding_hap_barthel_disc.html</loc></url>
+<url><loc>/reference/primary_coding_hap_barthel_pre.html</loc></url>
+<url><loc>/reference/primary_coding_hap_bmi.html</loc></url>
+<url><loc>/reference/primary_coding_hap_clinical_params.html</loc></url>
+<url><loc>/reference/primary_coding_hap_clinical_params_his.html</loc></url>
+<url><loc>/reference/primary_coding_hap_dds.html</loc></url>
+<url><loc>/reference/primary_coding_hap_eq5d5l.html</loc></url>
+<url><loc>/reference/primary_coding_hap_fss.html</loc></url>
+<url><loc>/reference/primary_coding_hap_icdsc.html</loc></url>
+<url><loc>/reference/primary_coding_hap_moca.html</loc></url>
+<url><loc>/reference/primary_coding_hap_news_first.html</loc></url>
+<url><loc>/reference/primary_coding_hap_pcs_score.html</loc></url>
+<url><loc>/reference/primary_coding_hap_who_scale.html</loc></url>
+<url><loc>/reference/primary_coding_pop.html</loc></url>
+<url><loc>/reference/primary_coding_pop_6ils.html</loc></url>
+<url><loc>/reference/primary_coding_pop_6mwt.html</loc></url>
+<url><loc>/reference/primary_coding_pop_abd_overw.html</loc></url>
+<url><loc>/reference/primary_coding_pop_age.html</loc></url>
+<url><loc>/reference/primary_coding_pop_bmi.html</loc></url>
+<url><loc>/reference/primary_coding_pop_brs.html</loc></url>
+<url><loc>/reference/primary_coding_pop_cardio_params.html</loc></url>
+<url><loc>/reference/primary_coding_pop_clinical_params.html</loc></url>
+<url><loc>/reference/primary_coding_pop_eq5d5l.html</loc></url>
+<url><loc>/reference/primary_coding_pop_facitf.html</loc></url>
+<url><loc>/reference/primary_coding_pop_gad7.html</loc></url>
+<url><loc>/reference/primary_coding_pop_gpaq_calc.html</loc></url>
+<url><loc>/reference/primary_coding_pop_gpaq_post.html</loc></url>
+<url><loc>/reference/primary_coding_pop_gpaq_pre.html</loc></url>
+<url><loc>/reference/primary_coding_pop_gpaq_vars_post.html</loc></url>
+<url><loc>/reference/primary_coding_pop_gpaq_vars_pre.html</loc></url>
+<url><loc>/reference/primary_coding_pop_kccq.html</loc></url>
+<url><loc>/reference/primary_coding_pop_migration.html</loc></url>
+<url><loc>/reference/primary_coding_pop_mmrc.html</loc></url>
+<url><loc>/reference/primary_coding_pop_moca.html</loc></url>
+<url><loc>/reference/primary_coding_pop_phq8.html</loc></url>
+<url><loc>/reference/primary_coding_pop_pneumo_params.html</loc></url>
+<url><loc>/reference/primary_coding_pop_psqi.html</loc></url>
+<url><loc>/reference/primary_coding_pop_pss.html</loc></url>
+<url><loc>/reference/primary_coding_suep.html</loc></url>
+<url><loc>/reference/primary_coding_suep_6ils.html</loc></url>
+<url><loc>/reference/primary_coding_suep_age.html</loc></url>
+<url><loc>/reference/primary_coding_suep_ards.html</loc></url>
+<url><loc>/reference/primary_coding_suep_baseline_barthel.html</loc></url>
+<url><loc>/reference/primary_coding_suep_bmi.html</loc></url>
+<url><loc>/reference/primary_coding_suep_brs.html</loc></url>
+<url><loc>/reference/primary_coding_suep_cfq11.html</loc></url>
+<url><loc>/reference/primary_coding_suep_clinical_params.html</loc></url>
+<url><loc>/reference/primary_coding_suep_dn4.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_13t18p.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_4p.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_5t7p.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_8p.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_8y.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_9t11p.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d3l_9t11y.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d5l.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d5l_12p.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d5l_12y.html</loc></url>
+<url><loc>/reference/primary_coding_suep_eq5d5l_13t18y.html</loc></url>
+<url><loc>/reference/primary_coding_suep_moca.html</loc></url>
+<url><loc>/reference/primary_coding_suep_patient_barthel.html</loc></url>
+<url><loc>/reference/primary_coding_suep_pcs_score.html</loc></url>
+<url><loc>/reference/primary_coding_suep_phq4.html</loc></url>
+<url><loc>/reference/primary_coding_suep_pss.html</loc></url>
+<url><loc>/reference/primary_coding_suep_recode_promis_cogn_funct.html</loc></url>
+<url><loc>/reference/primary_coding_suep_recode_promis_dysp.html</loc></url>
+<url><loc>/reference/primary_coding_suep_recode_promis_phys.html</loc></url>
+<url><loc>/reference/primary_coding_suep_recode_promis_sleep.html</loc></url>
+<url><loc>/reference/primary_coding_suep_recode_promis_social.html</loc></url>
+<url><loc>/reference/primary_coding_suep_who_scale.html</loc></url>
+<url><loc>/reference/read_tsExport.html</loc></url>
+<url><loc>/reference/read_tsExport_raw.html</loc></url>
+<url><loc>/reference/recode_6ils.html</loc></url>
+<url><loc>/reference/recode_brs.html</loc></url>
+<url><loc>/reference/recode_cfq11.html</loc></url>
+<url><loc>/reference/recode_dn4.html</loc></url>
+<url><loc>/reference/recode_phq.html</loc></url>
+<url><loc>/reference/recode_promis29_phys_funct.html</loc></url>
+<url><loc>/reference/recode_promis29_sleep.html</loc></url>
+<url><loc>/reference/recode_promis29_social.html</loc></url>
+<url><loc>/reference/recode_promis_cognitive.html</loc></url>
+<url><loc>/reference/recode_promis_dyspnoe.html</loc></url>
+<url><loc>/reference/recode_pss.html</loc></url>
+<url><loc>/reference/remove_st_dates_tsExport.html</loc></url>
+<url><loc>/reference/remove_st_dates_tsExport_table.html</loc></url>
+<url><loc>/reference/return_child_table_names_of_parent.html</loc></url>
+<url><loc>/reference/return_children_table_names_of_parents.html</loc></url>
+<url><loc>/reference/return_parent_child_pairs.html</loc></url>
+<url><loc>/reference/set_id_names.html</loc></url>
+<url><loc>/reference/spss_labelled_tsExport.html</loc></url>
+<url><loc>/reference/spss_labelled_tsExport_table.html</loc></url>
+<url><loc>/reference/spss_missings_tsExport.html</loc></url>
+<url><loc>/reference/spss_missings_tsExport_table.html</loc></url>
+<url><loc>/reference/summarize_who_scale.html</loc></url>
+<url><loc>/reference/valuelabels_tsExport.html</loc></url>
+<url><loc>/reference/valuelabels_tsExport_table.html</loc></url>
+<url><loc>/reference/write_tsExport.html</loc></url>
 </urlset>
+
