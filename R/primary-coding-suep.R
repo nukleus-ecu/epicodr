@@ -1639,18 +1639,46 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$m2), "mnpvislabel", "visit_name")
   
-  visit_data <- trial_data$scv %>%
-    full_join (trial_data$m2, by=c(pid, visit_label_var_name, docid)) %>%
-    full_join (trial_data$m, by=c(pid, visit_label_var_name, docid)) %>%
-    filter(.data$pr_visit_mode.factor != "Zus\u00e4tzliche Dokumentationsvisite" | is.na(.data$pr_visit_mode.factor) |
-             .data$pr_visit_mode.factor != "Telefonvisite (PROM)") %>%
-    #filter(visit_label_var_name != "3M Follow-Up" | visit_label_var_name != "12M Follow-Up") %>%
-    mutate(visit_date = coalesce(.data$gec_pr_docudate_1.date, .data$pr_docudate.date, .data$pr_incl_date.date)) %>%
-    arrange(.data$visit_date) %>%
+  if("gec_pr_incl_date.date" %in% names(trial_data$scv)) {
+    
+    visit_data <- trial_data$scv %>% 
+      select(all_of(pid), "gec_pr_incl_date.date") %>%
+      left_join(trial_data$m2 %>% filter(!!sym(visit_label_var_name) == "Abschluss des Akutverlaufs") %>% select(all_of(pid), "gec_pr_docudate_1.date"), by = pid) %>% 
+      mutate(acute_phase_int = interval(.data$gec_pr_incl_date.date, .data$gec_pr_docudate_1.date)) 
+    
+  } else {
+    
+    visit_data <- trial_data$scv %>% 
+      select(all_of(pid), "pr_incl_date.date") %>%
+      left_join(trial_data$m2 %>% filter(!!sym(visit_label_var_name) == "Abschluss des Akutverlaufs") %>% select(all_of(pid), "gec_pr_docudate_1.date"), by = pid) %>% 
+      mutate(acute_phase_int = interval(.data$pr_incl_date.date, .data$gec_pr_docudate_1.date))
+    
+  }
+  
+  visit_data_a <- visit_data %>% 
+    left_join(trial_data$m2 %>% 
+                rename(visit_date = .data$gec_pr_docudate_1.date, visit_mode = .data$pr_visit_mode_1.factor) %>% 
+                select(all_of(pid), all_of(visit_label_var_name), "visit_mode", "visit_date"), 
+              by = pid) 
+  
+  visit_data_b <- visit_data %>% 
+    left_join(trial_data$m %>% 
+                rename(visit_date = .data$pr_docudate.date, visit_mode = .data$pr_visit_mode.factor) %>% 
+                select(all_of(pid), all_of(visit_label_var_name), "visit_mode", "visit_date"), 
+              by = pid) %>%
     group_by(!!sym(pid)) %>%
     mutate(!!sym(visit_label_var_name) := str_replace(!!sym(visit_label_var_name), "#", as.character(row_number()))) %>%
-    ungroup() %>%
-    select(all_of(pid), all_of(visit_label_var_name), "visit_date")
+    ungroup()
+  
+  visit_data_final <- visit_data_a %>% 
+    full_join(visit_data_b) %>% 
+    filter(!is.na(visit_label_var_name)) %>%
+    mutate(visit_in_acute_phase = case_when(visit_date %within% acute_phase_int ~ 1, TRUE ~ 0)) %>% 
+    left_join(trial_data$fv2_6 %>% filter(.data$gec_death.factor == "Ja" ) %>% select(all_of(pid), "death_date.date", "death_date_d.factor", "death_date_uk.factor"), by = pid) %>%
+    full_join(trial_data$fv15 %>% filter(pr_end_reason.factor == "Tod") %>% select(all_of(pid), "pr_end_date.date", "pr_end_reason.factor")) %>% 
+    mutate(ecu_death_date = coalesce(death_date.date, pr_end_date.date)) %>% 
+    select(-c("death_date.date", "pr_end_date.date", "death_date_d.factor", "death_date_uk.factor")) %>% 
+    filter(!(!!sym(visit_label_var_name) %in% c("3M Follow-Up", "12M Follow-Up")) & !(visit_mode %in% c("Zus\u00e4tzliche Dokumentationsvisite", "Telefonvisite (PROM)")))
   
   
   # Inclusion groups (one row per pat) -----------------------------------------
@@ -1682,32 +1710,45 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   trial_data$eresid$resid_icd10 <- str_replace(trial_data$eresid$resid_icd10, " ", "")
   comparable_covid_icd <- str_detect(trial_data$eresid$resid_icd10, regex("U(07|7|\\.07|\\.7)(\\.|,|:|\\-|\\.0|\\.)(1|2)", ignore_case = TRUE))
   
-  main_diag_data <- trial_data$eresid %>%
-    mutate(
-      ecu_main_diag_covid = case_when(comparable_covid_icd | .data$p_hospital == 1 ~ "Hauptdiagnose Covid",
-                                      (!is.na(.data$resid_icd10) & !comparable_covid_icd) | .data$p_hospital == 0 ~ "Hauptdiagnose Andere",
-                                      .data$resid_icd10_uk < 0 | .data$p_hospital < 0 ~ coalesce(as.character(.data$resid_icd10_uk.factor), as.character(.data$p_hospital.factor)))) %>%
-    # reduce to one row per pat
-    group_by(!!sym(pid)) %>%  
-    summarise(ecu_main_diag_covid = case_when(any(.data$ecu_main_diag_covid == "Hauptdiagnose Covid") ~ "Hauptdiagnose Covid",
-                                              any(.data$ecu_main_diag_covid == "Hauptdiagnose Andere") ~ "Hauptdiagnose Andere",
-                                              TRUE ~ first(.data$ecu_main_diag_covid))) %>%
-    ungroup() %>%
-    select(all_of(pid),"ecu_main_diag_covid")
+  if("p_hospital" %in% names(trial_data$eresid)) {
+    main_diag_data <- trial_data$eresid %>%
+      mutate(
+        ecu_main_diag_covid = case_when(comparable_covid_icd | .data$p_hospital == 1 ~ "Hauptdiagnose Covid",
+                                        (!is.na(.data$resid_icd10) & !comparable_covid_icd) | .data$p_hospital == 0 ~ "Hauptdiagnose Andere",
+                                        .data$resid_icd10_uk < 0 | .data$p_hospital < 0 ~ coalesce(as.character(.data$resid_icd10_uk.factor), as.character(.data$p_hospital.factor)))) %>%
+      # reduce to one row per pat
+      group_by(!!sym(pid)) %>%  
+      summarise(ecu_main_diag_covid = case_when(any(.data$ecu_main_diag_covid == "Hauptdiagnose Covid") ~ "Hauptdiagnose Covid",
+                                                any(.data$ecu_main_diag_covid == "Hauptdiagnose Andere") ~ "Hauptdiagnose Andere",
+                                                TRUE ~ first(.data$ecu_main_diag_covid))) %>%
+      ungroup() %>%
+      select(all_of(pid),"ecu_main_diag_covid") } else {
+        main_diag_data <- trial_data$eresid %>%
+          mutate(
+            ecu_main_diag_covid = case_when(comparable_covid_icd ~ "Hauptdiagnose Covid",
+                                            (!is.na(.data$resid_icd10) & !comparable_covid_icd) ~ "Hauptdiagnose Andere",
+                                            .data$resid_icd10_uk < 0  ~ .data$resid_icd10_uk.factor)) %>%
+          # reduce to one row per pat
+          group_by(!!sym(pid)) %>%  
+          summarise(ecu_main_diag_covid = case_when(any(.data$ecu_main_diag_covid == "Hauptdiagnose Covid") ~ "Hauptdiagnose Covid",
+                                                    any(.data$ecu_main_diag_covid == "Hauptdiagnose Andere") ~ "Hauptdiagnose Andere",
+                                                    TRUE ~ first(.data$ecu_main_diag_covid))) %>%
+          ungroup() %>%
+          select(all_of(pid),"ecu_main_diag_covid")
+      }
   
   
   # Date of last Treatment Update ----------------------------------------------
   
   treatment_update_date <- trial_data$fuv3 %>%
-    #left_join (trial_data$vp %>% select (.data$mnpvisid, .data$visit_label_var_name), by = "mnpvisid") %>%
-    filter (.data$pr_check_treat.factor == "Ja") %>% #only treatment_update == YES
-    rename (treatment_update_visit = all_of(visit_label_var_name),
-            treatment_update.datetime = "fuv3_date.date") %>%
-    group_by (!!sym(pid)) %>%
+    filter(.data$pr_check_treat.factor == "Ja") %>% #only treatment_update == YES
+    rename(treatment_update_visit = all_of(visit_label_var_name),
+           treatment_update.datetime = "fuv3_date.date") %>%
+    group_by(!!sym(pid)) %>%
     slice_max (.data$treatment_update.datetime, with_ties = FALSE) %>%
     ungroup() %>%
-    mutate (treatment_update.date = as_date(.data$treatment_update.datetime)) %>%
-    select (all_of(pid), "treatment_update_visit", "treatment_update.date") 
+    mutate(treatment_update.date = as_date(.data$treatment_update.datetime)) %>%
+    select(all_of(pid), "treatment_update_visit", "treatment_update.date") 
   
   
   # Oxygenation (multiple rows per pat) ----------------------------------------
@@ -1718,126 +1759,108 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
     mutate(
       gec_oxy_end.date = case_when(.data$gec_oxy_end_on.factor =="Andauernd" ~ .data$treatment_update.date,
                                    .data$gec_oxy_end_d.factor == "Auf Monat genau" ~ rollforward(.data$gec_oxy_end.date, roll_to_first = FALSE),
-                                   .data$gec_oxy_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$gec_oxy_end.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
+                                   .data$gec_oxy_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$gec_oxy_end.date, unit = "week", week_start = 1),
                                    TRUE ~ .data$gec_oxy_end.date),
-      gec_oxy_start.date = case_when (.data$gec_oxy_start_d.factor == "Auf Monat genau" ~ rollback(.data$gec_oxy_start.date, roll_to_first = TRUE),
-                                      .data$gec_oxy_start_d.factor == "Auf Woche genau" ~ floor_date(.data$gec_oxy_start.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
-                                      TRUE ~ .data$gec_oxy_start.date),
-      ecu_oxy_interval = interval(.data$gec_oxy_start.date, .data$gec_oxy_end.date),
+      gec_oxy_start.date = case_when(.data$gec_oxy_start_d.factor == "Auf Monat genau" ~ rollback(.data$gec_oxy_start.date, roll_to_first = TRUE),
+                                     .data$gec_oxy_start_d.factor == "Auf Woche genau" ~ floor_date(.data$gec_oxy_start.date, unit = "week", week_start = 1),
+                                     TRUE ~ .data$gec_oxy_start.date),
+      ecu_oxy_interval = case_when(!(.data$gec_oxy_start_d.factor %in% c("Auf Jahr genau", "Unbekannter Zeitpunkt vor Baseline")) & !(.data$gec_oxy_end_d.factor %in% c("Auf Jahr genau", "Unbekannter Zeitpunkt vor Baseline")) 
+                                   ~ interval(.data$gec_oxy_start.date, .data$gec_oxy_end.date),
+                                   TRUE ~ NA),
       gec_oxy_type.factor = factor(fct_reorder(.data$gec_oxy_type.factor, .data$gec_oxy_type, .na_rm = FALSE), ordered = TRUE)) %>%
-    select(all_of(pid),"gec_oxy.factor", "gec_oxy_type", "gec_oxy_type.factor", "gec_oxy_start.date", "gec_oxy_start_d.factor", "gec_oxy_start_uk.factor", 
-           "gec_oxy_end.date", "gec_oxy_end_d.factor", "gec_oxy_end_uk.factor", "gec_oxy_end_on.factor", "treatment_update.date", "ecu_oxy_interval") 
+    select(all_of(pid), "gec_oxy.factor", "ecu_oxy_interval", "gec_oxy_type", "gec_oxy_type.factor") 
+  
+  exgas_data <-  trial_data$fv6 %>%
+    left_join(trial_data$eexgas, by = pid) %>%
+    left_join(treatment_update_date, by = pid) %>%
+    mutate(
+      gec_exgas_end.date = case_when(.data$exgas_end_on.factor =="Andauernd" ~ .data$treatment_update.date,
+                                     .data$exgas_end_d.factor == "Auf Monat genau" ~ rollforward(.data$exgas_end.date, roll_to_first = FALSE),
+                                     .data$exgas_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$exgas_end.date, unit = "week", week_start = 1),
+                                     TRUE ~ .data$exgas_end.date),
+      gec_exgas_start.date = case_when(.data$exgas_start_d.factor == "Auf Monat genau" ~ rollback(.data$exgas_start.date, roll_to_first = TRUE),
+                                       .data$exgas_start_d.factor == "Auf Woche genau" ~ floor_date(.data$exgas_start.date, unit = "week", week_start = 1),
+                                       TRUE ~ .data$exgas_start.date),
+      ecu_oxy_interval = case_when(!(.data$exgas_start_d.factor %in% c("Auf Jahr genau", "Unbekannter Zeitpunkt vor Baseline")) & !(.data$exgas_end_d.factor %in% c("Auf Jahr genau", "Unbekannter Zeitpunkt vor Baseline")) 
+                                   ~ interval(.data$gec_exgas_start.date, .data$gec_exgas_end.date),
+                                   TRUE ~ NA),
+      gec_oxy_type.factor = "Invasive mechanische Beatmung",
+      gec_oxy_type = 4, 
+      gec_oxy.factor = "Ja",
+      gec_oxy = 1) %>% 
+    select(all_of(pid), "gec_oxy.factor", "ecu_oxy_interval", "gec_oxy_type", "gec_oxy_type.factor") 
+  
+  oxy_data_final <- oxy_data %>% 
+    rbind(exgas_data)
   
   # Hospitalisation (one row per pat per start date) ---------------------------
   
   hospital_data <- trial_data$eward %>%
-    bind_rows(trial_data$eresid) %>% 
     bind_rows(treatment_update_date) %>%
     mutate(
-      ecu_ward = coalesce(.data$gec_ward.factor, .data$resid.factor),
-      ecu_ward_resid_start.date = coalesce(.data$ward_start.date, .data$resid_start.date), 
-      ecu_ward_resid_start_d.factor = coalesce(.data$ward_start_d.factor, .data$resid_start_d.factor), 
-      ecu_ward_resid_start_uk.date = coalesce(.data$ward_start_uk.factor, .data$resid_start_uk.factor), 
+      ecu_ward = gec_ward.factor,  
+      ecu_ward_resid_start.date = ward_start.date, 
+      ecu_ward_resid_start_d.factor = ward_start_d.factor, 
+      ecu_ward_resid_start_uk.date = ward_start_uk.factor, 
       ecu_ward_resid_start.date = case_when(.data$ecu_ward_resid_start_d.factor == "Auf Monat genau" ~ rollback(.data$ecu_ward_resid_start.date, roll_to_first = TRUE),
-                                            .data$ecu_ward_resid_start_d.factor == "Auf Woche genau" ~ floor_date(.data$ecu_ward_resid_start.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
+                                            .data$ecu_ward_resid_start_d.factor == "Auf Woche genau" ~ floor_date(.data$ecu_ward_resid_start.date, unit = "week", week_start = 1),
                                             TRUE ~ .data$ecu_ward_resid_start.date),
-      ecu_ward_resid_end.date = coalesce(.data$ward_end.date, .data$resid_end.date), 
-      ecu_ward_resid_end_d.factor = coalesce(.data$ward_end_d.factor, .data$resid_end_d.factor), 
-      ecu_ward_resid_end_uk.date = coalesce(.data$ward_end_uk.factor, .data$resid_end_uk.factor), 
-      ecu_ward_resid_end_on.date = coalesce(.data$ward_end_on.factor, .data$resid_end_on.factor), 
+      ecu_ward_resid_end.date = ward_end.date, 
+      ecu_ward_resid_end_d.factor = ward_end_d.factor, 
+      ecu_ward_resid_end_uk.date = ward_end_uk.factor,
+      ecu_ward_resid_end_on.date = ward_end_on.factor, 
       ecu_ward_resid_end.date = case_when(.data$ecu_ward_resid_end_on.date == "Andauernd" ~ .data$treatment_update.date,
                                           .data$ecu_ward_resid_end_d.factor == "Auf Monat genau" ~ rollforward(.data$ecu_ward_resid_end.date, roll_to_first = FALSE),
-                                          .data$ecu_ward_resid_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$ecu_ward_resid_end.date, unit = "week", week_start = getOption ("lubridate.week.start", 1)),
+                                          .data$ecu_ward_resid_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$ecu_ward_resid_end.date, unit = "week", week_start = 1),
                                           TRUE ~ .data$ecu_ward_resid_end.date),
       ecu_hospital_interval = interval(.data$ecu_ward_resid_start.date, .data$ecu_ward_resid_end.date)) %>%
     filter(str_detect(tolower(.data$ecu_ward), "station|krankenhaus|keine informationen") & (.data$ecu_ward_resid_start.date >= ymd(20200101) | is.na(.data$ecu_ward_resid_start.date))) %>% # anything before 2020 must be covid19 unrelated
     full_join(trial_data$fv1, by=pid) %>%
-    select(all_of(pid),"ward.factor", starts_with("ecu"), "gec_resid_disch.factor")
+    select(all_of(pid), "ward.factor", "ecu_ward", "ecu_hospital_interval")
   
-  # Death (one row per pat) ----------------------------------------------------
   
-  eresid_death <- trial_data$eresid %>%
-    filter(.data$gec_resid_disch.factor == "Tod") %>%
-    rename(ecu_death_date.date = "resid_end.date",
-           ecu_death_date_d.factor = "resid_end_d.factor",
-           ecu_death_date_uk.factor = "resid_end_uk.factor") %>%
-    select(all_of(pid),"ecu_death_date.date", "ecu_death_date_d.factor", "ecu_death_date_uk.factor")
+  # WHO Scale Data  (one row per pat per visit) ----------------------------------
   
-  tryCatch(expr = {fv2_6_death <- trial_data$fv2_6 %>%
-    filter(.data$gec_death.factor == "Ja" | .data$gec_death.factor == "Keine Informationen verf\u00fcgbar") %>%
-    rename(ecu_death_date.date = "death_date.date",
-           ecu_death_date_d.factor = "death_date_d.factor",
-           ecu_death_date_uk.factor = "death_date_uk.factor") %>%
-    select(all_of(pid),"ecu_death_date.date", "ecu_death_date_d.factor", "ecu_death_date_uk.factor")},
-    error = function(e) {
-      warning("death_date is missing in fv2_6")
-      print(e)})
-  
-  death_data <- fv2_6_death %>%
-    bind_rows(eresid_death) %>%
-    group_by(!!sym(pid)) %>%
+  who_scale_per_visit_data <- visit_data_final %>%
+    left_join(inclusion_data, by = pid) %>%
+    left_join(main_diag_data, by = pid) %>%
+    left_join(hospital_data, by = pid, relationship = "many-to-many") %>%
+    left_join(oxy_data_final, by = pid, relationship = "many-to-many") %>%
+    filter(visit_in_acute_phase == 1) %>% 
     mutate(
-      n = n(),
-      are_death_dates_same = length(unique(.data$ecu_death_date.date)) == 1) %>%
-    # Select first death with exct date if there is more than one
-    filter(if (any(n > 1 & .data$are_death_dates_same)) .data$ecu_death_date_d.factor == "Exakte Angabe" else TRUE) %>% 
-    # after that the min date
-    slice_min(.data$ecu_death_date.date, with_ties = FALSE) %>% 
-    ungroup() %>%
-    select(all_of(pid),"ecu_death_date.date", "ecu_death_date_d.factor", "ecu_death_date_uk.factor")
-  
-  
-  # WHO Scale Data  (one row per pat per visit) --------------------------------
-  
-  who_scale_per_visit_data <- visit_data %>%
-    full_join(trial_data$fv15 %>% select(all_of(pid), "pr_end_date.date", "pr_end_reason.factor"), by=pid) %>%
-    full_join(inclusion_data, by =pid) %>%
-    full_join(main_diag_data, by =pid) %>%
-    full_join(death_data, by=pid) %>%
-    full_join(oxy_data, by=pid, relationship = "many-to-many") %>%
-    full_join(hospital_data, by=pid, relationship = "many-to-many") %>%
-    mutate(
-      is_hospital = case_when(.data$visit_date %within% .data$ecu_hospital_interval ~ 1,
-                              .data$ward.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                              !(.data$visit_date %within% .data$ecu_hospital_interval) | .data$ward.factor == "Nein" ~ 0),
-      is_oxy = case_when(.data$visit_date %within% .data$ecu_oxy_interval ~ 1,
-                         .data$gec_oxy.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                         !(.data$visit_date %within% .data$ecu_oxy_interval) | .data$gec_oxy.factor == "Nein" ~ 0),
-      oxy_hospital_interval_overlap = int_overlaps(.data$ecu_oxy_interval, .data$ecu_hospital_interval),
-      is_oxy_type_severe = case_when(oxy_hospital_interval_overlap == TRUE & .data$gec_oxy_type >= "2" ~ TRUE,
-                                     TRUE ~ FALSE)
-    ) %>%
-    mutate(
+      ward_in_acute_phase = case_when(int_overlaps(ecu_hospital_interval, acute_phase_int) ~ 1, 
+                                      is.na(ecu_hospital_interval) ~ NA_real_,
+                                      TRUE ~ 0),
+      oxy_in_ward = case_when(int_overlaps(ecu_oxy_interval, ecu_hospital_interval) ~ 1, 
+                              is.na(ecu_oxy_interval) ~ NA_real_,
+                              TRUE ~ 0),
+      death_in_acute_phase = case_when(pr_end_reason.factor == "Tod" & ecu_death_date %within% acute_phase_int ~ 1,
+                                       TRUE ~ 0),
       ecu_who_scale.factor = case_when(str_detect(.data$ecu_pr_inclusion, "Kontroll") ~ "Kontrollgruppe, ohne Sars-Infektion",
-                                       .data$ward.factor == "Nein" ~ "Ambulant, milde Phase", # ward == 0 = "Nein" 
-                                       .data$ward.factor == "Keine Informationen verf\u00fcgbar" | 
-                                         .data$gec_oxy.factor == "Keine Informationen verf\u00fcgbar" ~ "Keine Informationen verf\u00fcgbar",
-                                       .data$is_hospital == 0 ~ "Ambulant, milde Phase",
-                                       .data$visit_date >= .data$ecu_death_date.date ~ "Verstorben",
-                                       .data$is_oxy_type_severe & .data$is_hospital == 1 ~ "Hospitalisiert, schwere Phase",
-                                       .data$is_hospital == 1  & .data$is_oxy != "-1" ~ "Hospitalisiert, moderate Phase"),
-      ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                                           .data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
-                                           .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
-                                           .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" ~ 2,
-                                           .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" ~ 3,
-                                           .data$ecu_who_scale.factor == "Verstorben" ~ 4)),
+                                       .data$death_in_acute_phase == 1 ~ "Verstorben in Akutphase",
+                                       .data$ward.factor == "Nein" | .data$ward_in_acute_phase == 0 ~ "Ambulant, milde Phase",
+                                       .data$ward_in_acute_phase == 1 & (.data$gec_oxy.factor == "Nein" | (.data$gec_oxy.factor == "Ja" & .data$oxy_in_ward == 1 & .data$gec_oxy_type == 1)) ~ "Hospitalisiert, moderate Phase",
+                                       .data$ward_in_acute_phase == 1 & .data$gec_oxy.factor == "Ja" & .data$oxy_in_ward == 1 & .data$gec_oxy_type >= 2 ~ "Hospitalisiert, schwere Phase"),
       ecu_who_scale_with_diag.factor = case_when(.data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Covid" ~ "Hospitalisiert wegen Covid, moderate Phase",
                                                  .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Andere" ~ "Hospitalisiert mit Covid, moderate Phase",
                                                  .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Covid" ~ "Hospitalisiert wegen Covid, schwere Phase",
                                                  .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Andere" ~ "Hospitalisiert mit Covid, schwere Phase",
-                                                 is.na(.data$ecu_main_diag_covid) ~ NA,
-                                                 .data$ecu_main_diag_covid == "Keine Informationen verf\u00fcgbar" ~ "Keine Informationen verf\u00fcgbar",
                                                  TRUE ~ .data$ecu_who_scale.factor),
-      ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Keine Informationen verf\u00fcgbar" ~ -1,
-                                                     .data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+      ecu_who_scale = as.integer(case_when(.data$ecu_who_scale.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
+                                           .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
+                                           .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" ~ 2,
+                                           .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" ~ 3,
+                                           .data$ecu_who_scale.factor == "Verstorben in Akutphase" ~ 4)),
+      ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
                                                      .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, moderate Phase" ~ 3,
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, schwere Phase" ~ 4,
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert wegen Covid, schwere Phase" ~ 5,
-                                                     .data$ecu_who_scale_with_diag.factor == "Verstorben" ~ 6))
-    ) 
+                                                     .data$ecu_who_scale_with_diag.factor == "Verstorben in Akutphase" ~ 6))
+    ) %>% 
+    group_by(!!sym(pid), !!sym(visit_label_var_name)) %>% 
+    slice_max(.data$ecu_who_scale, with_ties = FALSE)
   
   return(who_scale_per_visit_data)
   
