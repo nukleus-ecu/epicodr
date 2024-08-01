@@ -1673,12 +1673,12 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   visit_data_final <- visit_data_a %>% 
     full_join(visit_data_b) %>% 
     filter(!is.na(visit_label_var_name)) %>%
-    mutate(visit_in_acute_phase = case_when(visit_date %within% acute_phase_int ~ 1, TRUE ~ 0)) %>% 
+    mutate(visit_in_acute_phase = case_when(.data$visit_date %within% .data$acute_phase_int ~ 1, TRUE ~ 0)) %>% 
     left_join(trial_data$fv2_6 %>% filter(.data$gec_death.factor == "Ja" ) %>% select(all_of(pid), "death_date.date", "death_date_d.factor", "death_date_uk.factor"), by = pid) %>%
-    full_join(trial_data$fv15 %>% filter(pr_end_reason.factor == "Tod") %>% select(all_of(pid), "pr_end_date.date", "pr_end_reason.factor")) %>% 
-    mutate(ecu_death_date = coalesce(death_date.date, pr_end_date.date)) %>% 
+    full_join(trial_data$fv15 %>% filter(.data$pr_end_reason.factor == "Tod") %>% select(all_of(pid), "pr_end_date.date", "pr_end_reason.factor")) %>% 
+    mutate(ecu_death_date = coalesce(.data$death_date.date, .data$pr_end_date.date)) %>% 
     select(-c("death_date.date", "pr_end_date.date", "death_date_d.factor", "death_date_uk.factor")) %>% 
-    filter(!(!!sym(visit_label_var_name) %in% c("3M Follow-Up", "12M Follow-Up")) & !(visit_mode %in% c("Zus\u00e4tzliche Dokumentationsvisite", "Telefonvisite (PROM)")))
+    filter(!(!!sym(visit_label_var_name) %in% c("3M Follow-Up", "12M Follow-Up")) & !(.data$visit_mode %in% c("Zus\u00e4tzliche Dokumentationsvisite", "Telefonvisite (PROM)")))
   
   
   # Inclusion groups (one row per pat) -----------------------------------------
@@ -1798,17 +1798,17 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
   hospital_data <- trial_data$eward %>%
     bind_rows(treatment_update_date) %>%
     mutate(
-      ecu_ward = gec_ward.factor,  
-      ecu_ward_resid_start.date = ward_start.date, 
-      ecu_ward_resid_start_d.factor = ward_start_d.factor, 
-      ecu_ward_resid_start_uk.date = ward_start_uk.factor, 
+      ecu_ward = .data$gec_ward.factor,  
+      ecu_ward_resid_start.date = .data$ward_start.date, 
+      ecu_ward_resid_start_d.factor = .data$ward_start_d.factor, 
+      ecu_ward_resid_start_uk.date = .data$ward_start_uk.factor, 
       ecu_ward_resid_start.date = case_when(.data$ecu_ward_resid_start_d.factor == "Auf Monat genau" ~ rollback(.data$ecu_ward_resid_start.date, roll_to_first = TRUE),
                                             .data$ecu_ward_resid_start_d.factor == "Auf Woche genau" ~ floor_date(.data$ecu_ward_resid_start.date, unit = "week", week_start = 1),
                                             TRUE ~ .data$ecu_ward_resid_start.date),
-      ecu_ward_resid_end.date = ward_end.date, 
-      ecu_ward_resid_end_d.factor = ward_end_d.factor, 
-      ecu_ward_resid_end_uk.date = ward_end_uk.factor,
-      ecu_ward_resid_end_on.date = ward_end_on.factor, 
+      ecu_ward_resid_end.date = .data$ward_end.date, 
+      ecu_ward_resid_end_d.factor = .data$ward_end_d.factor, 
+      ecu_ward_resid_end_uk.date = .data$ward_end_uk.factor,
+      ecu_ward_resid_end_on.date = .data$ward_end_on.factor, 
       ecu_ward_resid_end.date = case_when(.data$ecu_ward_resid_end_on.date == "Andauernd" ~ .data$treatment_update.date,
                                           .data$ecu_ward_resid_end_d.factor == "Auf Monat genau" ~ rollforward(.data$ecu_ward_resid_end.date, roll_to_first = FALSE),
                                           .data$ecu_ward_resid_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$ecu_ward_resid_end.date, unit = "week", week_start = 1),
@@ -1826,15 +1826,15 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
     left_join(main_diag_data, by = pid) %>%
     left_join(hospital_data, by = pid, relationship = "many-to-many") %>%
     left_join(oxy_data_final, by = pid, relationship = "many-to-many") %>%
-    filter(visit_in_acute_phase == 1) %>% 
+    filter(.data$visit_in_acute_phase == 1) %>% 
     mutate(
-      ward_in_acute_phase = case_when(int_overlaps(ecu_hospital_interval, acute_phase_int) ~ 1, 
-                                      is.na(ecu_hospital_interval) ~ NA_real_,
+      ward_in_acute_phase = case_when(int_overlaps(.data$ecu_hospital_interval, .data$acute_phase_int) ~ 1, 
+                                      is.na(.data$ecu_hospital_interval) ~ NA_real_,
                                       TRUE ~ 0),
-      oxy_in_ward = case_when(int_overlaps(ecu_oxy_interval, ecu_hospital_interval) ~ 1, 
-                              is.na(ecu_oxy_interval) ~ NA_real_,
+      oxy_in_ward = case_when(int_overlaps(.data$ecu_oxy_interval, .data$ecu_hospital_interval) ~ 1, 
+                              is.na(.data$ecu_oxy_interval) ~ NA_real_,
                               TRUE ~ 0),
-      death_in_acute_phase = case_when(pr_end_reason.factor == "Tod" & ecu_death_date %within% acute_phase_int ~ 1,
+      death_in_acute_phase = case_when(.data$pr_end_reason.factor == "Tod" & .data$ecu_death_date %within% .data$acute_phase_int ~ 1,
                                        TRUE ~ 0),
       ecu_who_scale.factor = case_when(str_detect(.data$ecu_pr_inclusion, "Kontroll") ~ "Kontrollgruppe, ohne Sars-Infektion",
                                        .data$death_in_acute_phase == 1 ~ "Verstorben in Akutphase",
