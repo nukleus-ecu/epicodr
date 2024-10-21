@@ -1771,6 +1771,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
     select(all_of(pid), "gec_oxy.factor", "ecu_oxy_interval", "gec_oxy_type", "gec_oxy_type.factor") 
   
   exgas_data <-  trial_data$fv6 %>%
+    filter(.data$gec_exgas == 1) %>% 
     left_join(trial_data$eexgas, by = pid) %>%
     left_join(treatment_update_date, by = pid) %>%
     mutate(
@@ -1813,7 +1814,9 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
                                           .data$ecu_ward_resid_end_d.factor == "Auf Monat genau" ~ rollforward(.data$ecu_ward_resid_end.date, roll_to_first = FALSE),
                                           .data$ecu_ward_resid_end_d.factor == "Auf Woche genau" ~ ceiling_date(.data$ecu_ward_resid_end.date, unit = "week", week_start = 1),
                                           TRUE ~ .data$ecu_ward_resid_end.date),
-      ecu_hospital_interval = interval(.data$ecu_ward_resid_start.date, .data$ecu_ward_resid_end.date)) %>%
+      ecu_hospital_interval = case_when(!(.data$ecu_ward_resid_start_d.factor %in% c("Auf Jahr genau", "Unbekannter Zeitpunkt vor Baseline")) & !(.data$ecu_ward_resid_end_d.factor %in% c("Auf Jahr genau", "Unbekannter Zeitpunkt vor Baseline")) 
+                                        ~ interval(.data$ecu_ward_resid_start.date, .data$ecu_ward_resid_end.date),
+                                        TRUE ~ NA)) %>%
     filter(str_detect(tolower(.data$ecu_ward), "station|krankenhaus|keine informationen") & (.data$ecu_ward_resid_start.date >= ymd(20200101) | is.na(.data$ecu_ward_resid_start.date))) %>% # anything before 2020 must be covid19 unrelated
     full_join(trial_data$fv1, by=pid) %>%
     select(all_of(pid), "ward.factor", "ecu_ward", "ecu_hospital_interval")
@@ -1839,7 +1842,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
       ecu_who_scale.factor = case_when(str_detect(.data$ecu_pr_inclusion, "Kontroll") ~ "Kontrollgruppe, ohne Sars-Infektion",
                                        .data$death_in_acute_phase == 1 ~ "Verstorben in Akutphase",
                                        .data$ward.factor == "Nein" | .data$ward_in_acute_phase == 0 ~ "Ambulant, milde Phase",
-                                       .data$ward_in_acute_phase == 1 & (.data$gec_oxy.factor == "Nein" | (.data$gec_oxy.factor == "Ja" & .data$oxy_in_ward == 1 & .data$gec_oxy_type == 1)) ~ "Hospitalisiert, moderate Phase",
+                                       .data$ward_in_acute_phase == 1 & (.data$gec_oxy.factor == "Nein" | .data$oxy_in_ward == 0 | (.data$gec_oxy.factor == "Ja" & .data$oxy_in_ward == 1 & .data$gec_oxy_type == 1)) ~ "Hospitalisiert, moderate Phase",
                                        .data$ward_in_acute_phase == 1 & .data$gec_oxy.factor == "Ja" & .data$oxy_in_ward == 1 & .data$gec_oxy_type >= 2 ~ "Hospitalisiert, schwere Phase"),
       ecu_who_scale_with_diag.factor = case_when(.data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Covid" ~ "Hospitalisiert wegen Covid, moderate Phase",
                                                  .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" & .data$ecu_main_diag_covid == "Hauptdiagnose Andere" ~ "Hospitalisiert mit Covid, moderate Phase",
@@ -1850,7 +1853,7 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
                                            .data$ecu_who_scale.factor == "Ambulant, milde Phase" ~ 1,
                                            .data$ecu_who_scale.factor == "Hospitalisiert, moderate Phase" ~ 2,
                                            .data$ecu_who_scale.factor == "Hospitalisiert, schwere Phase" ~ 3,
-                                           .data$ecu_who_scale.factor == "Verstorben in Akutphase" ~ 4)),
+                                           .data$ecu_who_scale.factor == "Verstorben in Akutphase" ~ 5)),
       ecu_who_scale_with_diag = as.integer(case_when(.data$ecu_who_scale_with_diag.factor == "Kontrollgruppe, ohne Sars-Infektion" ~ 0,
                                                      .data$ecu_who_scale_with_diag.factor == "Ambulant, milde Phase" ~ 1,
                                                      .data$ecu_who_scale_with_diag.factor == "Hospitalisiert mit Covid, moderate Phase" ~ 2,
@@ -1860,7 +1863,8 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
                                                      .data$ecu_who_scale_with_diag.factor == "Verstorben in Akutphase" ~ 6))
     ) %>% 
     group_by(!!sym(pid), !!sym(visit_label_var_name)) %>% 
-    slice_max(.data$ecu_who_scale, with_ties = FALSE)
+    slice_max(.data$ecu_who_scale, with_ties = FALSE) %>%
+    ungroup()
   
   return(who_scale_per_visit_data)
   
@@ -1880,6 +1884,11 @@ build_who_scale_suep_df <- function(trial_data, pid, docid, visitid){
 
 summarize_who_scale <- function(trial_data, pid) {
   
+  na_in_who <- trial_data[["ecu_who_scale_per_visit_data"]] %>%
+    filter(is.na(.data$ecu_who_scale)) %>%
+    select(all_of(pid)) %>%
+    distinct()
+  
   who_scale_max <- trial_data[["ecu_who_scale_per_visit_data"]] %>%
     group_by(!!sym(pid)) %>%
     slice_max(.data$ecu_who_scale, with_ties = FALSE) %>% 
@@ -1890,7 +1899,7 @@ summarize_who_scale <- function(trial_data, pid) {
   
   who_scale_with_diag_max <- trial_data[["ecu_who_scale_per_visit_data"]] %>%
     group_by(!!sym(pid)) %>%
-    slice_max(.data$ecu_who_scale_with_diag, with_ties = FALSE) %>%
+    slice_max(.data$ecu_who_scale_with_diag, with_ties = FALSE, na_rm = TRUE) %>%
     ungroup() %>%
     rename(ecu_who_scale_with_diag_max = "ecu_who_scale_with_diag",
            ecu_who_scale_with_diag_max.factor = "ecu_who_scale_with_diag.factor") %>%
