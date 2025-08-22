@@ -66,8 +66,8 @@ primary_coding_rapid_revive_age <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
-    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -07-01 to set the birthdate to July 1st as middle of the respective year
-    dplyr::mutate(ecu_demo_birth_new = ymd(paste0(.data$demo_birth, "-07-01")), 
+    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the birthdate to July 1st as middle of the respective year
+    dplyr::mutate(ecu_demo_birth_new = ymd(paste0(.data$demo_birth, "-06-30")), 
                   ecu_age = calculate_full_years(from = .data$ecu_demo_birth_new, to = .data$demo_date.date),
                   ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
                   ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age))
@@ -179,6 +179,49 @@ primary_coding_rapid_revive_fss <- function(trial_data) {
 }
 
 
+## Montreal Cognitive Assessment (MoCA) ========================================
+
+#' Primary cpding for Montreal Cognitive Assessment (MoCA)
+#' 
+#' adds the following varible to moca
+#' ecu_moca_total_score, ecu_moca_cat
+#' 
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_moca <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?moca$", table_names)]] <- trial_data[[grep("^_?moca$", table_names)]] %>%
+    mutate(ecu_moca_a_7_sum = .data$moca_a_7_93 + .data$moca_a_7_86 + .data$moca_a_7_79 + .data$moca_a_7_72 + .data$moca_a_7_65, 
+           ecu_moca_total_score = .data$moca_v_atm + 
+             .data$moca_v_cube + 
+             .data$moca_v_clock_con + .data$moca_v_clock_num + .data$moca_v_clock_han + 
+             .data$moca_n_lion + .data$moca_n_rhi + .data$moca_n_cam +
+             .data$moca_a_num_f + .data$moca_a_num_b +
+             .data$moca_a_let_a + 
+             ifelse(.data$ecu_moca_a_7_sum == 0, 0, 
+                    ifelse(.data$ecu_moca_a_7_sum == 1, 1, 
+                           ifelse(.data$ecu_moca_a_7_sum == 2 | .data$ecu_moca_a_7_sum == 3, 2, 
+                                  ifelse(.data$ecu_moca_a_7_sum >= 4, 3, NA)))) +
+             .data$moca_s_rep1 + .data$moca_s_rep2 + 
+             .data$moca_s_let_f +
+             .data$moca_ab_tran + .data$moca_ab_meas + 
+             .data$moca_m_face3 + .data$moca_m_vel3 + .data$moca_m_chur3 + .data$moca_m_tul3 + .data$moca_m_red3 +
+             .data$moca_o_date + .data$moca_o_mon + .data$moca_o_year + .data$moca_o_day + .data$moca_o_loc + .data$moca_o_city + 
+             .data$moca_ed_12,
+           ecu_moca_cat = categorize_moca_ecu(.data$ecu_moca_total_score)) 
+  
+  labelled::var_label(trial_data[[grep("^_?moca$", table_names)]]) <- list(
+    ecu_moca_total_score = "",
+    ecu_moca_cat = ""
+  )
+  
+  return(trial_data)
+}
+
 
 # RAPID REVIVE Wrapper primary coding ==========================================
 
@@ -232,6 +275,12 @@ primary_coding_rapid_revive <- function(trial_data) {
     tryCatch(expr = {trial_data <- primary_coding_rapid_revive_fss(trial_data)},
            error = function(e) {
              warning("primary_coding_rapid_revive_fss() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Montreal Cognitive Assessment (MoCA) ======================================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_moca(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_moca() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
