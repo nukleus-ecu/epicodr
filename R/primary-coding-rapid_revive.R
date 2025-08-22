@@ -1,5 +1,5 @@
 #################
-# Primary coding for RAPID-REVIVE secuTrial data via secuTrialR =================
+# Primary coding for RAPID-REVIVE secuTrial data via secuTrialR ================
 #
 # 
 #
@@ -53,10 +53,12 @@ clean_cs <- function(x){
 #' Primary coding age
 #'
 #' adds the following columns to demo: 
-#' ecu_age - age in years, ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
+#' ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
+#' @import dplyr
+#' @import lubridate
 #' @export
  
 primary_coding_rapid_revive_age <- function(trial_data) {
@@ -64,8 +66,11 @@ primary_coding_rapid_revive_age <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
-    mutate(ecu_age_cat_dec = ecu_age_cat_dec(.data$demo_birth),
-           ecu_age_cat_3 = ecu_age_cat_3(.data$demo_birth))
+    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -07-01 to set the birthdate to July 1st as middle of the respective year
+    dplyr::mutate(ecu_demo_birth_new = ymd(paste0(.data$demo_birth, "-07-01")), 
+                  ecu_age = calculate_full_years(from = .data$ecu_demo_birth_new, to = .data$demo_date.date),
+                  ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
+                  ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age))
   
   labelled::var_label(trial_data[[grep("^_?demo$", table_names)]]) <- list(
     ecu_age_cat_3 = "",
@@ -86,6 +91,7 @@ primary_coding_rapid_revive_age <- function(trial_data) {
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
 #' @importFrom forcats fct_collapse
+#' @import dplyr
 #' @export
 
 primary_coding_rapid_revive_bmi <- function(trial_data) {
@@ -93,11 +99,11 @@ primary_coding_rapid_revive_bmi <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
-    mutate(ecu_bmi = calculate_bmi(.data$demo_gewicht, .data$demo_height),
-           ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
-           ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  fct_collapse(.data$ecu_bmi_cat,
-                                                                                    Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
-                                                                                    Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
+    dplyr::mutate(ecu_bmi = calculate_bmi(.data$basis_gewicht, .data$demo_height),
+                  ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
+                  ecu_bmi_adipositas = dplyr::case_when(!is.na(.data$ecu_bmi_cat) ~  forcats::fct_collapse(.data$ecu_bmi_cat,
+                                                                                           Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
+                                                                                           Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
   
   labelled::var_label(trial_data[["demo"]]) <- list(
     ecu_bmi = "",
@@ -109,7 +115,7 @@ primary_coding_rapid_revive_bmi <- function(trial_data) {
 }
 
 
-## Blood pressure =========================================================================
+## Blood pressure ==============================================================
 
 #' Primary coding blood pressure
 #'
@@ -118,12 +124,15 @@ primary_coding_rapid_revive_bmi <- function(trial_data) {
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
+#' @import dplyr
 #' @export
 
 primary_coding_rapid_revive_bp <- function(trial_data) {
   
+  table_names <- names(trial_data)
+  
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    mutate(ecu_bp = categorize_bloodpressure_ecu(.data$vital_sys, .data$vital_dia))
+    dplyr::mutate(ecu_bp = categorize_bloodpressure_ecu(.data$vital_sys, .data$vital_dia))
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_bp = ""
@@ -132,8 +141,46 @@ primary_coding_rapid_revive_bp <- function(trial_data) {
   return (trial_data)
 }
 
+## Fatigue Severity Scale (FSS) ================================================
 
-# RAPID REVIVE Wrapper primary coding ==================================================
+#' Primary coding Fatigue Severity Scale (FSS)
+#' 
+#' adds the following colums to fss
+#' 
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_fss <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?fss$", table_names)]] <- trial_data[[grep("^_?fss$", table_names)]] %>%
+    dplyr::mutate(ecu_fss_sum = calculate_fss_sum(.data$fss_001, .data$fss_002, .data$fss_003, .data$fss_004, .data$fss_005, .data$fss_006, .data$fss_007, .data$fss_008, .data$fss_009),
+                  ecu_fss_cat = categorize_fss_sum_ecu(.data$ecu_fss_sum),
+                  ecu_fss_mean = calculate_fss_mean(.data$fss_001, .data$fss_002, .data$fss_003, .data$fss_004, .data$fss_005, .data$fss_006, .data$fss_007, .data$fss_008, .data$fss_009),
+                  ecu_fss_cat_2 = categorize_fss_mean_ecu(.data$ecu_fss_mean),
+                  ecu_fss_sum_phys = calculate_fss_sum_phys(.data$fss_002, .data$fss_004, .data$fss_006),
+                  ecu_fss_sum_mental = calculate_fss_sum_mental(.data$fss_001, .data$fss_003, .data$fss_005, .data$fss_007, .data$fss_008, .data$fss_009),
+                  ecu_fss_mental_phys_ratio = round(.data$ecu_fss_sum_mental / .data$ecu_fss_sum_phys, digits = 2))
+  
+  labelled::var_label(trial_data[[grep("^_?fss$", table_names)]]) <- list(
+    ecu_fss_sum = "",
+    ecu_fss_cat = "",
+    ecu_fss_mean = "",
+    ecu_fss_cat_2 = "",
+    ecu_fss_sum_phys = "",
+    ecu_fss_sum_mental = "",
+    ecu_fss_mental_phys_ratio = ""
+  )
+  
+  return(trial_data)
+  
+}
+
+
+
+# RAPID REVIVE Wrapper primary coding ==========================================
 
 #' Primary coding RAPID REVIVE Data
 #' 
@@ -155,11 +202,13 @@ primary_coding_rapid_revive <- function(trial_data) {
     stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
   }
   
+  table_names <- names(trial_data)
+  
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?demo$", table_names)]]), "mnpvislabel", "visit_name")
-  table_names <- names(trial_data)
+
   
   ## Age =======================================================================
   tryCatch(expr = {trial_data <- primary_coding_rapid_revive_age(trial_data)},
@@ -177,6 +226,12 @@ primary_coding_rapid_revive <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_rapid_revive_bp(trial_data)},
            error = function(e) {
              warning("primary_coding_rapid_revive_bp() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Fatigue Severity Scale (FSS) ==============================================
+    tryCatch(expr = {trial_data <- primary_coding_rapid_revive_fss(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_fss() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
