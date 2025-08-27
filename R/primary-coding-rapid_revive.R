@@ -178,6 +178,63 @@ primary_coding_rapid_revive_fss <- function(trial_data) {
   
 }
 
+## Generalized Anxiety Disorder 7 (GAD-7) ======================================
+
+#' Primary coding Generalized Anxiety Disorder 7 (GAD-7)
+#' 
+#' adds the following columns to gad7:
+#' ecu_gad7_sum
+#' ecu_gad_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+
+primary_coding_rapid_revive_gad7 <- function(trial_data) {
+  
+  trial_data[["gad7"]] <- trial_data[["gad7"]] %>%
+    mutate(ecu_gad7_sum = calculate_gad7_sum(.data$gad7_001, .data$gad7_002, .data$gad7_003, .data$gad7_004, .data$gad7_005, .data$gad7_006, .data$gad7_007),
+           ecu_gad7_cat = categorize_gad7_ecu(.data$ecu_gad7_sum))
+  
+  labelled::var_label(trial_data[["gad7"]]) <- list(
+    ecu_gad7_sum = "",
+    ecu_gad7_cat = ""
+  )
+  
+  return(trial_data)
+}
+
+
+## modified Medical Research Council Dyspnea Scale (mMRC) ======================
+
+#' Primary coding modified Medical Research Council Dyspnea Scale (mMRC)
+#' 
+#' adds the following column to mmrc: 
+#' ecu_mmrc
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom eq5d eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_mmrc <- function(trial_data) {
+  
+  trial_data[["mmrc"]] <- trial_data[["mmrc"]] %>%
+    mutate(ecu_mmrc = case_when(
+      .data$mmrc_sym == 0 ~ "No Dyspnea",
+      .data$mmrc_sym > 0 ~ "Dyspnea",
+      TRUE ~ NA
+    ))
+              #categorize_mmrc_ecu(.data$mmrc_sym.factor)) 
+  
+  labelled::var_label(trial_data[["mmrc"]]) <- list(
+    ecu_mmrc = ""
+  )
+  
+  return(trial_data)
+}
+
 
 ## Montreal Cognitive Assessment (MoCA) ========================================
 
