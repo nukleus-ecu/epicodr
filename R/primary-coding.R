@@ -489,7 +489,7 @@ categorize_phq4_ecu <- function (ecu_phq4_sum) {
 #' @param phq8_7 vector for item "Trouble concentrating on things, such as reading the newspaper or watching television."
 #' @param phq8_8 vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
 #' 
-#' #' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
+#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
 #' 
 #' @return A numeric vector with sum score of phq8
 #' @export
@@ -529,6 +529,162 @@ categorize_phq8_ecu_2 <- function (ecu_phq8_sum) {
                ecu_phq8_sum >= 5 & ecu_phq8_sum <= 9 ~ "Mild depression", 
                ecu_phq8_sum >= 10 & ecu_phq8_sum <= 14 ~ "Moderate depression", 
                ecu_phq8_sum >= 15 & ecu_phq8_sum <= 24 ~ "Severe depression")
+  )
+}
+
+
+#' Calculate Patient Health Questionnaire Depression Scale 9 (PHQ 9) sum score
+#' 
+#' @description Calculate sum score of PHQ-8
+#' 
+#' Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
+#' @param phq9_1 vector for item "Little interest or pleasure in doing things."
+#' @param phq9_2 vector for item "Feeling down, depressed, or hopeless."
+#' @param phq9_3 vector for item "Trouble falling or staying asleep, or sleeping too much."
+#' @param phq9_4 vector for item "Feeling tired or having little energy."
+#' @param phq9_5 vector for item "Poor appetite or overeating"
+#' @param phq9_6 vector for item "Feeling bad about yourself - or that you are a failure or have let yourself or your family down."
+#' @param phq9_7 vector for item "Trouble concentrating on things, such as reading the newspaper or watching television."
+#' @param phq9_8 vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
+#' @param phq9_9 vector for item "Thoughts that you would be better off dead, or thoughts of hurting yourself in some way?"
+#' 
+#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
+#' 
+#' @return A numeric vector with sum score of phq9
+#' @export
+
+calculate_phq9_sum <- function (phq9_1, phq9_2, phq9_3, phq9_4, phq9_5, phq9_6, phq9_7, phq9_8, phq9_9) {
+  ecu_phq9_sum <- phq9_1 + phq9_2 + phq9_3 + phq9_4 + phq9_5 + phq9_6 + phq9_7 + phq9_8 + phq9_9
+  
+  return(ecu_phq9_sum)
+}
+
+
+#' Categorize Patient Health Questionnaire Depression Scale 9 (PHQ 9) 
+#' 
+#' @description Categorize PHQ-8 sum score in depression and no depression
+#' @param ecu_phq9_sum numeric vector with sum score of phq9
+#' @return A factorized vector w/ levels "No depression" and "Depression"
+#' @export
+
+categorize_phq9_ecu <- function (ecu_phq9_sum) {
+  factor (
+    case_when (ecu_phq9_sum < 10 ~ "No depression",
+               ecu_phq9_sum >= 10 ~ "Depression")
+  )
+}
+
+
+#' Categorize Patient Health Questionnaire Depression Scale 9 (PHQ 9) - 5 groups
+#' 
+#' @description Categorize PHQ-8 sum score in "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @param ecu_phq9_sum numeric vector with sum score of phq9
+#' @return A factorized vector w/ levels "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @export
+
+categorize_phq9_ecu_2 <- function (ecu_phq9_sum) {
+  factor (
+    case_when (ecu_phq9_sum >= 0 & ecu_phq9_sum <= 4 ~ "Healthy",
+               ecu_phq9_sum >= 5 & ecu_phq9_sum <= 9 ~ "No depression", 
+               ecu_phq9_sum >= 10 & ecu_phq9_sum <= 14 ~ "Mild depression", 
+               ecu_phq9_sum >= 15 & ecu_phq9_sum <= 19 ~ "Moderate depression",
+               ecu_phq9_sum >= 20 ~ "Severe depression")
+  )
+}
+
+
+#' Calculate Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15) sum score
+#' 
+#' @description Calculate sum score of PHQ15
+#' 
+#' Patients are asked "During the past 4 weeks, how much have you been bothered by any of the following problems?"
+#' @param phq15_1 vector for item "Stomach pain"
+#' @param phq15_2 vector for item "Back pain"
+#' @param phq15_3 vector for item "Pain in your arms, legs, or joints (kneeps, hips, etc.)"
+#' @param phq15_4 vector for item "Menstrual cramps or other problems with your periods [Women only]"
+#' @param phq15_5 vector for item "Headaches"
+#' @param phq15_6 vector for item "Chest pain"
+#' @param phq15_7 vector for item "Dizziness"
+#' @param phq15_8 vector for item "Fainting spells"
+#' @param phq15_9 vector for item "Feeling your heart pound or race"
+#' @param phq15_10 vector for item "Shortness of breath"
+#' @param phq15_11 vector for item "Pain or problems during sexual intercourse"
+#' @param phq15_12 vector for item "Constipation, loos bowels, or diarrhea"
+#' @param phq15_13 vector for item "Nausea, gas, or indigestion"
+#' @param phq15_14 vector for item "Feeling tired or having low energy"
+#' @param phq15_15 vector for item "Trouble sleeping"
+#' 
+#' Answers were coded /w levels 0 = "Not bothered at all", 1 = "Bothered a little" and 2 = "Bothered a lot" 
+#' 
+#' @return A numeric vector with sum score of phq15
+#' @export
+
+calculate_phq15_sum <- function (phq15_1, phq15_2, phq15_3, phq15_4, phq15_5, phq15_6, phq15_7, phq15_8, phq15_9, phq15_10, phq15_11, phq15_12, phq15_13, phq15_14, phq15_15) {
+  ecu_phq15_sum <- phq15_1 + phq15_2 + phq15_3 + phq15_4 + phq15_5 + phq15_6 + phq15_7 + phq15_8 + phq15_9 + phq15_10 + phq15_11 + phq15_12 + phq15_13 + phq15_14 + phq15_15
+  
+  return(ecu_phq15_sum)
+}
+
+
+#' Categorize Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15) - 4 groups
+#' 
+#' @description Categorize PHQ-15 sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
+#' @param ecu_phq15_sum numeric vector with sum score of phq15
+#' @return A factorized vector w/ levels "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity
+#' @export
+
+categorize_phq15_ecu <- function (ecu_phq15_sum) {
+  factor (
+    case_when (ecu_phq15_sum >= 0 & ecu_phq15_sum <= 4 ~ "Minimal somatic symptom severity",
+               ecu_phq15_sum >= 5 & ecu_phq15_sum <= 9 ~ "Low somatic symptom severity", 
+               ecu_phq15_sum >= 10 & ecu_phq15_sum <= 14 ~ "Medium somatic symptom severity", 
+               ecu_phq15_sum >= 15 & ecu_phq15_sum <= 30 ~ "High somatic symptom severity")
+  )
+}
+
+
+#' Calculate Patient Health Questionnaire Stress Scale (PHQ-Stress) sum score
+#' 
+#' @description Calculate sum score of PHQ-Stress
+#' 
+#' Patients are asked "During the past 4 weeks, how much have you been bothered by any of the following problems?"
+#' @param phqs_1 vector for item "Worrying about your health"
+#' @param phqs_2 vector for item "Your weight or how you look"
+#' @param phqs_3 vector for item "Little or no sexual desire or pleasure during sex"
+#' @param phqs_4 vector for item "Difficulties with husband/wife, partner/lover or boyfriend/girlfriend"
+#' @param phqs_5 vector for item "The stress of taking care of children, parents, or other family members"
+#' @param phqs_6 vector for item "Stress at wirk outside of the home or at school"
+#' @param phqs_7 vector for item "Financial problems or worries"
+#' @param phqs_8 vector for item "Having no one to turn to when you have a problem"
+#' @param phqs_9 vector for item "Something bad that happened recently"
+#' @param phqs_10 vector for item "Thinking or dreaming about something terrible that happened to you in the past - like your house being destroyed, a severe accident, being hit or assaulted, or being forced to commit a sexual act"
+
+#' 
+#' Answers were coded /w levels 0 = "Not bothered at all", 1 = "Bothered a little" and 2 = "Bothered a lot" 
+#' 
+#' @return A numeric vector with sum score of phqs
+#' @export
+
+calculate_phqs_sum <- function (phqs_1, phqs_2, phqs_3, phqs_4, phqs_5, phqs_6, phqs_7, phqs_8, phqs_9, phqs_10) {
+  ecu_phqs_sum <- phqs_1 + phqs_2 + phqs_3 + phqs_4 + phqs_5 + phqs_6 + phqs_7 + phqs_8 + phqs_9 + phqs_10
+  
+  return(ecu_phqs_sum)
+}
+
+
+#' Categorize Patient Health Questionnaire Stress Scale (PHQ-Stress) - 4 groups
+#' 
+#' @description Categorize PHQ-15 sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
+#' @param ecu_phqs_sum numeric vector with sum score of phqs
+#' @return A factorized vector w/ levels "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity
+#' @export
+
+categorize_phqs_ecu <- function (ecu_phqs_sum) {
+  factor (
+    case_when (ecu_phqs_sum >= 0 & ecu_phqs_sum <= 4 ~ "Minimal psychosocial stress",
+               ecu_phqs_sum >= 5 & ecu_phqs_sum <= 9 ~ "Low psychosocial stress", 
+               ecu_phqs_sum >= 10 & ecu_phqs_sum <= 14 ~ "Medium psychosocial stress", 
+               ecu_phqs_sum >= 15 & ecu_phqs_sum <= 20 ~ "High psychosocial stress")
   )
 }
 

@@ -280,6 +280,90 @@ primary_coding_rapid_revive_moca <- function(trial_data) {
 }
 
 
+## Patient Health Questionnaire Depession Scale (PHQ-9) ========================
+
+#' Primary coding Patient Health Questionnaire Depession Scale (PHQ-9)
+#' 
+#' adds the following column to phq9: 
+#' ecu_phq9_sum, ecu_phq9_cat, ecu_phq9_cat_2
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_phq9 <- function(trial_data) {
+  
+  trial_data[["phq9"]] <- trial_data[["phq9"]] %>%
+    dplyr::mutate(ecu_phq9_sum = calculate_phq9_sum(.data$phq9_001, .data$phq9_002, .data$phq9_003, .data$phq9_004, .data$phq9_005, 
+                                                    .data$phq9_006, .data$phq9_007, .data$phq9_008, .data$phq9_009),
+                  ecu_phq9_cat = categorize_phq9_ecu(.data$ecu_phq9_sum),
+                  ecu_phq9_cat_2 = categorize_phq9_ecu_2(.data$ecu_phq9_sum))
+  
+  labelled::var_label(trial_data[["phq9"]]) <- list(
+    ecu_phq9_sum = "",
+    ecu_phq9_cat = "",
+    ecu_phq9_cat_2 = ""
+  )
+  
+  return(trial_data)
+}
+
+
+## Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15) ======
+
+#' Primary coding Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15)
+#' 
+#' adds the following column to phq15: 
+#' ecu_phq15_sum, ecu_phq15_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_phq15 <- function(trial_data) {
+  
+  trial_data[["phq15"]] <- trial_data[["phq15"]] %>%
+    dplyr::mutate(ecu_phq15_sum = calculate_phq15_sum(.data$phq15_001, .data$phq15_002, .data$phq15_003, .data$phq15_004, .data$phq15_005, 
+                                                    .data$phq15_006, .data$phq15_007, .data$phq15_008, .data$phq15_009, .data$phq15_010,
+                                                    .data$phq15_011, .data$phq15_012, .data$phq15_013, .data$phq15_014, .data$phq15_015),
+                  ecu_phq15_cat = categorize_phq15_ecu(.data$ecu_phq15_sum))
+  
+  labelled::var_label(trial_data[["phq15"]]) <- list(
+    ecu_phq15_sum = "",
+    ecu_phq15_cat = ""
+  )
+  
+  return(trial_data)
+}
+
+
+## Patient Health Questionnaire Stress Scale (PHQ-Stress) ========================
+
+#' Primary coding Patient Health Questionnaire Stress Scale (PHQ-Stress)
+#' 
+#' adds the following column to phqs: 
+#' ecu_phqs_sum, ecu_phqs_cat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_phqs <- function(trial_data) {
+  
+  trial_data[["phqs"]] <- trial_data[["phqs"]] %>%
+    dplyr::mutate(ecu_phqs_sum = calculate_phqs_sum(.data$phqs_001, .data$phqs_002, .data$phqs_003, .data$phqs_004, .data$phqs_005, 
+                                                    .data$phqs_006, .data$phqs_007, .data$phqs_008, .data$phqs_009, .data$phqs_010),
+                  ecu_phqs_cat = categorize_phqs_ecu(.data$ecu_phqs_sum))
+  
+  labelled::var_label(trial_data[["phqs"]]) <- list(
+    ecu_phqs_sum = "",
+    ecu_phqs_cat = ""
+  )
+  
+  return(trial_data)
+}
+
+
 # RAPID REVIVE Wrapper primary coding ==========================================
 
 #' Primary coding RAPID REVIVE Data
@@ -338,6 +422,24 @@ primary_coding_rapid_revive <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_rapid_revive_moca(trial_data)},
            error = function(e) {
              warning("primary_coding_rapid_revive_moca() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Patient Health Questionnaire Depession Scale (PHQ-9) ======================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_phq9(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_phq9() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15) ======
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_phq15(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_phq15() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Patient Health Questionnaire Stress Scale (PHQ-Stress) ======================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_phqs(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_phqs() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
