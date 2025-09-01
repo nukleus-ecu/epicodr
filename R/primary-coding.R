@@ -288,7 +288,7 @@ categorize_heartfrequency_ecu <- function(hf){
   factor(
     case_when(hf < 60 ~ "Bradykardie", 
               hf < 100 ~ "Physiologisch", 
-              hf >= 100 ~ "Tachikardie")
+              hf >= 100 ~ "Tachykardie")
   )
 }
 

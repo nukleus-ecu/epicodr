@@ -45,7 +45,7 @@ clean_cs <- function(x){
 # structure of functions with the prefix primary_coding_rapid_revive 
 # The functions create one or more new columns (using mutate)
 # the functions return the trial data including new columns
-# in the last step of this script, in the function primary_coding_pop(), all selected primary_coding_rapid_revive steps are performed consecutively. 
+# in the last step of this script, in the function primary_coding_rapid_revive(), all selected primary_coding_rapid_revive steps are performed consecutively. 
 # this is the function which will be called in the run script to create trial_data from trial_data_raw
 
 ## Age =========================================================================
@@ -136,6 +136,57 @@ primary_coding_rapid_revive_bp <- function(trial_data) {
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_bp = ""
+  )
+  
+  return (trial_data)
+}
+
+
+## Heart frequency ==============================================================
+
+#' Primary coding heart frequency
+#'
+#' adds the following columns to vital: 
+#' ecu_hr
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_rapid_revive_hf <- function(trial_data) {
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
+    dplyr::mutate(ecu_hf = categorize_heartfrequency_ecu(.data$vital_freq))
+  
+  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
+    ecu_hf = ""
+  )
+  
+  return (trial_data)
+}
+
+
+## Respiration rate sensor-based measurement (night) ==============================================================
+
+#' Primary coding respiration rate
+#'
+#' adds the following columns to vital: 
+#' ecu_rr
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_rapid_revive_resp_rate <- function(trial_data) {
+  table_names <- names(trial_data)
+  trial_data[[grep("^_?eohrsub$", table_names)]] <- trial_data[[grep("^_?eohrsub$", table_names)]] %>%
+    dplyr::mutate(ecu_os_resp_rate = categorize_resp_rate_ecu(.data$os_nocrr))
+  
+  labelled::var_label(trial_data[[grep("^_?eohrsub$", table_names)]]) <- list(
+    ecu_os_resp_rate = ""
   )
   
   return (trial_data)
@@ -410,6 +461,18 @@ primary_coding_rapid_revive <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_rapid_revive_bp(trial_data)},
            error = function(e) {
              warning("primary_coding_rapid_revive_bp() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Heart frequency ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_hf(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_hf() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Respiration rate ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_resp_rate(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_resp_rate() did not work. This is likely due to missing variables.")
              print(e)})
   
   ## Fatigue Severity Scale (FSS) ==============================================
