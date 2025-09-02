@@ -463,6 +463,126 @@ primary_coding_rapid_revive_pem <- function(trial_data) {
 }
 
 
+## Short Form Survey Instrument (SF-36) ========================================
+
+#' Short Form Survey Instrument (SF-36) questionnaire
+#' 
+#' adds the following column to sf36: 
+#' ecu_sf_013, ecu_sf_014, ecu_sf_015, ecu_sf_016. ecu_sf_017, v18, ecu_sf_019 (recoded items)
+#' ecu_sf_001p, ecu_sf_002p, ecu_sf_003p, ecu_sf_004p, ecu_sf_005p, ecu_sf_006p, ecu_sf_007p, ecu_sf_008p, ecu_sf_009p,
+#' ecu_sf_010p, ecu_sf_011p, ecu_sf_012p, ecu_sf_013p, ecu_sf_014p, ecu_sf_015p, ecu_sf_016p, ecu_sf_017p, ecu_sf_018p,
+#' ecu_sf_019p, ecu_sf_020p, ecu_sf_021p, ecu_sf_022p, ecu_sf_023p, ecu_sf_024p, ecu_sf_025p, ecu_sf_026p, ecu_sf_027p,
+#' ecu_sf_028p, ecu_sf_029p, ecu_sf_030p, ecu_sf_031p, ecu_sf_032p, ecu_sf_033p, ecu_sf_034p, ecu_sf_035p, ecu_sf_036p (points)
+#' ecu_sf_phys, ecu_sf_rl_phys, ecu_sf_rl_emot, ecu_sf_vitality, ecu_sf_wb, ecu_sf_social, ecu_sf_pain, ecu_sf_general,
+#' ecu_sf_hc (mean values)
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_sf36 <- function (trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?sf36$", table_names)]] <- trial_data[[grep("^_?sf36$", table_names)]] %>%
+    mutate(ecu_sf_013 = recode_sf36(.data$sf_013.factor),
+           ecu_sf_014 = recode_sf36(.data$sf_014.factor),
+           ecu_sf_015 = recode_sf36(.data$sf_015.factor), 
+           ecu_sf_016 = recode_sf36(.data$sf_016.factor),
+           ecu_sf_017 = recode_sf36(.data$sf_017.factor),
+           ecu_sf_018 = recode_sf36(.data$sf_018.factor),
+           ecu_sf_019 = recode_sf36(.data$sf_019.factor),
+           ecu_sf_001p = calculate_sf36_points1(.data$sf_001),
+           ecu_sf_002p = calculate_sf36_points1(.data$sf_002),
+           ecu_sf_003p = calculate_sf36_points2(.data$sf_003),
+           ecu_sf_004p = calculate_sf36_points2(.data$sf_004),
+           ecu_sf_005p = calculate_sf36_points2(.data$sf_005),
+           ecu_sf_006p = calculate_sf36_points2(.data$sf_006),
+           ecu_sf_007p = calculate_sf36_points2(.data$sf_007), 
+           ecu_sf_008p = calculate_sf36_points2(.data$sf_008), 
+           ecu_sf_009p = calculate_sf36_points2(.data$sf_009), 
+           ecu_sf_010p = calculate_sf36_points2(.data$sf_010), 
+           ecu_sf_011p = calculate_sf36_points2(.data$sf_011),
+           ecu_sf_012p = calculate_sf36_points2(.data$sf_012),
+           ecu_sf_013p = calculate_sf36_points3(.data$ecu_sf_013),
+           ecu_sf_014p = calculate_sf36_points3(.data$ecu_sf_014),
+           ecu_sf_015p = calculate_sf36_points3(.data$ecu_sf_015),
+           ecu_sf_016p = calculate_sf36_points3(.data$ecu_sf_016),
+           ecu_sf_017p = calculate_sf36_points3(.data$ecu_sf_017),
+           ecu_sf_018p = calculate_sf36_points3(.data$ecu_sf_018),
+           ecu_sf_019p = calculate_sf36_points3(.data$ecu_sf_019),
+           ecu_sf_020p = calculate_sf36_points1(.data$sf_020), 
+           ecu_sf_021p = calculate_sf36_points4(.data$sf_021),
+           ecu_sf_022p = calculate_sf36_points1(.data$sf_022),
+           ecu_sf_023p = calculate_sf36_points4(.data$sf_023),
+           ecu_sf_024p = calculate_sf36_points5(.data$sf_024),
+           ecu_sf_025p = calculate_sf36_points5(.data$sf_025),
+           ecu_sf_026p = calculate_sf36_points4(.data$sf_026),
+           ecu_sf_027p = calculate_sf36_points4(.data$sf_027),
+           ecu_sf_028p = calculate_sf36_points5(.data$sf_028),
+           ecu_sf_029p = calculate_sf36_points5(.data$sf_029),
+           ecu_sf_030p = calculate_sf36_points4(.data$sf_030),
+           ecu_sf_031p = calculate_sf36_points5(.data$sf_031),
+           ecu_sf_032p = calculate_sf36_points6(.data$sf_032),
+           ecu_sf_033p = calculate_sf36_points6(.data$sf_033),
+           ecu_sf_034p = calculate_sf36_points1(.data$sf_034),
+           ecu_sf_035p = calculate_sf36_points6(.data$sf_035), 
+           ecu_sf_036p = calculate_sf36_points1(.data$sf_036),
+           ecu_sf_phys = (.data$ecu_sf_003p + .data$ecu_sf_004p + .data$ecu_sf_005p + .data$ecu_sf_006p + .data$ecu_sf_007p +
+                              .data$ecu_sf_008p + .data$ecu_sf_009p + .data$ecu_sf_010p + .data$ecu_sf_011p + .data$ecu_sf_012p) / 10,
+           ecu_sf_rl_phys = (.data$ecu_sf_013p + .data$ecu_sf_014p + .data$ecu_sf_015p + .data$ecu_sf_016p) / 4,
+           ecu_sf_rl_emot = (.data$ecu_sf_017p + .data$ecu_sf_018p + .data$ecu_sf_019p) / 3,
+           ecu_sf_vitality = (.data$ecu_sf_023p + .data$ecu_sf_027p + .data$ecu_sf_029p + .data$ecu_sf_031p) / 4,
+           ecu_sf_wb = (.data$ecu_sf_024p + .data$ecu_sf_025p + .data$ecu_sf_026p + .data$ecu_sf_028p + .data$ecu_sf_030p) / 5,
+           ecu_sf_social = (.data$ecu_sf_020p + .data$ecu_sf_032p) / 2,
+           ecu_sf_pain = (.data$ecu_sf_021p + .data$ecu_sf_022p) / 2,
+           ecu_sf_general = (.data$ecu_sf_001p + .data$ecu_sf_033p + .data$ecu_sf_034p + .data$ecu_sf_035p + .data$ecu_sf_036p) / 5,
+           ecu_sf_hc = .data$ecu_sf_002p)
+  
+    labelled::var_label(trial_data[[grep("^_?sf36$", table_names)]]) <- list(
+      ecu_sf_001p = "",
+      ecu_sf_002p = "",
+      ecu_sf_003p = "",
+      ecu_sf_004p = "",
+      ecu_sf_005p = "",
+      ecu_sf_006p = "",
+      ecu_sf_007p = "",
+      ecu_sf_008p = "",
+      ecu_sf_009p = "",
+      ecu_sf_010p = "",
+      ecu_sf_011p = "",
+      ecu_sf_012p = "",
+      ecu_sf_013 = "", ecu_sf_013p = "",
+      ecu_sf_014 = "", ecu_sf_014p = "",
+      ecu_sf_015 = "", ecu_sf_015p = "",
+      ecu_sf_016 = "", ecu_sf_016p = "",
+      ecu_sf_017 = "", ecu_sf_017p = "", 
+      ecu_sf_018 = "", ecu_sf_018p = "", 
+      ecu_sf_019 = "", ecu_sf_019p = "",
+      ecu_sf_020p = "", 
+      ecu_sf_021p = "",
+      ecu_sf_022p = "",
+      ecu_sf_023p = "",
+      ecu_sf_024p = "",
+      ecu_sf_025p = "",
+      ecu_sf_026p = "",
+      ecu_sf_027p = "",
+      ecu_sf_028p = "",
+      ecu_sf_029p = "",
+      ecu_sf_030p = "",
+      ecu_sf_031p = "",
+      ecu_sf_032p = "",
+      ecu_sf_033p = "",
+      ecu_sf_034p = "",
+      ecu_sf_035p = "",
+      ecu_sf_036p = "",
+      ecu_sf_phys = "", ecu_sf_rl_phys = "", ecu_sf_rl_emot = "", ecu_sf_vitality = "", ecu_sf_wb = "", 
+      ecu_sf_social = "", ecu_sf_pain = "", ecu_sf_general = "", ecu_sf_hc = ""
+    )
+  
+  return(trial_data)
+  
+}
 
 # RAPID REVIVE Wrapper primary coding ==========================================
 
@@ -572,8 +692,139 @@ primary_coding_rapid_revive <- function(trial_data) {
              warning("primary_coding_rapid_revive_pem() did not work. This is likely due to missing variables.")
              print(e)})
   
+  ## Short Form Survey Instrument (SF-36) ======================================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_sf36(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_sf36() did not work. This is likely due to missing variables.")
+             print(e)})
+  
   catw("Primary Coding done")
   
   return(trial_data)
+}
+
+
+# SUEP helper functions for primary coding =====================================
+
+## Recoding ====================================================================
+
+### Short Form Survey Instrument (SF-36) =======================================
+
+#' Recode Short Form Survey Instrument (SF-36) items
+#' 
+#' @description item coding is wrong in some items of SF-36 questionnaire
+#' current levels: 1 = "Yes" and 0  = "No"
+#' needed levels: 1 = "Yes" and 2 = "No" 
+#' function recodes items to needed levels if they were coded incorrectly
+#' 
+#' @param sf36_item.factor SF-36 item that needs recoding
+
+recode_sf36 <- function(sf36_item.factor) {
+  
+  case_when(sf36_item.factor == "Ja" ~ 1,
+            sf36_item.factor == "Nein" ~ 2)
+  
+}
+
+
+## Short Form Survey Instrument (SF-36) ========================================
+
+#' Add points to SF-36 items - 5 groups, downward grading
+#' 
+#' @description each answer in SF-36 questionnaire corresponds to a specific amount of points, which differ between items
+#' this function adds points for items with 5 possible answers, downward grading
+#' 
+#' @param sf36 SF-36 item that gets points
+
+calculate_sf36_points1 <- function(sf36) {
+  
+  case_when(sf36 == 5 ~ 0,
+            sf36 == 4 ~ 25,
+            sf36 == 3 ~ 50,
+            sf36 == 2 ~ 75,
+            sf36 == 1 ~ 100)
+  
+}
+
+#' Add points to SF-36 items - 3 groups
+#' 
+#' @description each answer in SF-36 questionnaire corresponds to a specific amount of points, which differ between items
+#' this function adds points for items with 3 possible answers 
+#' 
+#' @param sf36 SF-36 item that gets points
+
+calculate_sf36_points2 <- function(sf36) {
+  
+  case_when(sf36 == 1 ~ 0,
+            sf36 == 2 ~ 50,
+            sf36 == 3 ~ 100)
+  
+}
+
+#' Add points to SF-36 items - 2 groups
+#' 
+#' @description each answer in SF-36 questionnaire corresponds to a specific amount of points, which differ between items
+#' this function adds points for items with 2 possible answers 
+#' 
+#' @param sf36 SF-36 item that gets points
+
+calculate_sf36_points3 <- function(sf36) {
+  
+  case_when(sf36 == 2 ~ 100,
+            sf36 == 1 ~ 0)
+  
+}
+
+#' Add points to SF-36 items - 6 groups, downward grading
+#' 
+#' @description each answer in SF-36 questionnaire corresponds to a specific amount of points, which differ between items
+#' this function adds points for items with 6 possible answers with downward grading
+#' 
+#' @param sf36 SF-36 item that gets points
+
+calculate_sf36_points4 <- function(sf36) {
+  
+  case_when(sf36 == 1 ~ 100,
+            sf36 == 2 ~ 80,
+            sf36 == 3 ~ 60,
+            sf36 == 4 ~ 40,
+            sf36 == 5 ~ 20,
+            sf36 == 6 ~ 0)
+  
+}
+
+#' Add points to SF-36 items - 6 groups, upward grading
+#' 
+#' @description each answer in SF-36 questionnaire corresponds to a specific amount of points, which differ between items
+#' this function adds points for items with 5 possible answers, upward grading
+#' 
+#' @param sf36 SF-36 item that gets points
+
+calculate_sf36_points5 <- function(sf36) {
+  
+  case_when(sf36 == 6 ~ 100,
+            sf36 == 5 ~ 80,
+            sf36 == 4 ~ 60,
+            sf36 == 3 ~ 40,
+            sf36 == 2 ~ 20,
+            sf36 == 1 ~ 0)
+  
+}
+
+#' Add points to SF-36 items - 5 groups, upward grading
+#' 
+#' @description each answer in SF-36 questionnaire corresponds to a specific amount of points, which differ between items
+#' this function adds points for items with 5 possible answers, upward grading
+#' 
+#' @param sf36 SF-36 item that gets points
+
+calculate_sf36_points6 <- function(sf36) {
+  
+  case_when(sf36 == 5 ~ 100,
+            sf36 == 4 ~ 75,
+            sf36 == 3 ~ 50,
+            sf36 == 2 ~ 25,
+            sf36 == 1 ~ 0)
+  
 }
 
