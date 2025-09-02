@@ -66,7 +66,7 @@ primary_coding_rapid_revive_age <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
-    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the birthdate to July 1st as middle of the respective year
+    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the birthdate to June 30th as middle of the respective year
     dplyr::mutate(ecu_demo_birth_new = ymd(paste0(.data$demo_birth, "-06-30")), 
                   ecu_age = calculate_full_years(from = .data$ecu_demo_birth_new, to = .data$demo_date.date),
                   ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
