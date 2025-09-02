@@ -147,7 +147,7 @@ primary_coding_rapid_revive_bp <- function(trial_data) {
 #' Primary coding heart frequency
 #'
 #' adds the following columns to vital: 
-#' ecu_hr
+#' ecu_hf
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -155,6 +155,7 @@ primary_coding_rapid_revive_bp <- function(trial_data) {
 #' @export
 
 primary_coding_rapid_revive_hf <- function(trial_data) {
+  
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
@@ -172,8 +173,8 @@ primary_coding_rapid_revive_hf <- function(trial_data) {
 
 #' Primary coding respiration rate
 #'
-#' adds the following columns to vital: 
-#' ecu_rr
+#' adds the following columns to eohrsub: 
+#' ecu_os_resp_rate
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -181,7 +182,9 @@ primary_coding_rapid_revive_hf <- function(trial_data) {
 #' @export
 
 primary_coding_rapid_revive_resp_rate <- function(trial_data) {
+  
   table_names <- names(trial_data)
+  
   trial_data[[grep("^_?eohrsub$", table_names)]] <- trial_data[[grep("^_?eohrsub$", table_names)]] %>%
     dplyr::mutate(ecu_os_resp_rate = categorize_resp_rate_ecu(.data$os_nocrr))
   
@@ -244,11 +247,13 @@ primary_coding_rapid_revive_fss <- function(trial_data) {
 
 primary_coding_rapid_revive_gad7 <- function(trial_data) {
   
-  trial_data[["gad7"]] <- trial_data[["gad7"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?gad7$", table_names)]] <- trial_data[[grep("^_?gad7$", table_names)]] %>%
     mutate(ecu_gad7_sum = calculate_gad7_sum(.data$gad7_001, .data$gad7_002, .data$gad7_003, .data$gad7_004, .data$gad7_005, .data$gad7_006, .data$gad7_007),
            ecu_gad7_cat = categorize_gad7_ecu(.data$ecu_gad7_sum))
   
-  labelled::var_label(trial_data[["gad7"]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?gad7$", table_names)]]) <- list(
     ecu_gad7_sum = "",
     ecu_gad7_cat = ""
   )
@@ -271,15 +276,16 @@ primary_coding_rapid_revive_gad7 <- function(trial_data) {
 
 primary_coding_rapid_revive_mmrc <- function(trial_data) {
   
-  trial_data[["mmrc"]] <- trial_data[["mmrc"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?mmrc$", table_names)]] <- trial_data[[grep("^_?mmrc$", table_names)]] %>%
     mutate(ecu_mmrc = case_when(
       .data$mmrc_sym == 0 ~ "No Dyspnea",
       .data$mmrc_sym > 0 ~ "Dyspnea",
       TRUE ~ NA
     ))
-              #categorize_mmrc_ecu(.data$mmrc_sym.factor)) 
   
-  labelled::var_label(trial_data[["mmrc"]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?mmrc$", table_names)]]) <- list(
     ecu_mmrc = ""
   )
   
@@ -344,13 +350,15 @@ primary_coding_rapid_revive_moca <- function(trial_data) {
 
 primary_coding_rapid_revive_phq9 <- function(trial_data) {
   
-  trial_data[["phq9"]] <- trial_data[["phq9"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?phq9$", table_names)]] <- trial_data[[grep("^_?phq9$", table_names)]] %>%
     dplyr::mutate(ecu_phq9_sum = calculate_phq9_sum(.data$phq9_001, .data$phq9_002, .data$phq9_003, .data$phq9_004, .data$phq9_005, 
                                                     .data$phq9_006, .data$phq9_007, .data$phq9_008, .data$phq9_009),
                   ecu_phq9_cat = categorize_phq9_ecu(.data$ecu_phq9_sum),
                   ecu_phq9_cat_2 = categorize_phq9_ecu_2(.data$ecu_phq9_sum))
   
-  labelled::var_label(trial_data[["phq9"]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?phq9$", table_names)]]) <- list(
     ecu_phq9_sum = "",
     ecu_phq9_cat = "",
     ecu_phq9_cat_2 = ""
@@ -373,13 +381,15 @@ primary_coding_rapid_revive_phq9 <- function(trial_data) {
 
 primary_coding_rapid_revive_phq15 <- function(trial_data) {
   
-  trial_data[["phq15"]] <- trial_data[["phq15"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?phq15$", table_names)]] <- trial_data[[grep("^_?phq15$", table_names)]] %>%
     dplyr::mutate(ecu_phq15_sum = calculate_phq15_sum(.data$phq15_001, .data$phq15_002, .data$phq15_003, .data$phq15_004, .data$phq15_005, 
                                                     .data$phq15_006, .data$phq15_007, .data$phq15_008, .data$phq15_009, .data$phq15_010,
                                                     .data$phq15_011, .data$phq15_012, .data$phq15_013, .data$phq15_014, .data$phq15_015),
                   ecu_phq15_cat = categorize_phq15_ecu(.data$ecu_phq15_sum))
   
-  labelled::var_label(trial_data[["phq15"]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?phq15$", table_names)]]) <- list(
     ecu_phq15_sum = "",
     ecu_phq15_cat = ""
   )
@@ -401,18 +411,57 @@ primary_coding_rapid_revive_phq15 <- function(trial_data) {
 
 primary_coding_rapid_revive_phqs <- function(trial_data) {
   
-  trial_data[["phqs"]] <- trial_data[["phqs"]] %>%
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?phqs$", table_names)]] <- trial_data[[grep("^_?phqs$", table_names)]] %>%
     dplyr::mutate(ecu_phqs_sum = calculate_phqs_sum(.data$phqs_001, .data$phqs_002, .data$phqs_003, .data$phqs_004, .data$phqs_005, 
                                                     .data$phqs_006, .data$phqs_007, .data$phqs_008, .data$phqs_009, .data$phqs_010),
                   ecu_phqs_cat = categorize_phqs_ecu(.data$ecu_phqs_sum))
   
-  labelled::var_label(trial_data[["phqs"]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?phqs$", table_names)]]) <- list(
     ecu_phqs_sum = "",
     ecu_phqs_cat = ""
   )
   
   return(trial_data)
 }
+
+
+## Post Exertional Malaise (PEM) questionnaire =================================
+
+#' Primary coding Post Exertional Malaise (PEM) questionnaire
+#' 
+#' adds the following column to pem: 
+#' ecu_pem, ecu_mecfs
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_rapid_revive_pem <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?pem$", table_names)]] <- trial_data[[grep("^_?pem$", table_names)]] %>%
+    mutate(ecu_pem = case_when((.data$pem_001 >= 2 & .data$pem_002 >= 2) |
+                                 (.data$pem_003 >= 2 & .data$pem_004 >= 2) |
+                                 (.data$pem_005 >= 2 & .data$pem_006 >= 2) |
+                                 (.data$pem_007 >= 2 & .data$pem_008 >= 2) |
+                                 (.data$pem_009 >= 2 & .data$pem_010 >= 2) ~ "PEM screening positive",
+                               .data$pem_001 < 2 & .data$pem_002 < 2 & .data$pem_003 < 2 & .data$pem_004 < 2 &
+                                 .data$pem_005 < 2 & .data$pem_006 < 2 & .data$pem_007 < 2 & .data$pem_008 < 2 &
+                                 .data$pem_009 < 2 & .data$pem_010 < 2 ~ "PEM screening negative"),
+           ecu_mecfs = case_when(.data$pem_012 == 1 | .data$pem_013 == 1 | .data$pem_014 >= 5 ~ "Indication for ME/CFS",
+                                 .data$pem_012 == 0 & .data$pem_013 == 0 & .data$pem_014 < 5 ~ "No indication for ME/CFS"))
+  
+  labelled::var_label(trial_data[[grep("^_?pem$", table_names)]]) <- list(
+    ecu_pem = "",
+    ecu_mecfs = ""
+  )
+  
+  return(trial_data)
+}
+
 
 
 # RAPID REVIVE Wrapper primary coding ==========================================
@@ -499,10 +548,16 @@ primary_coding_rapid_revive <- function(trial_data) {
              warning("primary_coding_rapid_revive_phq15() did not work. This is likely due to missing variables.")
              print(e)})
   
-  ## Patient Health Questionnaire Stress Scale (PHQ-Stress) ======================
+  ## Patient Health Questionnaire Stress Scale (PHQ-Stress) ====================
   tryCatch(expr = {trial_data <- primary_coding_rapid_revive_phqs(trial_data)},
            error = function(e) {
              warning("primary_coding_rapid_revive_phqs() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Post Exertional Malaise (PEM) questionnaire ===============================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_pem(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_pem() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")

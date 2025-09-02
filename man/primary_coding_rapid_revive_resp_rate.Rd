@@ -10,6 +10,6 @@ primary_coding_rapid_revive_resp_rate(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following columns to vital: 
-ecu_rr
+adds the following columns to eohrsub: 
+ecu_os_resp_rate
 }

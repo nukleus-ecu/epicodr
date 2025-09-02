@@ -11,5 +11,5 @@ primary_coding_rapid_revive_hf(trial_data)
 }
 \description{
 adds the following columns to vital: 
-ecu_hr
+ecu_hf
 }
