@@ -257,7 +257,7 @@ primary_coding_rapid_revive_gad7 <- function(trial_data) {
 }
 
 
-## modified Medical Research Council Dyspnea Scale (mMRC) ======================
+## Modified Medical Research Council Dyspnea Scale (mMRC) ======================
 
 #' Primary coding modified Medical Research Council Dyspnea Scale (mMRC)
 #' 
@@ -479,6 +479,18 @@ primary_coding_rapid_revive <- function(trial_data) {
     tryCatch(expr = {trial_data <- primary_coding_rapid_revive_fss(trial_data)},
            error = function(e) {
              warning("primary_coding_rapid_revive_fss() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Generalized Anxiety Disorder 7 (GAD-7) ====================================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_gad7(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_moca() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Modified Medical Research Council Dyspnea Scale (mMRC) ====================
+  tryCatch(expr = {trial_data <- primary_coding_rapid_revive_mmrc(trial_data)},
+           error = function(e) {
+             warning("primary_coding_rapid_revive_moca() did not work. This is likely due to missing variables.")
              print(e)})
   
   ## Montreal Cognitive Assessment (MoCA) ======================================
