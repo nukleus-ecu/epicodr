@@ -52,7 +52,7 @@ clean_cs <- function(x){
 
 #' Primary coding age
 #'
-#' adds the following columns to demo: 
+#' adds the following columns to patinf: 
 #' ecu_age_cat_dec - age in decades, ecu_age_cat_3 - age in 3 categories 
 #'
 #' @param trial_data A secuTrial data object
@@ -68,7 +68,7 @@ primary_coding_snid_age <- function(trial_data) {
   trial_data[[grep("^_?patinf$", table_names)]] <- trial_data[[grep("^_?patinf$", table_names)]] %>% 
     # get date of signed informed consent
     dplyr::left_join(trial_data[[grep("^_?ic$", table_names)]] %>% select(mnppid,ic_infcons_date.date), by = "mnppid") %>%
-    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the birthdate to June 30th as middle of the respective year
+    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the date of birth to June 30th as middle of the respective year
     dplyr::mutate(ecu_patinf_birthyear_new = ymd(paste0(.data$patinf_birthyear, "-06-30")),
                   ecu_age = calculate_full_years(from = .data$ecu_patinf_birthyear_new, to = .data$ic_infcons_date.date),
                   ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
@@ -82,6 +82,38 @@ primary_coding_snid_age <- function(trial_data) {
   return(trial_data)
 }
 
+## BMI =========================================================================
+
+#' Primary coding Body Mass Index (BMI)
+#'
+#' adds the following columns to patinf: 
+#' ecu_bmi, ecu_bmi_cat, ecu_adipositas
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @importFrom forcats fct_collapse
+#' @import dplyr
+#' @export
+
+primary_coding_snid_bmi <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?patinf$", table_names)]] <- trial_data[[grep("^_?patinf$", table_names)]] %>%
+    dplyr::mutate(ecu_bmi = calculate_bmi(.data$patinf_weight, .data$patinf_height),
+                  ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
+                  ecu_bmi_adipositas = dplyr::case_when(!is.na(.data$ecu_bmi_cat) ~  forcats::fct_collapse(.data$ecu_bmi_cat,
+                                                                                                           Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
+                                                                                                           Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
+  
+  labelled::var_label(trial_data[[grep("^_?patinf$", table_names)]]) <- list(
+    ecu_bmi = "",
+    ecu_bmi_cat = "",
+    ecu_bmi_adipositas = ""
+  )
+  
+  return (trial_data)
+}
 
 # SNID Wrapper primary coding ==========================================
 
@@ -116,6 +148,12 @@ primary_coding_snid <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_snid_age(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_age() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## BMI =========================================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_bmi(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_bmi() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")

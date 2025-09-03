@@ -66,7 +66,7 @@ primary_coding_rapid_revive_age <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?demo$", table_names)]] <- trial_data[[grep("^_?demo$", table_names)]] %>%
-    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the birthdate to June 30th as middle of the respective year
+    # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the date of birth to June 30th as middle of the respective year
     dplyr::mutate(ecu_demo_birth_new = ymd(paste0(.data$demo_birth, "-06-30")), 
                   ecu_age = calculate_full_years(from = .data$ecu_demo_birth_new, to = .data$demo_date.date),
                   ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
@@ -85,7 +85,7 @@ primary_coding_rapid_revive_age <- function(trial_data) {
 
 #' Primary coding Body Mass Index (BMI)
 #'
-#' adds the following columns to anthropo: 
+#' adds the following columns to demo: 
 #' ecu_bmi, ecu_bmi_cat, ecu_adipositas
 #'
 #' @param trial_data A secuTrial data object
@@ -105,7 +105,7 @@ primary_coding_rapid_revive_bmi <- function(trial_data) {
                                                                                            Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
                                                                                            Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
   
-  labelled::var_label(trial_data[["demo"]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?demo$", table_names)]]) <- list(
     ecu_bmi = "",
     ecu_bmi_cat = "",
     ecu_bmi_adipositas = ""
