@@ -10,6 +10,6 @@ primary_coding_rapid_revive_bmi(trial_data)
 \item{trial_data}{A secuTrial data object}
 }
 \description{
-adds the following columns to anthropo: 
+adds the following columns to demo: 
 ecu_bmi, ecu_bmi_cat, ecu_adipositas
 }

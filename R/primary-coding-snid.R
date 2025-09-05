@@ -17,7 +17,7 @@ catw <- function(..., callstack=sys.calls()){
   cs <- clean_cs(cs)
   
   
-  #browser()
+  
   message(paste(cs, ...))
 }
 
@@ -115,6 +115,59 @@ primary_coding_snid_bmi <- function(trial_data) {
   return (trial_data)
 }
 
+
+## Heart frequency ==============================================================
+
+#' Primary coding heart frequency
+#'
+#' adds the following columns to vital: 
+#' XXXXXXXXXX
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_hf <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
+    dplyr::mutate(ecu_hf = categorize_heartfrequency_ecu(.data$vital_freq))
+  
+  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
+    ecu_hf = ""
+  )
+  
+  return (trial_data)
+}
+
+## Respiration rate measurement (max of day) ==============================================================
+
+#' Primary coding respiration rate
+#'
+#' adds the following columns to vital: 
+#' ecu_resp_rate
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_resp_rate <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
+    dplyr::mutate(ecu_resp_rate = categorize_resp_rate_ecu(.data$vital_resp))
+  
+  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
+    ecu_resp_rate = ""
+  )
+  
+  return (trial_data)
+}
+
 # SNID Wrapper primary coding ==========================================
 
 #' Primary coding SNID Data
@@ -142,7 +195,7 @@ primary_coding_snid <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid 
   visitid <- trial_data$export_options$id_names$visitid
   docid <- trial_data$export_options$id_names$docid
-  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?demo$", table_names)]]), "mnpvislabel", "visit_name")
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?patinf$", table_names)]]), "mnpvislabel", "visit_name")
   
   ## Age =======================================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_age(trial_data)},
@@ -154,6 +207,18 @@ primary_coding_snid <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_snid_bmi(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_bmi() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Heart frequency ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_hf(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_hf() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Respiration rate ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_resp_rate(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_resp_rate() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
