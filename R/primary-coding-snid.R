@@ -168,6 +168,33 @@ primary_coding_snid_resp_rate <- function(trial_data) {
   return (trial_data)
 }
 
+## Oxygen Saturation (lowest) ==============================================================
+
+#' Primary coding respiration rate
+#'
+#' adds the following columns to vital: 
+#' ecu_oxy_sat
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_oxy_sat <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
+    dplyr::mutate(ecu_oxy_sat = categorize_oxigensaturation_ecu(.data$vital_spo2))
+  
+  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
+    ecu_oxy_sat = ""
+  )
+  
+  return (trial_data)
+}
+
+
 # SNID Wrapper primary coding ==========================================
 
 #' Primary coding SNID Data
@@ -220,6 +247,13 @@ primary_coding_snid <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_snid_resp_rate() did not work. This is likely due to missing variables.")
              print(e)})
+  
+  ## Oxygen saturation ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_oxy_sat(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_oxy_sat() did not work. This is likely due to missing variables.")
+             print(e)})
+  
   
   catw("Primary Coding done")
   
