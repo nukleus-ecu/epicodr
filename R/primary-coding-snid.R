@@ -121,7 +121,7 @@ primary_coding_snid_bmi <- function(trial_data) {
 #' Primary coding heart frequency
 #'
 #' adds the following columns to vital: 
-#' XXXXXXXXXX
+#' ecu_hf
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -142,6 +142,32 @@ primary_coding_snid_hf <- function(trial_data) {
   return (trial_data)
 }
 
+
+## Temperature ==============================================================
+
+#' Primary coding temperature
+#'
+#' adds the following columns to vital: 
+#' ecu_temp
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_temp <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
+    dplyr::mutate(ecu_temp = categorize_temp_ecu(.data$vital_temp))
+  
+  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
+    ecu_temp = ""
+  )
+  
+  return (trial_data)
+}
 ## Respiration rate measurement (max of day) ==============================================================
 
 #' Primary coding respiration rate
@@ -170,7 +196,7 @@ primary_coding_snid_resp_rate <- function(trial_data) {
 
 ## Oxygen Saturation (lowest) ==============================================================
 
-#' Primary coding respiration rate
+#' Primary coding Oxygen Saturation
 #'
 #' adds the following columns to vital: 
 #' ecu_oxy_sat
@@ -193,6 +219,34 @@ primary_coding_snid_oxy_sat <- function(trial_data) {
   
   return (trial_data)
 }
+
+## Glasgow Coma Scale ==============================================================
+
+#' Primary coding Glasgow Coma Scale
+#'
+#' adds the following columns to vital: 
+#' ecu_gcs
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_gcs <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
+    dplyr::mutate(ecu_gcs = categorize_gcs_ecu(.data$vital_gcs))
+  
+  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
+    ecu_gcs = ""
+  )
+  
+  return (trial_data)
+}
+
+
 
 
 # SNID Wrapper primary coding ==========================================
@@ -242,6 +296,12 @@ primary_coding_snid <- function(trial_data) {
              warning("primary_coding_snid_hf() did not work. This is likely due to missing variables.")
              print(e)})
   
+  ## Temperature ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_temp(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_temp() did not work. This is likely due to missing variables.")
+             print(e)})
+  
   ## Respiration rate ============================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_resp_rate(trial_data)},
            error = function(e) {
@@ -252,6 +312,12 @@ primary_coding_snid <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_snid_oxy_sat(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_oxy_sat() did not work. This is likely due to missing variables.")
+             print(e)})
+  
+  ## Glasgow Coma Scale ============================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_gcs(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_gcs() did not work. This is likely due to missing variables.")
              print(e)})
   
   

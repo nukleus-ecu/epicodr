@@ -11,5 +11,5 @@ primary_coding_snid_hf(trial_data)
 }
 \description{
 adds the following columns to vital: 
-XXXXXXXXXX
+ecu_hf
 }
