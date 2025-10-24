@@ -362,8 +362,8 @@ categorize_gcs_ecu <-  function(gcs){
     case_when(
       gcs <= 8 ~ "Schwere Hirnsch\u00e4digung", 
       gcs <= 12 ~ "Mittelschwere Hirnsch\u00e4digung", 
-      gcs <= 15 ~ "Leichte Hirnsch\u00e4digung", 
-      gcs > 15 ~ "Keine Hirnsch\u00e4digung"))
+      gcs < 15 ~ "Leichte Hirnsch\u00e4digung", 
+      gcs == 15 ~ "Keine Hirnsch\u00e4digung"))
 }
 
 
