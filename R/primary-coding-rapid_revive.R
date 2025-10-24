@@ -584,6 +584,9 @@ primary_coding_rapid_revive_sf36 <- function (trial_data) {
   
 }
 
+
+
+
 # RAPID REVIVE Wrapper primary coding ==========================================
 
 #' Primary coding RAPID REVIVE Data

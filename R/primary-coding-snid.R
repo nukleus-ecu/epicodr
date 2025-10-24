@@ -168,6 +168,40 @@ primary_coding_snid_resp_rate <- function(trial_data) {
   return (trial_data)
 }
 
+# Scores =======================================================================
+
+# the following scores are categorized according to primary coding:
+# EQ5D-5L
+
+# ============================================================================ #
+
+
+#' Primary coding EQ5D-5L-Index
+#' 
+#' adds the following column to erstbefragung: 
+#' ecu_eq5d_index
+#'
+#' @param trial_data A secuTrial data object
+#' @import eq5d
+#' @importFrom rlang .data
+#' @export
+
+primary_coding_snid_eq5d5l <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?eq5d5l$", table_names)]] <-  trial_data[[grep("^_?eq5d5l$", table_names)]] %>%
+    mutate (ecu_eq5d5l_index = calculate_eq5d5l_index(.data$eq5d5l_mob, .data$eq5d5l_care, .data$eq5d5l_act, .data$eq5d5l_pain, .data$eq5d5l_anx))
+  
+  labelled::var_label( trial_data[[grep("^_?eq5d5l$", table_names)]]) <- list(
+    ecu_eq5d5l_index = ""
+  )
+  
+  return(trial_data)
+}
+
+
+
 # SNID Wrapper primary coding ==========================================
 
 #' Primary coding SNID Data
@@ -219,6 +253,12 @@ primary_coding_snid <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_snid_resp_rate(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_resp_rate() did not work. This is likely due to missing variables.")
+             print(e)})
+  ## Scores ====================================================================
+  ### EQ-5D-5L =================================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_eq5d5l(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
   
   catw("Primary Coding done")
