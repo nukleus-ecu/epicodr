@@ -178,7 +178,7 @@ primary_coding_snid_resp_rate <- function(trial_data) {
 
 #' Primary coding EQ5D-5L-Index
 #' 
-#' adds the following column to erstbefragung: 
+#' adds the following column to eq5d5l: 
 #' ecu_eq5d_index
 #'
 #' @param trial_data A secuTrial data object
