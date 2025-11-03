@@ -1279,3 +1279,51 @@ categorize_fss_mean_ecu <- function(ecu_fss_mean) {
   return(ecu_fss_cat_2)
   
 }
+
+
+#' Label Meningitis Severity Score (MSS)
+#' 
+#' @description Label MSS
+#' 
+#' @param num_mss_value A numerical vector of the MSS score
+#' 
+#' @return Label to the numerical values of the MSS Score
+#' @export
+
+get_labels_mss <- function(num_mss_value){
+  
+  mss_label <- case_when(
+    num_mss_value == 0 ~ "No Symptoms",
+    num_mss_value == 1 ~ "Mild Symptoms",
+    num_mss_value == 2 ~ "Moderate Symptoms",
+    num_mss_value == 3 ~ "Severe Symptoms",
+    num_mss_value == 4 ~ "Critical Symptoms",
+    TRUE ~ NA
+  )
+  return(mss_label)
+}
+
+
+#' Label Modified Rankin Scale (mRS)
+#' 
+#' @description Label mRS
+#' 
+#' @param num_mrs_value A numerical vector of the mRS
+#' 
+#' @return Label to the numerical values of the mRS
+#' @export
+
+get_labels_mrs <- function(num_mrs_value){
+  
+  mrs_label <- case_when(
+    num_mrs_value == 0 ~ "No Symptoms",
+    num_mrs_value == 1 ~ "No significant disability",
+    num_mrs_value == 2 ~ "Slight disability",
+    num_mrs_value == 3 ~ "Moderate disability",
+    num_mrs_value == 4 ~ "Moderatly severe disability",
+    num_mrs_value == 5 ~ "Severe disabiliy",
+    num_mrs_value == 6 ~ "Dead",
+    TRUE ~ NA
+  )
+  return(mrs_label)
+}

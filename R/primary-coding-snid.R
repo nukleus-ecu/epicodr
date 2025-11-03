@@ -223,6 +223,7 @@ primary_coding_snid_oxy_sat <- function(trial_data) {
   return (trial_data)
 }
 
+# Scales =======================================================================
 ## Glasgow Coma Scale ==============================================================
 
 #' Primary coding Glasgow Coma Scale
@@ -249,10 +250,38 @@ primary_coding_snid_gcs <- function(trial_data) {
   return (trial_data)
 }
 
+# Modified Rankin Scale (mRS) ==================================================
+
+#' Primary Coding Modified Rankin Scale
+#' 
+#' adds the following column to scorecns:
+#' ecu_mrs_label
+#' 
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_mrs <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+  
+  trial_data[[grep("^_?scorecns$", table_names)]] <-  trial_data[[grep("^_?scorecns$", table_names)]] %>%
+    mutate (ecu_mrs_label = get_labels_mrs(.data$scorecns_mrs_score))
+  
+  labelled::var_label( trial_data[[grep("^_?scorecns$", table_names)]]) <- list(
+    ecu_mrs_label = ""
+  )
+  
+  return(trial_data)
+  
+}
+
+
 # Scores =======================================================================
 
 # the following scores are categorized according to primary coding:
-# EQ5D-5L
+# EQ5D-5L, Meningitis Severity Score (MSS)
 
 # ============================================================================ #
 
@@ -281,6 +310,32 @@ primary_coding_snid_eq5d5l <- function(trial_data) {
   return(trial_data)
   
 }
+
+#' Primary coding Meningitis Severity Score (MSS)
+#' 
+#' adds the following column to scorecns: 
+#' ecu_mss_label
+#'
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_mms <- function(trial_data) {
+  
+  table_names <- names(trial_data)
+
+  trial_data[[grep("^_?scorecns$", table_names)]] <-  trial_data[[grep("^_?scorecns$", table_names)]] %>%
+    mutate (ecu_mss_label = get_labels_mss(.data$scorecns_mss_score))
+
+  labelled::var_label( trial_data[[grep("^_?scorecns$", table_names)]]) <- list(
+    ecu_mss_label = ""
+  )
+
+  return(trial_data)
+  
+}
+
   
 # SNID Wrapper primary coding ==========================================
 
@@ -317,45 +372,55 @@ primary_coding_snid <- function(trial_data) {
              warning("primary_coding_snid_age() did not work. This is likely due to missing variables.")
              print(e)})
   
-  ## BMI =========================================================================
+  ## BMI =======================================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_bmi(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_bmi() did not work. This is likely due to missing variables.")
              print(e)})
   
-  ## Heart frequency ============================================================
+  ## Heart frequency ===========================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_hf(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_hf() did not work. This is likely due to missing variables.")
              print(e)})
   
-  ## Temperature ============================================================
+  ## Temperature ===============================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_temp(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_temp() did not work. This is likely due to missing variables.")
              print(e)})
   
-  ## Respiration rate ============================================================
+  ## Respiration rate ==========================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_resp_rate(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_resp_rate() did not work. This is likely due to missing variables.")
              print(e)})
-   ## Oxygen saturation ============================================================
+   ## Oxygen saturation ========================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_oxy_sat(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_oxy_sat() did not work. This is likely due to missing variables.")
              print(e)})
-  
-  ## Glasgow Coma Scale ============================================================
+  ##Scale ======================================================================
+  ## Glasgow Coma Scale ========================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_gcs(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_gcs() did not work. This is likely due to missing variables.")
+             print(e)})
+  ## Modified Rankin Scale =====================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_mrs(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_mrs() did not work. This is likely due to missing variables.")
              print(e)})
   ##Scores =====================================================================
   ### EQ-5D-5L =================================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_eq5d5l(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_eq5d5l() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### MSS ======================================================================
+  tryCatch(expr = {trial_data <- primary_coding_snid_mms(trial_data)},
+           error = function(e) {
+             warning("primary_coding_snid_miss() did not work. This is likely due to missing variables.")
              print(e)})
   
   
