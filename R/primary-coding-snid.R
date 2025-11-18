@@ -65,14 +65,24 @@ primary_coding_snid_age <- function(trial_data) {
   
   table_names <- names(trial_data)
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  pid <- trial_data$export_options$id_names$pid
+  
   trial_data[[grep("^_?patinf$", table_names)]] <- trial_data[[grep("^_?patinf$", table_names)]] %>% 
     # get date of signed informed consent
-    dplyr::left_join(trial_data[[grep("^_?ic$", table_names)]] %>% select(mnppid,ic_infcons_date.date), by = "mnppid") %>%
+    left_join(trial_data[[grep("^_?ic$", table_names)]] %>% select(all_of(pid),.data$ic_infcons_date.date), by = pid) %>%
     # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the date of birth to June 30th as middle of the respective year
-    dplyr::mutate(ecu_patinf_birthyear_new = ymd(paste0(.data$patinf_birthyear, "-06-30")),
-                  ecu_age = calculate_full_years(from = .data$ecu_patinf_birthyear_new, to = .data$ic_infcons_date.date),
-                  ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
-                  ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age))
+    mutate(ecu_patinf_birthyear_new = ymd(paste0(.data$patinf_birthyear, "-06-30")),
+           ecu_age = calculate_full_years(from = .data$ecu_patinf_birthyear_new, to = .data$ic_infcons_date.date),
+           ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
+           ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age))
   
   labelled::var_label(trial_data[[grep("^_?patinf$", table_names)]]) <- list(
     ecu_age_cat_3 = "",
@@ -100,11 +110,11 @@ primary_coding_snid_bmi <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?patinf$", table_names)]] <- trial_data[[grep("^_?patinf$", table_names)]] %>%
-    dplyr::mutate(ecu_bmi = calculate_bmi(.data$patinf_weight, .data$patinf_height),
-                  ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
-                  ecu_bmi_adipositas = dplyr::case_when(!is.na(.data$ecu_bmi_cat) ~  forcats::fct_collapse(.data$ecu_bmi_cat,
-                                                                                                           Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
-                                                                                                           Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
+    mutate(ecu_bmi = calculate_bmi(.data$patinf_weight, .data$patinf_height),
+           ecu_bmi_cat = categorize_bmi_ecu(.data$ecu_bmi),
+           ecu_bmi_adipositas = case_when(!is.na(.data$ecu_bmi_cat) ~  forcats::fct_collapse(.data$ecu_bmi_cat,
+                                                                                             Ja = c("Adipositas Grad I", "Adipositas Grad II", "Adipositas Grad III"),
+                                                                                             Nein = c("Untergewicht", "Normalgewicht", "\u00dcbergewicht"))))
   
   labelled::var_label(trial_data[[grep("^_?patinf$", table_names)]]) <- list(
     ecu_bmi = "",
@@ -133,7 +143,7 @@ primary_coding_snid_hf <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    dplyr::mutate(ecu_hf = categorize_heartfrequency_ecu(.data$vital_freq))
+    mutate(ecu_hf = categorize_heartfrequency_ecu(.data$vital_freq))
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_hf = ""
@@ -160,7 +170,7 @@ primary_coding_snid_temp <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    dplyr::mutate(ecu_temp = categorize_temp_ecu(.data$vital_temp))
+    mutate(ecu_temp = categorize_temp_ecu(.data$vital_temp))
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_temp = ""
@@ -186,7 +196,7 @@ primary_coding_snid_resp_rate <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    dplyr::mutate(ecu_resp_rate = categorize_resp_rate_ecu(.data$vital_resp))
+    mutate(ecu_resp_rate = categorize_resp_rate_ecu(.data$vital_resp))
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_resp_rate = ""
@@ -196,7 +206,7 @@ primary_coding_snid_resp_rate <- function(trial_data) {
 }
 
 
-  
+
 ## Oxygen Saturation (lowest) ==============================================================
 
 #' Primary coding Oxygen Saturation
@@ -214,7 +224,7 @@ primary_coding_snid_oxy_sat <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    dplyr::mutate(ecu_oxy_sat = categorize_oxigensaturation_ecu(.data$vital_spo2))
+    mutate(ecu_oxy_sat = categorize_oxigensaturation_ecu(.data$vital_spo2))
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_oxy_sat = ""
@@ -224,7 +234,8 @@ primary_coding_snid_oxy_sat <- function(trial_data) {
 }
 
 # Scales =======================================================================
-## Glasgow Coma Scale ==============================================================
+
+## Glasgow Coma Scale ==========================================================
 
 #' Primary coding Glasgow Coma Scale
 #'
@@ -241,7 +252,7 @@ primary_coding_snid_gcs <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    dplyr::mutate(ecu_gcs = categorize_gcs_ecu(.data$vital_gcs))
+    mutate(ecu_gcs = categorize_gcs_ecu(.data$vital_gcs))
   
   labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
     ecu_gcs = ""
@@ -250,7 +261,7 @@ primary_coding_snid_gcs <- function(trial_data) {
   return (trial_data)
 }
 
-# Modified Rankin Scale (mRS) ==================================================
+## Modified Rankin Scale (mRS) =================================================
 
 #' Primary Coding Modified Rankin Scale
 #' 
@@ -267,7 +278,7 @@ primary_coding_snid_mrs <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?scorecns$", table_names)]] <-  trial_data[[grep("^_?scorecns$", table_names)]] %>%
-    mutate (ecu_mrs_label = get_labels_mrs(.data$scorecns_mrs_score))
+    dplyrr::mutate(ecu_mrs_label = get_labels_mrs(.data$scorecns_mrs_score))
   
   labelled::var_label( trial_data[[grep("^_?scorecns$", table_names)]]) <- list(
     ecu_mrs_label = ""
@@ -283,7 +294,7 @@ primary_coding_snid_mrs <- function(trial_data) {
 # the following scores are categorized according to primary coding:
 # EQ5D-5L, Meningitis Severity Score (MSS)
 
-# ============================================================================ #
+## EQ5D ========================================================================
 
 
 #' Primary coding EQ5D-5L-Index
@@ -301,7 +312,7 @@ primary_coding_snid_eq5d5l <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?eq5d5l$", table_names)]] <-  trial_data[[grep("^_?eq5d5l$", table_names)]] %>%
-    mutate (ecu_eq5d5l_index = calculate_eq5d5l_index(.data$eq5d5l_mob, .data$eq5d5l_care, .data$eq5d5l_act, .data$eq5d5l_pain, .data$eq5d5l_anx))
+    mutate(ecu_eq5d5l_index = calculate_eq5d5l_index(.data$eq5d5l_mob, .data$eq5d5l_care, .data$eq5d5l_act, .data$eq5d5l_pain, .data$eq5d5l_anx))
   
   labelled::var_label( trial_data[[grep("^_?eq5d5l$", table_names)]]) <- list(
     ecu_eq5d5l_index = ""
@@ -310,6 +321,9 @@ primary_coding_snid_eq5d5l <- function(trial_data) {
   return(trial_data)
   
 }
+
+## Meningitis Severity Score (MSS) =============================================
+
 
 #' Primary coding Meningitis Severity Score (MSS)
 #' 
@@ -324,20 +338,137 @@ primary_coding_snid_eq5d5l <- function(trial_data) {
 primary_coding_snid_mms <- function(trial_data) {
   
   table_names <- names(trial_data)
-
+  
   trial_data[[grep("^_?scorecns$", table_names)]] <-  trial_data[[grep("^_?scorecns$", table_names)]] %>%
-    mutate (ecu_mss_label = get_labels_mss(.data$scorecns_mss_score))
-
+    mutate(ecu_mss_label = get_labels_mss(.data$scorecns_mss_score))
+  
   labelled::var_label( trial_data[[grep("^_?scorecns$", table_names)]]) <- list(
     ecu_mss_label = ""
   )
-
+  
   return(trial_data)
   
 }
 
+
+# Laboratory units =============================================================
+
+# create common units for each laboratory measure
+
+#' Primary coding laboratory units
+#' 
+#' add the following colums to lab:
+#' ecu_lab_leuko_1E9pliter, ecu_lab_neutroph_1E9pliter, ecu_lab_lympho_1E9pliter, ecu_lab_crp_mgpliter,  
+#' ecu_lab_pct_ngpml, ecu_lab_il6_pgpml, ecu_lab_ast_Upl, ecu_lab_crea_mgpdl, ecu_lab_lactate_mmolpl
+#' 
+#' @param trial_data A secuTrial data object
+#' @importFrom rlang .data
+#' @import dplyr
+#' @export
+
+primary_coding_snid_lab <- function(trial_data) {
   
-# SNID Wrapper primary coding ==========================================
+  table_names <- names(trial_data)
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_leuko_1E9pliter = case_when(lab_leuko_u == 1 ~ lab_leuko / 1000, # lab_leuko_u == 1 = /mikroliter, needs recalculation
+                                               lab_leuko_u == 2 ~ lab_leuko, # lab_leuko_u == 2 = /nanoliter, same as 10^9/liter
+                                               lab_leuko_u == 3 ~ lab_leuko, # lab_leuko_u == 3 = x10^3/mikroliter, same as 10^9/liter
+                                               lab_leuko_u == 4 ~ lab_leuko / 1000, # lab_leuko_u == 4 = Ts/mikroliter, needs recalculation
+                                               lab_leuko_u == 5 ~ lab_leuko, # lab_leuko_u == 5 = 1E9/liter = 10^9/liter, most common unit, reference unit 
+                                               lab_leuko_u == 6 ~ lab_leuko, # lab_leuko_u == 6 = Gpt/liter, same as 10^9/liter
+                                               lab_leuko_u == 7 ~ lab_leuko))}, #lab_leuko_u == 7 = K/mikroliter, same as 10^9/liter
+    error = function(e) {
+      warning("Leucocyte unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_neutroph_1E9pliter = case_when(lab_neutroph_u == 1 ~ ecu_lab_leuko_1E9pliter * (lab_neutroph / 100), # lab_neutroph_u == 1 = %, needs recalculation
+                                                  lab_neutroph_u == 2 ~ lab_neutroph / 1000, # lab_neutroph_u == 1 = /mikroliter, needs recalculation
+                                                  lab_neutroph_u == 3 ~ lab_neutroph, # lab_neutroph_u == 3 = /nanoliter, same as 10^9/liter
+                                                  lab_neutroph_u == 4 ~ lab_neutroph, # lab_neutroph_u == 4 = x10^3/mikroliter, same as 10^9/liter
+                                                  lab_neutroph_u == 5 ~ lab_neutroph / 1000, # lab_neutroph_u == 5 = Ts/mikroliter, needs recalculation,
+                                                  lab_neutroph_u == 6 ~ lab_neutroph, # lab_neutroph_u == 6 = 1E9/liter = 10^9/liter, most common unit, reference unit 
+                                                  lab_neutroph_u == 7 ~ lab_neutroph))}, #lab_neutroph_u == 7 = Gpt/mikroliter, same as 10^9/liter
+    error = function(e) {
+      warning("Neutrophil unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_lympho_1E9pliter = case_when(lab_lympho_u == 1 ~ ecu_lab_leuko_1E9pliter * (lab_lympho / 100), # lab_lympho_u == 1 = %, needs recalculation
+                                                lab_lympho_u == 2 ~ lab_lympho / 1000, # lab_lympho_u == 1 = /mikroliter, needs recalculation
+                                                lab_lympho_u == 3 ~ lab_lympho, # lab_lympho_u == 3 = /nanoliter, same as 10^9/liter
+                                                lab_lympho_u == 4 ~ lab_lympho, # lab_lympho_u == 4 = x10^3/mikroliter, same as 10^9/liter
+                                                lab_lympho_u == 5 ~ lab_lympho / 1000, # lab_lympho_u == 5 = Ts/mikroliter, needs recalculation,
+                                                lab_lympho_u == 6 ~ lab_lympho, # lab_lympho_u == 6 = 1E9/liter = 10^9/liter, most common unit, reference unit 
+                                                lab_lympho_u == 7 ~ lab_lympho))}, #lab_lympho_u == 7 = Gpt/mikroliter, same as 10^9/liter
+    error = function(e) {
+      warning("Lymphocyte unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_crp_mgpliter = case_when(lab_crp_u == 1 ~ lab_crp,
+                                            lab_crp_u == 2 ~ lab_crp * 10,
+                                            lab_crp_u == 3 ~ lab_crp * 0.115))}, #*0.115, da mg/l = nmol/l * (Molare Masse / 10^6) und Molare Masse CRP = 115000 g/mol
+    error = function(e) {
+      warning("CRP unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_pct_ngpml = case_when(lab_pct_u == 1 ~ lab_pct, 
+                                         lab_pct_u == 2 ~ lab_pct))}, #lab_pct_u == 2 = mikrogramm/liter, same as nanogram/ml
+    error = function(e) {
+      warning("PCT unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_il6_pgpml = case_when(lab_il6_u == 1 ~ lab_il6, # lab_il6_u == 1 = nanogram/liter, same as pg/ml
+                                         lab_il6_u == 2 ~ lab_il6))}, 
+    error = function(e) {
+      warning("IL6 unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_ast_Upl = case_when(lab_ast_u == 1 ~ lab_ast * 60, # lab_ast_u == 1 = mikrokat/l, needs recalculation
+                                       lab_ast_u == 2 ~ lab_ast, 
+                                       lab_ast_u == 3 ~ lab_ast * 60))}, #lab_ast_u == 3 = mikromol/s/liter, needs recalculation
+    error = function(e) {
+      warning("AST unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_crea_mgpdl = case_when(lab_crea_u == 1 ~ lab_crea * 0.011312, # *0.011312, da mg/dl = mikromol/l * (Molare Masse / 1000) und Molare Masse Kreatinin = 113.12 g/mol
+                                          lab_crea_u == 2 ~ lab_crea * 11.312, # *11,312, da mg/dl = nmol/ml * (Molare Masse / 10) und Molare Masse Kreatinin = 113.12 g/mol 
+                                          lab_crea_u == 3 ~ lab_crea))},
+    error = function(e) {
+      warning("Creatinine unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
+    mutate(ecu_lab_lactate_mmolpl = case_when(lab_lactate_u == 1 ~ lab_lactate,
+                                              lab_lactate_u == 2 ~ lab_lactate * 0.111))}, #*0.111, da mmol/l = (mg/dl * 10) / Molare Masse und Molare Masse Laktate = 90.08 g/mol
+    error = function(e) {
+      warning("Lactate unit could not be recalculated. This is likely due to missing variables.")
+      print(e)})
+  
+  labelled::var_label( trial_data[[grep("^_?lab$", table_names)]]) <- list(
+    ecu_lab_leuko_1E9pliter = "",
+    ecu_lab_neutroph_1E9pliter = "", 
+    ecu_lab_lympho_1E9pliter = "", 
+    ecu_lab_crp_mgpliter = "", 
+    ecu_lab_pct_ngpml = "", 
+    ecu_lab_il6_pgpml = "", 
+    ecu_lab_ast_Upl = "", 
+    ecu_lab_crea_mgpdl = "",
+    ecu_lab_lactate_mmolpl = ""
+  )
+  
+  return (trial_data)
+  
+}
+
+
+# SNID Wrapper primary coding ==================================================
 
 #' Primary coding SNID Data
 #' 
@@ -395,7 +526,7 @@ primary_coding_snid <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_snid_resp_rate() did not work. This is likely due to missing variables.")
              print(e)})
-   ## Oxygen saturation ========================================================
+  ## Oxygen saturation ========================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_oxy_sat(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_oxy_sat() did not work. This is likely due to missing variables.")
