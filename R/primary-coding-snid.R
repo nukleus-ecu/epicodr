@@ -278,7 +278,7 @@ primary_coding_snid_mrs <- function(trial_data) {
   table_names <- names(trial_data)
   
   trial_data[[grep("^_?scorecns$", table_names)]] <-  trial_data[[grep("^_?scorecns$", table_names)]] %>%
-    dplyrr::mutate(ecu_mrs_label = get_labels_mrs(.data$scorecns_mrs_score))
+    dplyr::mutate(ecu_mrs_label = get_labels_mrs(.data$scorecns_mrs_score))
   
   labelled::var_label( trial_data[[grep("^_?scorecns$", table_names)]]) <- list(
     ecu_mrs_label = ""
