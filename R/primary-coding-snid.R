@@ -335,7 +335,7 @@ primary_coding_snid_eq5d5l <- function(trial_data) {
 #' @import dplyr
 #' @export
 
-primary_coding_snid_mms <- function(trial_data) {
+primary_coding_snid_mss <- function(trial_data) {
   
   table_names <- names(trial_data)
   
@@ -549,7 +549,7 @@ primary_coding_snid <- function(trial_data) {
              warning("primary_coding_snid_eq5d5l() did not work. This is likely due to missing variables.")
              print(e)})
   ### MSS ======================================================================
-  tryCatch(expr = {trial_data <- primary_coding_snid_mms(trial_data)},
+  tryCatch(expr = {trial_data <- primary_coding_snid_mss(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_miss() did not work. This is likely due to missing variables.")
              print(e)})
