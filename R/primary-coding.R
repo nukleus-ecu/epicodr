@@ -1320,8 +1320,8 @@ get_labels_mrs <- function(num_mrs_value){
     num_mrs_value == 1 ~ "No significant disability",
     num_mrs_value == 2 ~ "Slight disability",
     num_mrs_value == 3 ~ "Moderate disability",
-    num_mrs_value == 4 ~ "Moderatly severe disability",
-    num_mrs_value == 5 ~ "Severe disabiliy",
+    num_mrs_value == 4 ~ "Moderately severe disability",
+    num_mrs_value == 5 ~ "Severe disability",
     num_mrs_value == 6 ~ "Dead",
     TRUE ~ NA
   )
