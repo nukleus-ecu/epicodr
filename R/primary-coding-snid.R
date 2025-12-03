@@ -92,6 +92,7 @@ primary_coding_snid_age <- function(trial_data) {
   return(trial_data)
 }
 
+
 ## BMI =========================================================================
 
 #' Primary coding Body Mass Index (BMI)
@@ -551,7 +552,7 @@ primary_coding_snid <- function(trial_data) {
   ### MSS ======================================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_mss(trial_data)},
            error = function(e) {
-             warning("primary_coding_snid_miss() did not work. This is likely due to missing variables.")
+             warning("primary_coding_snid_mss() did not work. This is likely due to missing variables.")
              print(e)})
   
   
