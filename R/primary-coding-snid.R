@@ -372,37 +372,37 @@ primary_coding_snid_lab <- function(trial_data) {
   table_names <- names(trial_data)
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
-    mutate(ecu_lab_leuko_1E9pliter = case_when(lab_leuko_u == 1 ~ lab_leuko / 1000, # lab_leuko_u == 1 = /mikroliter, needs recalculation
-                                               lab_leuko_u == 2 ~ lab_leuko, # lab_leuko_u == 2 = /nanoliter, same as 10^9/liter
-                                               lab_leuko_u == 3 ~ lab_leuko, # lab_leuko_u == 3 = x10^3/mikroliter, same as 10^9/liter
-                                               lab_leuko_u == 4 ~ lab_leuko / 1000, # lab_leuko_u == 4 = Ts/mikroliter, needs recalculation
-                                               lab_leuko_u == 5 ~ lab_leuko, # lab_leuko_u == 5 = 1E9/liter = 10^9/liter, most common unit, reference unit 
-                                               lab_leuko_u == 6 ~ lab_leuko, # lab_leuko_u == 6 = Gpt/liter, same as 10^9/liter
-                                               lab_leuko_u == 7 ~ lab_leuko))}, #lab_leuko_u == 7 = K/mikroliter, same as 10^9/liter
+    mutate(ecu_lab_leuko_1E9pliter = case_when(lab_leuko_u == 1 ~ lab_leuko * 1000, 
+                                               lab_leuko_u == 2 ~ lab_leuko, 
+                                               lab_leuko_u == 3 ~ lab_leuko, 
+                                               lab_leuko_u == 4 ~ lab_leuko,
+                                               lab_leuko_u == 5 ~ lab_leuko, 
+                                               lab_leuko_u == 6 ~ lab_leuko, 
+                                               lab_leuko_u == 7 ~ lab_leuko))}, 
     error = function(e) {
       warning("Leucocyte unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
-    mutate(ecu_lab_neutroph_1E9pliter = case_when(lab_neutroph_u == 1 ~ ecu_lab_leuko_1E9pliter * (lab_neutroph / 100), # lab_neutroph_u == 1 = %, needs recalculation
-                                                  lab_neutroph_u == 2 ~ lab_neutroph / 1000, # lab_neutroph_u == 1 = /mikroliter, needs recalculation
-                                                  lab_neutroph_u == 3 ~ lab_neutroph, # lab_neutroph_u == 3 = /nanoliter, same as 10^9/liter
-                                                  lab_neutroph_u == 4 ~ lab_neutroph, # lab_neutroph_u == 4 = x10^3/mikroliter, same as 10^9/liter
-                                                  lab_neutroph_u == 5 ~ lab_neutroph / 1000, # lab_neutroph_u == 5 = Ts/mikroliter, needs recalculation,
-                                                  lab_neutroph_u == 6 ~ lab_neutroph, # lab_neutroph_u == 6 = 1E9/liter = 10^9/liter, most common unit, reference unit 
-                                                  lab_neutroph_u == 7 ~ lab_neutroph))}, #lab_neutroph_u == 7 = Gpt/mikroliter, same as 10^9/liter
+    mutate(ecu_lab_neutroph_1E9pliter = case_when(lab_neutroph_u == 1 ~ ecu_lab_leuko_1E9pliter * (lab_neutroph / 100), 
+                                                  lab_neutroph_u == 2 ~ lab_neutroph * 1000, 
+                                                  lab_neutroph_u == 3 ~ lab_neutroph, 
+                                                  lab_neutroph_u == 4 ~ lab_neutroph, 
+                                                  lab_neutroph_u == 5 ~ lab_neutroph,
+                                                  lab_neutroph_u == 6 ~ lab_neutroph, 
+                                                  lab_neutroph_u == 7 ~ lab_neutroph))}, 
     error = function(e) {
       warning("Neutrophil unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
-    mutate(ecu_lab_lympho_1E9pliter = case_when(lab_lympho_u == 1 ~ ecu_lab_leuko_1E9pliter * (lab_lympho / 100), # lab_lympho_u == 1 = %, needs recalculation
-                                                lab_lympho_u == 2 ~ lab_lympho / 1000, # lab_lympho_u == 1 = /mikroliter, needs recalculation
-                                                lab_lympho_u == 3 ~ lab_lympho, # lab_lympho_u == 3 = /nanoliter, same as 10^9/liter
-                                                lab_lympho_u == 4 ~ lab_lympho, # lab_lympho_u == 4 = x10^3/mikroliter, same as 10^9/liter
-                                                lab_lympho_u == 5 ~ lab_lympho / 1000, # lab_lympho_u == 5 = Ts/mikroliter, needs recalculation,
-                                                lab_lympho_u == 6 ~ lab_lympho, # lab_lympho_u == 6 = 1E9/liter = 10^9/liter, most common unit, reference unit 
-                                                lab_lympho_u == 7 ~ lab_lympho))}, #lab_lympho_u == 7 = Gpt/mikroliter, same as 10^9/liter
+    mutate(ecu_lab_lympho_1E9pliter = case_when(lab_lympho_u == 1 ~ ecu_lab_leuko_1E9pliter * (lab_lympho / 100), 
+                                                lab_lympho_u == 2 ~ lab_lympho * 1000, 
+                                                lab_lympho_u == 3 ~ lab_lympho, 
+                                                lab_lympho_u == 4 ~ lab_lympho, 
+                                                lab_lympho_u == 5 ~ lab_lympho,
+                                                lab_lympho_u == 6 ~ lab_lympho, 
+                                                lab_lympho_u == 7 ~ lab_lympho))},
     error = function(e) {
       warning("Lymphocyte unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
@@ -410,36 +410,36 @@ primary_coding_snid_lab <- function(trial_data) {
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
     mutate(ecu_lab_crp_mgpliter = case_when(lab_crp_u == 1 ~ lab_crp,
                                             lab_crp_u == 2 ~ lab_crp * 10,
-                                            lab_crp_u == 3 ~ lab_crp * 0.115))}, #*0.115, da mg/l = nmol/l * (Molare Masse / 10^6) und Molare Masse CRP = 115000 g/mol
+                                            lab_crp_u == 3 ~ lab_crp * 115000 * 0.0001))}, 
     error = function(e) {
       warning("CRP unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
     mutate(ecu_lab_pct_ngpml = case_when(lab_pct_u == 1 ~ lab_pct, 
-                                         lab_pct_u == 2 ~ lab_pct))}, #lab_pct_u == 2 = mikrogramm/liter, same as nanogram/ml
+                                         lab_pct_u == 2 ~ lab_pct))}, 
     error = function(e) {
       warning("PCT unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
-    mutate(ecu_lab_il6_pgpml = case_when(lab_il6_u == 1 ~ lab_il6, # lab_il6_u == 1 = nanogram/liter, same as pg/ml
+    mutate(ecu_lab_il6_pgpml = case_when(lab_il6_u == 1 ~ lab_il6, 
                                          lab_il6_u == 2 ~ lab_il6))}, 
     error = function(e) {
       warning("IL6 unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
-    mutate(ecu_lab_ast_Upl = case_when(lab_ast_u == 1 ~ lab_ast * 60, # lab_ast_u == 1 = mikrokat/l, needs recalculation
+    mutate(ecu_lab_ast_Upl = case_when(lab_ast_u == 1 ~ lab_ast / 60, 
                                        lab_ast_u == 2 ~ lab_ast, 
-                                       lab_ast_u == 3 ~ lab_ast * 60))}, #lab_ast_u == 3 = mikromol/s/liter, needs recalculation
+                                       lab_ast_u == 3 ~ lab_ast))}, 
     error = function(e) {
       warning("AST unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
-    mutate(ecu_lab_crea_mgpdl = case_when(lab_crea_u == 1 ~ lab_crea * 0.011312, # *0.011312, da mg/dl = mikromol/l * (Molare Masse / 1000) und Molare Masse Kreatinin = 113.12 g/mol
-                                          lab_crea_u == 2 ~ lab_crea * 11.312, # *11,312, da mg/dl = nmol/ml * (Molare Masse / 10) und Molare Masse Kreatinin = 113.12 g/mol 
+    mutate(ecu_lab_crea_mgpdl = case_when(lab_crea_u == 1 ~ lab_crea * 113.12 * 0.0001, 
+                                          lab_crea_u == 2 ~ lab_crea * 113.12 * 10000, 
                                           lab_crea_u == 3 ~ lab_crea))},
     error = function(e) {
       warning("Creatinine unit could not be recalculated. This is likely due to missing variables.")
@@ -447,7 +447,7 @@ primary_coding_snid_lab <- function(trial_data) {
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
     mutate(ecu_lab_lactate_mmolpl = case_when(lab_lactate_u == 1 ~ lab_lactate,
-                                              lab_lactate_u == 2 ~ lab_lactate * 0.111))}, #*0.111, da mmol/l = (mg/dl * 10) / Molare Masse und Molare Masse Laktate = 90.08 g/mol
+                                              lab_lactate_u == 2 ~ lab_lactate * 90.08 * 0.1))}, 
     error = function(e) {
       warning("Lactate unit could not be recalculated. This is likely due to missing variables.")
       print(e)})

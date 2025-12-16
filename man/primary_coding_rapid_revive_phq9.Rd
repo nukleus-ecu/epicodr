@@ -11,5 +11,5 @@ primary_coding_rapid_revive_phq9(trial_data)
 }
 \description{
 adds the following column to phq9: 
-ecu_phq9_sum, ecu_phq9_cat, ecu_phq9_cat_2
+ecu_phq9_sum, ecu_phq9_binary, ecu_phq9_5_cat
 }
