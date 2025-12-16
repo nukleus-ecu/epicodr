@@ -567,7 +567,7 @@ calculate_phq9_sum <- function (phq9_1, phq9_2, phq9_3, phq9_4, phq9_5, phq9_6, 
 #' @return A factorized vector w/ levels "No depression" and "Depression"
 #' @export
 
-categorize_phq9_ecu <- function (ecu_phq9_sum) {
+categorize_phq9_ecu_binary <- function (ecu_phq9_sum) {
   factor (
     case_when (ecu_phq9_sum < 10 ~ "No depression",
                ecu_phq9_sum >= 10 ~ "Depression")
@@ -582,7 +582,7 @@ categorize_phq9_ecu <- function (ecu_phq9_sum) {
 #' @return A factorized vector w/ levels "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 #' @export
 
-categorize_phq9_ecu_2 <- function (ecu_phq9_sum) {
+categorize_phq9_ecu_5_cat <- function (ecu_phq9_sum) {
   factor (
     case_when (ecu_phq9_sum >= 0 & ecu_phq9_sum <= 4 ~ "Healthy",
                ecu_phq9_sum >= 5 & ecu_phq9_sum <= 9 ~ "No depression", 

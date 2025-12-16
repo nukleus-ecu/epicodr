@@ -342,7 +342,7 @@ primary_coding_rapid_revive_moca <- function(trial_data) {
 #' Primary coding Patient Health Questionnaire Depession Scale (PHQ-9)
 #' 
 #' adds the following column to phq9: 
-#' ecu_phq9_sum, ecu_phq9_cat, ecu_phq9_cat_2
+#' ecu_phq9_sum, ecu_phq9_binary, ecu_phq9_5_cat
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -355,13 +355,13 @@ primary_coding_rapid_revive_phq9 <- function(trial_data) {
   trial_data[[grep("^_?phq9$", table_names)]] <- trial_data[[grep("^_?phq9$", table_names)]] %>%
     mutate(ecu_phq9_sum = calculate_phq9_sum(.data$phq9_001, .data$phq9_002, .data$phq9_003, .data$phq9_004, .data$phq9_005, 
                                              .data$phq9_006, .data$phq9_007, .data$phq9_008, .data$phq9_009),
-           ecu_phq9_cat = categorize_phq9_ecu(.data$ecu_phq9_sum),
-           ecu_phq9_cat_2 = categorize_phq9_ecu_2(.data$ecu_phq9_sum))
+           ecu_phq9_binary = categorize_phq9_ecu_binary(.data$ecu_phq9_sum),
+           ecu_phq9_5_cat = categorize_phq9_ecu_5_cat(.data$ecu_phq9_sum))
   
   labelled::var_label(trial_data[[grep("^_?phq9$", table_names)]]) <- list(
     ecu_phq9_sum = "",
-    ecu_phq9_cat = "",
-    ecu_phq9_cat_2 = ""
+    ecu_phq9_binary = "",
+    ecu_phq9_5_cat = ""
   )
   
   return(trial_data)
