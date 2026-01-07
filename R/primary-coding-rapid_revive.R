@@ -732,7 +732,7 @@ primary_coding_rapid_revive_lab <- function(trial_data) {
   tryCatch(expr = {trial_data[[grep("^_?labor$", table_names)]] <-  trial_data[[grep("^_?labor$", table_names)]] %>%
     mutate(ecu_lab_crea_mgpdl = case_when(lab_crea_u == 1 ~ .data$lab_crea * 113.12 * 0.0001, 
                                           lab_crea_u == 2 ~ .data$lab_crea, 
-                                          lab_crea_u == 3 ~ .data$lab_crea * 113.12 * 10000))}, 
+                                          lab_crea_u == 3 ~ .data$lab_crea * 113.12 * 0.1))}, 
     error = function(e) {
       warning("Creatinine unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
@@ -747,7 +747,7 @@ primary_coding_rapid_revive_lab <- function(trial_data) {
   tryCatch(expr = {trial_data[[grep("^_?labor$", table_names)]] <-  trial_data[[grep("^_?labor$", table_names)]] %>%
     mutate(ecu_lab_uricacid_mgpdl = case_when(lab_uricacid_u == 1 ~ .data$lab_uricacid, 
                                               lab_uricacid_u == 2 ~ .data$lab_uricacid * 168.11 * 0.0001,  
-                                              lab_uricacid_u == 3 ~ .data$lab_uricacid * 168.11 * 10000))}, 
+                                              lab_uricacid_u == 3 ~ .data$lab_uricacid * 168.11 * 0.1))}, 
     error = function(e) {
       warning("Uric acid unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
@@ -786,7 +786,7 @@ primary_coding_rapid_revive_lab <- function(trial_data) {
     mutate(ecu_lab_bilitotal_mgpdl = case_when(lab_bilitotal_u == 1 ~ .data$lab_bilitotal * 584.7 * 0.1, 
                                                lab_bilitotal_u == 2 ~ .data$lab_bilitotal * 584.7 * 0.0001, 
                                                lab_bilitotal_u == 3 ~ .data$lab_bilitotal, 
-                                               lab_bilitotal_u == 4 ~ .data$lab_bilitotal * 584.7 * 10000))}, 
+                                               lab_bilitotal_u == 4 ~ .data$lab_bilitotal * 584.7 * 0.1))}, 
     error = function(e) {
       warning("Bilirubin (total) unit could not be recalculated. This is likely due to missing variables.")
       print(e)})
@@ -795,7 +795,7 @@ primary_coding_rapid_revive_lab <- function(trial_data) {
     mutate(ecu_lab_bilidir_mgpdl = case_when(lab_bilidir_u == 1 ~ .data$lab_bilidir * 584.7 * 0.0001, 
                                              lab_bilidir_u == 2 ~ .data$lab_bilidir * 584.7 * 0.0001, 
                                              lab_bilidir_u == 3 ~ .data$lab_bilidir, 
-                                             lab_bilidir_u == 4 ~ .data$lab_bilidir * 584.7 * 10000))}, 
+                                             lab_bilidir_u == 4 ~ .data$lab_bilidir * 584.7 * 0.1))}, 
     error = function(e) {
       warning("Bilirubin (indirect) unit could not be recalculated. This is likely due to missing variables.")
       print(e)})

@@ -439,7 +439,7 @@ primary_coding_snid_lab <- function(trial_data) {
   
   tryCatch(expr = {trial_data[[grep("^_?lab$", table_names)]] <-  trial_data[[grep("^_?lab$", table_names)]] %>%
     mutate(ecu_lab_crea_mgpdl = case_when(lab_crea_u == 1 ~ lab_crea * 113.12 * 0.0001, 
-                                          lab_crea_u == 2 ~ lab_crea * 113.12 * 10000, 
+                                          lab_crea_u == 2 ~ lab_crea * 113.12 * 0.1, 
                                           lab_crea_u == 3 ~ lab_crea))},
     error = function(e) {
       warning("Creatinine unit could not be recalculated. This is likely due to missing variables.")
