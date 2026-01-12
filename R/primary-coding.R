@@ -798,9 +798,9 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
 }
 
 
-#' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F) sum score
+#' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue) sum score
 #' 
-#' @description Calculate FACIT-F sum score
+#' @description Calculate FACIT-Fatigue sum score
 #' 
 #' Patients are asked "Please indicate how much each of the following statements has applied to you over the last 7 days by selecting the appropriate item."
 #' @param facitf_1 vector for item "I feel fatigued."
@@ -816,32 +816,62 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
 #' @param facitf_11 vector for item "I need help doing my usual activities."
 #' @param facitf_12 vector for item "I am frustrated by being too tired to do the things I want to do."
 #' @param facitf_13 vector for item "I have to limit my social activity because I am tired."
+#' @param facitf_n numeric vector with number of answered items of FACIT-Fatigue
 #' 
 #' Answers were coded /w levels "Not at all", "A little bit", "Somewhat", "Quite a bit" and "Very much"
 #' 
-#' @return A numeric vector with sum score of FACIT-F
+#' @return A numeric vector with sum score of FACIT-Fatigue
 #' @export
  
 calculate_facitf_sum <- function(facitf_1,facitf_2, facitf_3, facitf_4, facitf_5, facitf_6, facitf_7, facitf_8, facitf_9, facitf_10,
-                                 facitf_11, facitf_12, facitf_13) {
-  ecu_facitf_sum <- facitf_1 + facitf_2 + facitf_3 + facitf_4 + facitf_5 + facitf_6 + facitf_7 + facitf_8 + facitf_9 + facitf_10 +
-                        facitf_11 + facitf_12 + facitf_13
+                                 facitf_11, facitf_12, facitf_13, facitf_n) {
+  ecu_facitf_sum <- ifelse(!is.na(facitf_1), facitf_1, 0) + 
+    ifelse(!is.na(facitf_2), facitf_2, 0) + 
+    ifelse(!is.na(facitf_3), facitf_3, 0) + 
+    ifelse(!is.na(facitf_4), facitf_4, 0) + 
+    ifelse(!is.na(facitf_5), facitf_5, 0) + 
+    ifelse(!is.na(facitf_6), facitf_6, 0) + 
+    ifelse(!is.na(facitf_7), facitf_7, 0) + 
+    ifelse(!is.na(facitf_8), facitf_8, 0) + 
+    ifelse(!is.na(facitf_9), facitf_9, 0) + 
+    ifelse(!is.na(facitf_10), facitf_10, 0) + 
+    ifelse(!is.na(facitf_11), facitf_11, 0) + 
+    ifelse(!is.na(facitf_12), facitf_12, 0) + 
+    ifelse(!is.na(facitf_13), facitf_13, 0)
+  
+  ecu_facitf_sum <- ifelse(facitf_n >= 7, ecu_facitf_sum, NA_real_)
   
   return(ecu_facitf_sum)
 }
 
 
-#' Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)
+#' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue) subscale score
 #' 
-#' @description Categorize FACIT-F sum score in no fatigue and relevant fatigue
-#' @param ecu_facitf_sum numeric vector with sum score of FACIT-F
+#' @description Calculate FACIT-Fatigue subscale score based on number of answered items
+#' @param facitf_sum numeric vector with subscale score of FACIT-Fatigue
+#' @param facitf_n numeric vector with number of answered items of FACIT-Fatigue
+#' @return A numeric vector w/ subscale score of FACIT-Fatigue
+#' @export
+
+calculate_facitf_scale <- function(facitf_sum, facitf_n) {
+  
+  ecu_facitf_scale <- ifelse(facitf_n >= 7, round(facitf_sum * 13 / facitf_n, digits = 2), NA_real_)
+  
+  return(ecu_facitf_scale)
+  
+}
+
+#' Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue)
+#' 
+#' @description Categorize FACIT-Fatigue subscale score in no fatigue and relevant fatigue
+#' @param ecu_facitf_scale numeric vector with subscale score of FACIT-Fatigue
 #' @return A factorized vector w/ levels "Relevant fatigue" and "No fatigue"
 #' @export
 
-categorize_facitf_ecu <- function (ecu_facitf_sum) {
+categorize_facitf_ecu <- function(ecu_facitf_scale) {
   factor (
-    case_when (ecu_facitf_sum < 30 ~ "Relevant fatigue",
-               ecu_facitf_sum >= 30 ~ "No fatigue")
+    case_when (ecu_facitf_scale < 30 ~ "Relevant fatigue",
+               ecu_facitf_scale >= 30 ~ "No fatigue")
   )
 }
 

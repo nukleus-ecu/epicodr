@@ -139,12 +139,20 @@ primary_coding_pop_bmi <- function(trial_data) {
 #' ecu_waist
 #'
 #' @param trial_data A secuTrial data object
-#' @param pid column name of patient ID in trial_data
 #' @importFrom rlang .data
 #' @export
 
-primary_coding_pop_abd_overw <- function(trial_data, pid) {
+primary_coding_pop_abd_overw <- function(trial_data) {
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  pid <- "export_psn"
   visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data$erstbefragung), "mnpvislabel", "visit_name")
   
   needed_vars <- trial_data[["anthropo"]] %>%
@@ -152,7 +160,7 @@ primary_coding_pop_abd_overw <- function(trial_data, pid) {
     select(all_of(pid), "visit_name_temp") %>%
     left_join(trial_data[["erstbefragung"]] %>% select (all_of(pid), "gec_gender", "gec_gender.factor", all_of(visit_label_var_name)) %>%
                 mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")), by = c(pid, "visit_name_temp")) %>%
-    select(-"visit_name")
+    select(all_of(pid), "visit_name_temp", "gec_gender", "gec_gender.factor")
   
   trial_data[["anthropo"]] <- trial_data[["anthropo"]] %>%
     mutate(visit_name_temp = str_remove(!!sym(visit_label_var_name), "-EB|-VO")) %>%
@@ -390,7 +398,9 @@ primary_coding_pop_gad7 <- function(trial_data) {
 #' Primary coding Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue Scale)
 #' 
 #' adds the following column to surveyfrageboge: 
-#' ecu_facitf
+#' ecu_facitf_sum, ecu_facitf_n, ecu_facitf_scale, ecu_facitf_cat
+#' ecu_facitf1, ecu_facitf2, ecu_facitf3, ecu_facitf4, ecu_facitf5, ecu_facitf6, ecu_facitf7, ecu_facitf8, ecu_facitf8
+#' ecu_facitf10, ecu_facitf11, ecu_facitf12, ecu_facitf13
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data
@@ -399,12 +409,31 @@ primary_coding_pop_gad7 <- function(trial_data) {
 primary_coding_pop_facitf <- function(trial_data) {
   
   trial_data[["surveyfrageboge"]] <- trial_data[["surveyfrageboge"]] %>%
-    mutate(ecu_facitf_sum = calculate_facitf_sum(.data$facitf1, .data$facitf2, .data$facitf3, .data$facitf4, .data$facitf5, .data$facitf6, .data$facitf7, 
-                                                 .data$facitf8, .data$facitf9, .data$facitf10, .data$facitf11, .data$facitf12, .data$facitf13),
-           ecu_facitf_cat = categorize_facitf_ecu(.data$ecu_facitf_sum)) 
+    mutate(ecu_facitf_n = ifelse(!is.na(.data$facitf1), 1, 0) +
+             ifelse(!is.na(.data$facitf2), 1, 0) +
+             ifelse(!is.na(.data$facitf3), 1, 0) +
+             ifelse(!is.na(.data$facitf4), 1, 0) +
+             ifelse(!is.na(.data$facitf5), 1, 0) +
+             ifelse(!is.na(.data$facitf6), 1, 0) +
+             ifelse(!is.na(.data$facitf7), 1, 0) +
+             ifelse(!is.na(.data$facitf8), 1, 0) +
+             ifelse(!is.na(.data$facitf9), 1, 0) +
+             ifelse(!is.na(.data$facitf10), 1, 0) +
+             ifelse(!is.na(.data$facitf11), 1, 0) +
+             ifelse(!is.na(.data$facitf12), 1, 0) +
+             ifelse(!is.na(.data$facitf13), 1, 0), 
+           ecu_facitf_n = case_when(.data$ecu_facif_n == 0 ~ NA, TRUE ~ .data$ecu_facitf_n), 
+           ecu_facitf_sum = calculate_facitf_sum(.data$facitf1, .data$facitf2, .data$facitf3, .data$facitf4, .data$facitf5, .data$facitf6, 
+                                                 .data$facitf7, .data$facitf8, .data$facitf9, .data$facitf10, .data$facitf11, .data$facitf12, 
+                                                 .data$facitf13, .data$ecu_facitf_n),
+           ecu_facitf_scale = calculate_facitf_scale(.data$ecu_facitf_sum, .data$ecu_facitf_n),
+           ecu_facitf_cat = categorize_facitf_ecu(.data$ecu_facitf_scale)) 
+  
   
   labelled::var_label(trial_data[["surveyfrageboge"]]) <- list(
     ecu_facitf_sum = "",
+    ecu_facitf_n = "", 
+    ecu_facitf_scale = "", 
     ecu_facitf_cat = ""
   )
   
@@ -872,7 +901,7 @@ primary_coding_pop <- function(trial_data) {
              print(e)})
   
   ## Abdominal overweight ======================================================
-  tryCatch(expr = {trial_data <- primary_coding_pop_abd_overw(trial_data, pid)},
+  tryCatch(expr = {trial_data <- primary_coding_pop_abd_overw(trial_data)},
            error = function(e) {
              warning("primary_coding_pop_abd_overw() did not work. This is likely due to missing variables.")
              print(e)})

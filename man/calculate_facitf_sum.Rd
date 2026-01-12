@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary-coding.R
 \name{calculate_facitf_sum}
 \alias{calculate_facitf_sum}
-\title{Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F) sum score}
+\title{Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue) sum score}
 \usage{
 calculate_facitf_sum(
   facitf_1,
@@ -17,7 +17,8 @@ calculate_facitf_sum(
   facitf_10,
   facitf_11,
   facitf_12,
-  facitf_13
+  facitf_13,
+  facitf_n
 )
 }
 \arguments{
@@ -45,15 +46,17 @@ calculate_facitf_sum(
 
 \item{facitf_12}{vector for item "I am frustrated by being too tired to do the things I want to do."}
 
-\item{facitf_13}{vector for item "I have to limit my social activity because I am tired."
+\item{facitf_13}{vector for item "I have to limit my social activity because I am tired."}
+
+\item{facitf_n}{numeric vector with number of answered items of FACIT-Fatigue
 
 Answers were coded /w levels "Not at all", "A little bit", "Somewhat", "Quite a bit" and "Very much"}
 }
 \value{
-A numeric vector with sum score of FACIT-F
+A numeric vector with sum score of FACIT-Fatigue
 }
 \description{
-Calculate FACIT-F sum score
+Calculate FACIT-Fatigue sum score
 
 Patients are asked "Please indicate how much each of the following statements has applied to you over the last 7 days by selecting the appropriate item."
 }

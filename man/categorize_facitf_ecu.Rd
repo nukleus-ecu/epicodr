@@ -2,16 +2,16 @@
 % Please edit documentation in R/primary-coding.R
 \name{categorize_facitf_ecu}
 \alias{categorize_facitf_ecu}
-\title{Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)}
+\title{Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue)}
 \usage{
-categorize_facitf_ecu(ecu_facitf_sum)
+categorize_facitf_ecu(ecu_facitf_scale)
 }
 \arguments{
-\item{ecu_facitf_sum}{numeric vector with sum score of FACIT-F}
+\item{ecu_facitf_scale}{numeric vector with subscale score of FACIT-Fatigue}
 }
 \value{
 A factorized vector w/ levels "Relevant fatigue" and "No fatigue"
 }
 \description{
-Categorize FACIT-F sum score in no fatigue and relevant fatigue
+Categorize FACIT-Fatigue subscale score in no fatigue and relevant fatigue
 }

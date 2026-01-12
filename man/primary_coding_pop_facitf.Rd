@@ -11,5 +11,7 @@ primary_coding_pop_facitf(trial_data)
 }
 \description{
 adds the following column to surveyfrageboge: 
-ecu_facitf
+ecu_facitf_sum, ecu_facitf_n, ecu_facitf_scale, ecu_facitf_cat
+ecu_facitf1, ecu_facitf2, ecu_facitf3, ecu_facitf4, ecu_facitf5, ecu_facitf6, ecu_facitf7, ecu_facitf8, ecu_facitf8
+ecu_facitf10, ecu_facitf11, ecu_facitf12, ecu_facitf13
 }
