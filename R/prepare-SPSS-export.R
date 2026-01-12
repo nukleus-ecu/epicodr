@@ -22,7 +22,7 @@
 #' @param .data Data.Frame where the original secutrial date variables should be 
 #' removed. 
 #' @param studydata_name String. Table name in lookup that relates to the table.
-#' @param lookup List that holds date variables lookup information. It is 
+#' @param date_lookup List that holds date variables lookup information. It is 
 #' produced by [create_date_lookup()]
 #'   
 #' @return Data.Frame deleted secutrial date variables found in the vallab lookup 
@@ -179,7 +179,7 @@ defactorize_tsExport <- function(tsExport) {
 #' @param .data Data.Frame that should be spss_labelled. 
 #' @param studydata_name String. Table name in lookup that relates to the table
 #'   that get's spss_labelled.
-#' @param lookup List that holds lookup information. It is produced by
+#' @param vallab_lookup List that holds lookup information. It is produced by
 #'   [create_vallab_lookup()]
 #'   
 #' @return Data.Frame with value labelled variables
@@ -260,7 +260,7 @@ spss_labelled_tsExport <- function(tsExport) {
 #' the missing value lookup list contains entries where either the values matching 
 #' the missing values or the labels matching the missing labels.
 #' 
-#' @param lookup vallab lookup list.
+#' @param vallab_lookup vallab lookup list.
 #' @param missing_labels character vector of value labels that are generally 
 #' considered as missing values.
 #' @param missing_values numerical vector of values that are generally considered
