@@ -507,11 +507,6 @@ primary_coding_snid <- function(trial_data) {
              warning("primary_coding_snid_oxy_sat() did not work. This is likely due to missing variables.")
              print(e)})
   ##Scale ======================================================================
-  ## Glasgow Coma Scale ========================================================
-  tryCatch(expr = {trial_data <- primary_coding_snid_gcs(trial_data)},
-           error = function(e) {
-             warning("primary_coding_snid_gcs() did not work. This is likely due to missing variables.")
-             print(e)})
   ## Modified Rankin Scale =====================================================
   tryCatch(expr = {trial_data <- primary_coding_snid_mrs(trial_data)},
            error = function(e) {
