@@ -12,7 +12,7 @@ spss_labelled_tsExport_table(.data, studydata_name, vallab_lookup)
 \item{studydata_name}{String. Table name in lookup that relates to the table
 that get's spss_labelled.}
 
-\item{lookup}{List that holds lookup information. It is produced by
+\item{vallab_lookup}{List that holds lookup information. It is produced by
 [create_vallab_lookup()]}
 }
 \value{

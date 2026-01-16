@@ -11,13 +11,13 @@ create_missing_lookup(
 )
 }
 \arguments{
+\item{vallab_lookup}{vallab lookup list.}
+
 \item{missing_labels}{character vector of value labels that are generally 
 considered as missing values.}
 
 \item{missing_values}{numerical vector of values that are generally considered
 as missing values.}
-
-\item{lookup}{vallab lookup list.}
 }
 \value{
 nested list.

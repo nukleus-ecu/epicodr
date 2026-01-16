@@ -12,7 +12,7 @@ removed.}
 
 \item{studydata_name}{String. Table name in lookup that relates to the table.}
 
-\item{lookup}{List that holds date variables lookup information. It is 
+\item{date_lookup}{List that holds date variables lookup information. It is 
 produced by [create_date_lookup()]}
 }
 \value{

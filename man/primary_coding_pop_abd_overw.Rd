@@ -4,12 +4,10 @@
 \alias{primary_coding_pop_abd_overw}
 \title{Primary coding Body Mass Index (BMI)}
 \usage{
-primary_coding_pop_abd_overw(trial_data, pid)
+primary_coding_pop_abd_overw(trial_data)
 }
 \arguments{
 \item{trial_data}{A secuTrial data object}
-
-\item{pid}{column name of patient ID in trial_data}
 }
 \description{
 adds the following columns to anthropo: 

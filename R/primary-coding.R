@@ -288,7 +288,7 @@ categorize_heartfrequency_ecu <- function(hf){
   factor(
     case_when(hf < 60 ~ "Bradykardie", 
               hf < 100 ~ "Physiologisch", 
-              hf >= 100 ~ "Tachikardie")
+              hf >= 100 ~ "Tachykardie")
   )
 }
 
@@ -489,7 +489,7 @@ categorize_phq4_ecu <- function (ecu_phq4_sum) {
 #' @param phq8_7 vector for item "Trouble concentrating on things, such as reading the newspaper or watching television."
 #' @param phq8_8 vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
 #' 
-#' #' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
+#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
 #' 
 #' @return A numeric vector with sum score of phq8
 #' @export
@@ -529,6 +529,162 @@ categorize_phq8_ecu_2 <- function (ecu_phq8_sum) {
                ecu_phq8_sum >= 5 & ecu_phq8_sum <= 9 ~ "Mild depression", 
                ecu_phq8_sum >= 10 & ecu_phq8_sum <= 14 ~ "Moderate depression", 
                ecu_phq8_sum >= 15 & ecu_phq8_sum <= 24 ~ "Severe depression")
+  )
+}
+
+
+#' Calculate Patient Health Questionnaire Depression Scale 9 (PHQ 9) sum score
+#' 
+#' @description Calculate sum score of PHQ-8
+#' 
+#' Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
+#' @param phq9_1 vector for item "Little interest or pleasure in doing things."
+#' @param phq9_2 vector for item "Feeling down, depressed, or hopeless."
+#' @param phq9_3 vector for item "Trouble falling or staying asleep, or sleeping too much."
+#' @param phq9_4 vector for item "Feeling tired or having little energy."
+#' @param phq9_5 vector for item "Poor appetite or overeating"
+#' @param phq9_6 vector for item "Feeling bad about yourself - or that you are a failure or have let yourself or your family down."
+#' @param phq9_7 vector for item "Trouble concentrating on things, such as reading the newspaper or watching television."
+#' @param phq9_8 vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
+#' @param phq9_9 vector for item "Thoughts that you would be better off dead, or thoughts of hurting yourself in some way?"
+#' 
+#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"
+#' 
+#' @return A numeric vector with sum score of phq9
+#' @export
+
+calculate_phq9_sum <- function (phq9_1, phq9_2, phq9_3, phq9_4, phq9_5, phq9_6, phq9_7, phq9_8, phq9_9) {
+  ecu_phq9_sum <- phq9_1 + phq9_2 + phq9_3 + phq9_4 + phq9_5 + phq9_6 + phq9_7 + phq9_8 + phq9_9
+  
+  return(ecu_phq9_sum)
+}
+
+
+#' Categorize Patient Health Questionnaire Depression Scale 9 (PHQ 9) 
+#' 
+#' @description Categorize PHQ-8 sum score in depression and no depression
+#' @param ecu_phq9_sum numeric vector with sum score of phq9
+#' @return A factorized vector w/ levels "No depression" and "Depression"
+#' @export
+
+categorize_phq9_ecu_binary <- function (ecu_phq9_sum) {
+  factor (
+    case_when (ecu_phq9_sum < 10 ~ "No depression",
+               ecu_phq9_sum >= 10 ~ "Depression")
+  )
+}
+
+
+#' Categorize Patient Health Questionnaire Depression Scale 9 (PHQ 9) - 5 groups
+#' 
+#' @description Categorize PHQ-8 sum score in "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @param ecu_phq9_sum numeric vector with sum score of phq9
+#' @return A factorized vector w/ levels "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @export
+
+categorize_phq9_ecu_5_cat <- function (ecu_phq9_sum) {
+  factor (
+    case_when (ecu_phq9_sum >= 0 & ecu_phq9_sum <= 4 ~ "Healthy",
+               ecu_phq9_sum >= 5 & ecu_phq9_sum <= 9 ~ "No depression", 
+               ecu_phq9_sum >= 10 & ecu_phq9_sum <= 14 ~ "Mild depression", 
+               ecu_phq9_sum >= 15 & ecu_phq9_sum <= 19 ~ "Moderate depression",
+               ecu_phq9_sum >= 20 ~ "Severe depression")
+  )
+}
+
+
+#' Calculate Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15) sum score
+#' 
+#' @description Calculate sum score of PHQ15
+#' 
+#' Patients are asked "During the past 4 weeks, how much have you been bothered by any of the following problems?"
+#' @param phq15_1 vector for item "Stomach pain"
+#' @param phq15_2 vector for item "Back pain"
+#' @param phq15_3 vector for item "Pain in your arms, legs, or joints (kneeps, hips, etc.)"
+#' @param phq15_4 vector for item "Menstrual cramps or other problems with your periods [Women only]"
+#' @param phq15_5 vector for item "Headaches"
+#' @param phq15_6 vector for item "Chest pain"
+#' @param phq15_7 vector for item "Dizziness"
+#' @param phq15_8 vector for item "Fainting spells"
+#' @param phq15_9 vector for item "Feeling your heart pound or race"
+#' @param phq15_10 vector for item "Shortness of breath"
+#' @param phq15_11 vector for item "Pain or problems during sexual intercourse"
+#' @param phq15_12 vector for item "Constipation, loos bowels, or diarrhea"
+#' @param phq15_13 vector for item "Nausea, gas, or indigestion"
+#' @param phq15_14 vector for item "Feeling tired or having low energy"
+#' @param phq15_15 vector for item "Trouble sleeping"
+#' 
+#' Answers were coded /w levels 0 = "Not bothered at all", 1 = "Bothered a little" and 2 = "Bothered a lot" 
+#' 
+#' @return A numeric vector with sum score of phq15
+#' @export
+
+calculate_phq15_sum <- function (phq15_1, phq15_2, phq15_3, phq15_4, phq15_5, phq15_6, phq15_7, phq15_8, phq15_9, phq15_10, phq15_11, phq15_12, phq15_13, phq15_14, phq15_15) {
+  ecu_phq15_sum <- phq15_1 + phq15_2 + phq15_3 + phq15_4 + phq15_5 + phq15_6 + phq15_7 + phq15_8 + phq15_9 + phq15_10 + phq15_11 + phq15_12 + phq15_13 + phq15_14 + phq15_15
+  
+  return(ecu_phq15_sum)
+}
+
+
+#' Categorize Patient Health Questionnaire 15-Item Somatic Symptom Severity Scale (PHQ15) - 4 groups
+#' 
+#' @description Categorize PHQ-15 sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
+#' @param ecu_phq15_sum numeric vector with sum score of phq15
+#' @return A factorized vector w/ levels "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity
+#' @export
+
+categorize_phq15_ecu <- function (ecu_phq15_sum) {
+  factor (
+    case_when (ecu_phq15_sum >= 0 & ecu_phq15_sum <= 4 ~ "Minimal somatic symptom severity",
+               ecu_phq15_sum >= 5 & ecu_phq15_sum <= 9 ~ "Low somatic symptom severity", 
+               ecu_phq15_sum >= 10 & ecu_phq15_sum <= 14 ~ "Medium somatic symptom severity", 
+               ecu_phq15_sum >= 15 & ecu_phq15_sum <= 30 ~ "High somatic symptom severity")
+  )
+}
+
+
+#' Calculate Patient Health Questionnaire Stress Scale (PHQ-Stress) sum score
+#' 
+#' @description Calculate sum score of PHQ-Stress
+#' 
+#' Patients are asked "During the past 4 weeks, how much have you been bothered by any of the following problems?"
+#' @param phqs_1 vector for item "Worrying about your health"
+#' @param phqs_2 vector for item "Your weight or how you look"
+#' @param phqs_3 vector for item "Little or no sexual desire or pleasure during sex"
+#' @param phqs_4 vector for item "Difficulties with husband/wife, partner/lover or boyfriend/girlfriend"
+#' @param phqs_5 vector for item "The stress of taking care of children, parents, or other family members"
+#' @param phqs_6 vector for item "Stress at wirk outside of the home or at school"
+#' @param phqs_7 vector for item "Financial problems or worries"
+#' @param phqs_8 vector for item "Having no one to turn to when you have a problem"
+#' @param phqs_9 vector for item "Something bad that happened recently"
+#' @param phqs_10 vector for item "Thinking or dreaming about something terrible that happened to you in the past - like your house being destroyed, a severe accident, being hit or assaulted, or being forced to commit a sexual act"
+
+#' 
+#' Answers were coded /w levels 0 = "Not bothered at all", 1 = "Bothered a little" and 2 = "Bothered a lot" 
+#' 
+#' @return A numeric vector with sum score of phqs
+#' @export
+
+calculate_phqs_sum <- function (phqs_1, phqs_2, phqs_3, phqs_4, phqs_5, phqs_6, phqs_7, phqs_8, phqs_9, phqs_10) {
+  ecu_phqs_sum <- phqs_1 + phqs_2 + phqs_3 + phqs_4 + phqs_5 + phqs_6 + phqs_7 + phqs_8 + phqs_9 + phqs_10
+  
+  return(ecu_phqs_sum)
+}
+
+
+#' Categorize Patient Health Questionnaire Stress Scale (PHQ-Stress) - 4 groups
+#' 
+#' @description Categorize PHQ-15 sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
+#' @param ecu_phqs_sum numeric vector with sum score of phqs
+#' @return A factorized vector w/ levels "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity
+#' @export
+
+categorize_phqs_ecu <- function (ecu_phqs_sum) {
+  factor (
+    case_when (ecu_phqs_sum >= 0 & ecu_phqs_sum <= 4 ~ "Minimal psychosocial stress",
+               ecu_phqs_sum >= 5 & ecu_phqs_sum <= 9 ~ "Low psychosocial stress", 
+               ecu_phqs_sum >= 10 & ecu_phqs_sum <= 14 ~ "Medium psychosocial stress", 
+               ecu_phqs_sum >= 15 & ecu_phqs_sum <= 20 ~ "High psychosocial stress")
   )
 }
 
@@ -642,9 +798,9 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
 }
 
 
-#' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F) sum score
+#' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue) sum score
 #' 
-#' @description Calculate FACIT-F sum score
+#' @description Calculate FACIT-Fatigue sum score
 #' 
 #' Patients are asked "Please indicate how much each of the following statements has applied to you over the last 7 days by selecting the appropriate item."
 #' @param facitf_1 vector for item "I feel fatigued."
@@ -660,32 +816,62 @@ categorize_gad7_ecu <- function (ecu_gad7_sum) {
 #' @param facitf_11 vector for item "I need help doing my usual activities."
 #' @param facitf_12 vector for item "I am frustrated by being too tired to do the things I want to do."
 #' @param facitf_13 vector for item "I have to limit my social activity because I am tired."
+#' @param facitf_n numeric vector with number of answered items of FACIT-Fatigue
 #' 
 #' Answers were coded /w levels "Not at all", "A little bit", "Somewhat", "Quite a bit" and "Very much"
 #' 
-#' @return A numeric vector with sum score of FACIT-F
+#' @return A numeric vector with sum score of FACIT-Fatigue
 #' @export
  
 calculate_facitf_sum <- function(facitf_1,facitf_2, facitf_3, facitf_4, facitf_5, facitf_6, facitf_7, facitf_8, facitf_9, facitf_10,
-                                 facitf_11, facitf_12, facitf_13) {
-  ecu_facitf_sum <- facitf_1 + facitf_2 + facitf_3 + facitf_4 + facitf_5 + facitf_6 + facitf_7 + facitf_8 + facitf_9 + facitf_10 +
-                        facitf_11 + facitf_12 + facitf_13
+                                 facitf_11, facitf_12, facitf_13, facitf_n) {
+  ecu_facitf_sum <- ifelse(!is.na(facitf_1), facitf_1, 0) + 
+    ifelse(!is.na(facitf_2), facitf_2, 0) + 
+    ifelse(!is.na(facitf_3), facitf_3, 0) + 
+    ifelse(!is.na(facitf_4), facitf_4, 0) + 
+    ifelse(!is.na(facitf_5), facitf_5, 0) + 
+    ifelse(!is.na(facitf_6), facitf_6, 0) + 
+    ifelse(!is.na(facitf_7), facitf_7, 0) + 
+    ifelse(!is.na(facitf_8), facitf_8, 0) + 
+    ifelse(!is.na(facitf_9), facitf_9, 0) + 
+    ifelse(!is.na(facitf_10), facitf_10, 0) + 
+    ifelse(!is.na(facitf_11), facitf_11, 0) + 
+    ifelse(!is.na(facitf_12), facitf_12, 0) + 
+    ifelse(!is.na(facitf_13), facitf_13, 0)
+  
+  ecu_facitf_sum <- ifelse(facitf_n >= 7, ecu_facitf_sum, NA_real_)
   
   return(ecu_facitf_sum)
 }
 
 
-#' Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-F)
+#' Calculate Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue) subscale score
 #' 
-#' @description Categorize FACIT-F sum score in no fatigue and relevant fatigue
-#' @param ecu_facitf_sum numeric vector with sum score of FACIT-F
+#' @description Calculate FACIT-Fatigue subscale score based on number of answered items
+#' @param facitf_sum numeric vector with subscale score of FACIT-Fatigue
+#' @param facitf_n numeric vector with number of answered items of FACIT-Fatigue
+#' @return A numeric vector w/ subscale score of FACIT-Fatigue
+#' @export
+
+calculate_facitf_scale <- function(facitf_sum, facitf_n) {
+  
+  ecu_facitf_scale <- ifelse(facitf_n >= 7, round(facitf_sum * 13 / facitf_n, digits = 2), NA_real_)
+  
+  return(ecu_facitf_scale)
+  
+}
+
+#' Categorize Functional Assessment of Chronic Illness Therapy - Fatigue (FACIT-Fatigue)
+#' 
+#' @description Categorize FACIT-Fatigue subscale score in no fatigue and relevant fatigue
+#' @param ecu_facitf_scale numeric vector with subscale score of FACIT-Fatigue
 #' @return A factorized vector w/ levels "Relevant fatigue" and "No fatigue"
 #' @export
 
-categorize_facitf_ecu <- function (ecu_facitf_sum) {
+categorize_facitf_ecu <- function(ecu_facitf_scale) {
   factor (
-    case_when (ecu_facitf_sum < 30 ~ "Relevant fatigue",
-               ecu_facitf_sum >= 30 ~ "No fatigue")
+    case_when (ecu_facitf_scale < 30 ~ "Relevant fatigue",
+               ecu_facitf_scale >= 30 ~ "No fatigue")
   )
 }
 
@@ -1122,4 +1308,52 @@ categorize_fss_mean_ecu <- function(ecu_fss_mean) {
   
   return(ecu_fss_cat_2)
   
+}
+
+
+#' Label Meningitis Severity Score (MSS)
+#' 
+#' @description Label MSS
+#' 
+#' @param num_mss_value A numerical vector of the MSS score
+#' 
+#' @return Label to the numerical values of the MSS Score
+#' @export
+
+get_labels_mss <- function(num_mss_value){
+  
+  mss_label <- case_when(
+    num_mss_value == 0 ~ "No Symptoms",
+    num_mss_value == 1 ~ "Mild Symptoms",
+    num_mss_value == 2 ~ "Moderate Symptoms",
+    num_mss_value == 3 ~ "Severe Symptoms",
+    num_mss_value == 4 ~ "Critical Symptoms",
+    TRUE ~ NA
+  )
+  return(mss_label)
+}
+
+
+#' Label Modified Rankin Scale (mRS)
+#' 
+#' @description Label mRS
+#' 
+#' @param num_mrs_value A numerical vector of the mRS
+#' 
+#' @return Label to the numerical values of the mRS
+#' @export
+
+get_labels_mrs <- function(num_mrs_value){
+  
+  mrs_label <- case_when(
+    num_mrs_value == 0 ~ "No Symptoms",
+    num_mrs_value == 1 ~ "No significant disability",
+    num_mrs_value == 2 ~ "Slight disability",
+    num_mrs_value == 3 ~ "Moderate disability",
+    num_mrs_value == 4 ~ "Moderately severe disability",
+    num_mrs_value == 5 ~ "Severe disability",
+    num_mrs_value == 6 ~ "Dead",
+    TRUE ~ NA
+  )
+  return(mrs_label)
 }

@@ -32,7 +32,7 @@ calculate_phq8_sum(
 
 \item{phq8_8}{vector for item "Moving or speaking so slowly that other people could have notived. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual."
 
-#' Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"}
+Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More than half the days" and 3 = "Nearly every day"}
 }
 \value{
 A numeric vector with sum score of phq8
