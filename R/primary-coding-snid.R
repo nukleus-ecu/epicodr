@@ -236,32 +236,6 @@ primary_coding_snid_oxy_sat <- function(trial_data) {
 
 # Scales =======================================================================
 
-## Glasgow Coma Scale ==========================================================
-
-#' Primary coding Glasgow Coma Scale
-#'
-#' adds the following columns to vital: 
-#' ecu_gcs
-#'
-#' @param trial_data A secuTrial data object
-#' @importFrom rlang .data
-#' @import dplyr
-#' @export
-
-primary_coding_snid_gcs <- function(trial_data) {
-  
-  table_names <- names(trial_data)
-  
-  trial_data[[grep("^_?vital$", table_names)]] <- trial_data[[grep("^_?vital$", table_names)]] %>%
-    mutate(ecu_gcs = categorize_gcs_ecu(.data$vital_gcs))
-  
-  labelled::var_label(trial_data[[grep("^_?vital$", table_names)]]) <- list(
-    ecu_gcs = ""
-  )
-  
-  return (trial_data)
-}
-
 ## Modified Rankin Scale (mRS) =================================================
 
 #' Primary Coding Modified Rankin Scale
