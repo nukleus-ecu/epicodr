@@ -506,18 +506,23 @@ primary_coding_pop_psqi <- function(trial_data) {
                                            .data$psqi2 >= 31 & .data$psqi2 <= 60 ~ 2,
                                            .data$psqi2 > 60 ~ 3) +
              .data$psqi5a,
+           
+           
            ecu_psqi_comp_2 = case_when(.data$ecu_psqi_comp_2_sum == 0 ~ 0,
                                        .data$ecu_psqi_comp_2_sum == 1 | .data$ecu_psqi_comp_2_sum == 2 ~ 1,
                                        .data$ecu_psqi_comp_2_sum == 3 | .data$ecu_psqi_comp_2_sum == 4 ~ 2,
                                        .data$ecu_psqi_comp_2_sum >= 5 ~ 3),
+           
+           
            ecu_psqi_comp_3 = case_when(.data$psqi4 > 7 ~ 0, # > 7 hours
                                        .data$psqi4 >= 6 & .data$psqi4 <= 7 ~ 1, # 6-7 hours
                                        .data$psqi4 >= 5 & .data$psqi4 < 6 ~ 2, # 5-6 hours
                                        .data$psqi4 < 5 ~ 3), # < 5 hours
-           ecu_psqi_comp_4 = case_when(.data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 85 ~ 0,
-                                       .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 75 & .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 84 ~ 1,
-                                       .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 >= 65 & .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 74 ~ 2,
-                                       .data$psqi4/(.data$psqi3 - .data$psqi1) * 100 <= 64 ~ 3),
+           ecu_psqi_comp_4 = case_when(.data$psqi4/(as.numeric(.data$psqi3) - as.numeric(.data$psqi1)) * 100 >= 85 ~ 0,
+                                       .data$psqi4/(as.numeric(.data$psqi3) - as.numeric(.data$psqi1)) * 100 >= 75 & .data$psqi4/(as.numeric(.data$psqi3) - as.numeric(.data$psqi1)) * 100 <= 84 ~ 1,
+                                       .data$psqi4/(as.numeric(.data$psqi3) - as.numeric(.data$psqi1)) * 100 >= 65 & .data$psqi4/(as.numeric(.data$psqi3) - as.numeric(.data$psqi1)) * 100 <= 74 ~ 2,
+                                       .data$psqi4/(as.numeric(.data$psqi3) - as.numeric(.data$psqi1)) * 100 <= 64 ~ 3),
+           
            ecu_psqi_comp_5_sum = .data$psqi5b + .data$psqi5c + .data$psqi5d + .data$psqi5e + .data$psqi5f + .data$psqi5g + .data$psqi5h + .data$psqi5i + .data$psqi5j,
            ecu_psqi_comp_5 = case_when(.data$ecu_psqi_comp_5_sum == 0 ~ 0,
                                        .data$ecu_psqi_comp_5_sum >= 1 & .data$ecu_psqi_comp_5_sum <= 9 ~ 1,
