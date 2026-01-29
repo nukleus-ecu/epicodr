@@ -105,13 +105,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Open pull request
+#      - name: Open pull request
+#        run: |
+#          gh pr create \
+#            --base main \
+#            --head "$BRANCH" \
+#            --title "Update DESCRIPTION version to ${{ needs.release-on-push.outputs.new_version }}" \
+#            --body "Automated version bump after release ${{ needs.release-on-push.outputs.new_version }}."
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Next steps (manual PR required)
         run: |
-          gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --title "Update DESCRIPTION version to ${{ needs.release-on-push.outputs.new_version }}" \
-            --body "Automated version bump after release ${{ needs.release-on-push.outputs.new_version }}."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Version bump branch pushed: $BRANCH"
+          echo "Please open a pull request:"
+          echo "  Base: main"
+          echo "  Compare: $BRANCH"
 
