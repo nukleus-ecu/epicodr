@@ -1,4 +1,6 @@
 name: Release and Update DESCRIPTION
+permissions:
+  contents: write
 
 on:
   push:
@@ -20,7 +22,7 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
             COMMIT_SHA="${{ github.event.after }}"
-          elif [[ "${{ github.eventname }}" == "pull_request" ]]; then
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
             COMMIT_SHA="${{ github.event.pull_request.head.sha }}"
           fi
           message=$(git log --format=%B -n 1 $COMMIT_SHA)
@@ -34,9 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-commit
     if: ${{ !contains(needs.check-commit.outputs.message, 'norelease') }}
+    # Removed, causes problems, MY_PAT nowhere documented
+    # env:
+    #   GITHUB_PAT: ${{ secrets.MY_PAT }}
+    #   R_KEEP_PKG_SOURCE: yes
     env:
-      GITHUB_PAT: ${{ secrets.MY_PAT }}
-      R_KEEP_PKG_SOURCE: yes
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
@@ -51,8 +57,11 @@ jobs:
   release-on-push:
     runs-on: ubuntu-latest
     needs: check-on-push
+    # env:
+    #   GITHUB_TOKEN: ${{ secrets.MY_PAT }}
     env:
-      GITHUB_TOKEN: ${{ secrets.MY_PAT }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     outputs:
       new_version: ${{ steps.create_release.outputs.version }}
     steps:
@@ -70,8 +79,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # This is important to allow pushing to the protected branch
-          token: ${{ secrets.MY_PAT }} # Use the PAT stored as a secret
+          # token: ${{ secrets.MY_PAT }} # Use the PAT stored as a secret
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
@@ -89,13 +98,10 @@ jobs:
           git add DESCRIPTION
           git commit -m "Update version in DESCRIPTION [norelease]"
           git push
-        env:
-          # Use the PAT for pushing
-          GIT_ASKPASS: echo ${{ secrets.MY_PAT }}
-
       - name: Trigger pkgdown Workflow
         run: |
-          curl -X POST -H "Authorization: token ${{ secrets.MY_PAT }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -d '{"event_type": "newVersionEvent", "client_payload": {"key": "value"}}'
+            curl -X POST \
+                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github+json" \
+                https://api.github.com/repos/${{ github.repository }}/dispatches \
+                -d '{"event_type":"newVersionEvent"}'
