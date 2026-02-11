@@ -442,6 +442,83 @@ primary_coding_snid_lab <- function(trial_data) {
   
 }
 
+# Assigning casenode forms to visits ===========================================
+# start is "Screening/Baselinevisite" or "Abschlussvisite"
+
+assign_cn_to_visits <- function(data = trial_data, start = "Screening/Baselinevisite"){    # set "Screening/Baselinevisite" as default starting time point
+  
+  table_names <- names(trial_data)
+  
+  # trial_data$cn                 # contains "mnpcnptnid" = Casenode-Instanz-ID 
+  
+  # sympoms
+  trial_data[[grep("^_?esym$", table_names)]] <- trial_data[[grep("^_?esym$", table_names)]] %>% 
+    # join visit dates
+    left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
+                filter(mnpvislabel == start) %>%                                # using "start" enables variable starting time point
+                select(mnppid, mnpvislabel, visitreg_date.date),
+              by = "mnppid") %>%
+    # select(mnppid, mnpvislabel, visitreg_date.date, sym_main_date, sym_main_date.date) %>%     # nur zur besseren Übersicht, später löschen
+    # incomplete dates in sym_main_date
+    mutate(
+      # assess accuracy
+      inaccuracy = case_when(
+        nchar(sym_main_date) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
+        nchar(sym_main_date) == 6 ~ 15,   # YYYYMM   → Monat bekannt
+        nchar(sym_main_date) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
+        TRUE ~ NA_real_),
+      # correct incomplete dates
+      sym_main_date.date = case_when(
+        nchar(sym_main_date) == 6 ~ as.Date(paste0(sym_main_date, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
+        nchar(sym_main_date) == 4 ~ as.Date(paste0(sym_main_date, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
+        TRUE ~ sym_main_date.date),
+      time_diff = as.numeric(sym_main_date.date - visitreg_date.date)
+      )
+    
+
+  # get right labels
+  label(trial_data[[grep("^_?esym$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
+  label(trial_data[[grep("^_?esym$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
+  
+  
+  labelled::var_label( trial_data[[grep("^_?esym$", table_names)]]) <- list(
+    time_diff = ""
+  )
+  
+  # Diagnosis
+  trial_data[[grep("^_?ecomorb$", table_names)]] <- trial_data[[grep("^_?ecomorb$", table_names)]] %>%   # später hochsetzen
+    # join visit dates
+    left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
+                filter(mnpvislabel == start) %>%                                # using "start" enables variable starting time point
+                select(mnppid, mnpvislabel, visitreg_date.date),
+              by = "mnppid") %>%
+    # select(mnppid, mnpvislabel, visitreg_date.date, comorb_oth_diag_d, comorb_oth_diag_d.date) %>%     # nur zur besseren Übersicht, später löschen
+    # incomplete dates in sym_main_date
+    mutate(
+      # assess accuracy
+      inaccuracy = case_when(
+        nchar(comorb_oth_diag_d) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
+        nchar(comorb_oth_diag_d) == 6 ~ 15,   # YYYYMM   → Monat bekannt
+        nchar(comorb_oth_diag_d) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
+        TRUE ~ NA_real_),
+      # correct incomplete dates
+      comorb_oth_diag_d.date = case_when(
+        nchar(comorb_oth_diag_d) == 6 ~ as.Date(paste0(comorb_oth_diag_d, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
+        nchar(comorb_oth_diag_d) == 4 ~ as.Date(paste0(comorb_oth_diag_d, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
+        TRUE ~ comorb_oth_diag_d.date),
+      time_diff = as.numeric(comorb_oth_diag_d.date - visitreg_date.date)
+    )
+ 
+  # get right labels
+  label(trial_data[[grep("^_?ecomorb$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
+  label(trial_data[[grep("^_?ecomorb$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
+  
+
+  
+  return (trial_data)
+  
+}
+
 
 # SNID Wrapper primary coding ==================================================
 
@@ -522,6 +599,11 @@ primary_coding_snid <- function(trial_data) {
   tryCatch(expr = {trial_data <- primary_coding_snid_mss(trial_data)},
            error = function(e) {
              warning("primary_coding_snid_mss() did not work. This is likely due to missing variables.")
+             print(e)})
+  ### Assigning cn forms to visits =============================================
+  tryCatch(expr = {trial_data <- assign_cn_to_visits(trial_data)},
+           error = function(e) {
+             warning("assign_cn_to_visits() did not work. This is likely due to missing variables.")
              print(e)})
   
   
