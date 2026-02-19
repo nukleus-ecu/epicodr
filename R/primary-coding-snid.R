@@ -442,23 +442,22 @@ primary_coding_snid_lab <- function(trial_data) {
   
 }
 
-# Assigning casenode forms to visits ===========================================
+# get time to visits ===========================================
 # start is "Screening/Baselinevisite" or "Abschlussvisite"
 
-assign_cn_to_visits <- function(data = trial_data, start = "Screening/Baselinevisite"){    # set "Screening/Baselinevisite" as default starting time point
+get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevisite"){    # set "Screening/Baselinevisite" as default starting time point
   
   table_names <- names(trial_data)
   
-  # trial_data$cn                 # contains "mnpcnptnid" = Casenode-Instanz-ID 
-  
-  # sympoms
-  trial_data[[grep("^_?esym$", table_names)]] <- trial_data[[grep("^_?esym$", table_names)]] %>% 
+  # symptoms
+  trial_data[[grep("^_?esym$", table_names)]] <- trial_data[[grep("^_?esym$", table_names)]] %>%                       
     # join visit dates
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
                 filter(mnpvislabel == start) %>%                                # using "start" enables variable starting time point
                 select(mnppid, mnpvislabel, visitreg_date.date),
-              by = "mnppid") %>%
-    # select(mnppid, mnpvislabel, visitreg_date.date, sym_main_date, sym_main_date.date) %>%     # nur zur besseren Übersicht, später löschen
+              by = "mnppid",
+              relationship = "many-to-many") %>%                                # some patients with mulitple "Abschlussvisite" entries
+    # select(mnppid, mnpvislabel, visitreg_date.date,  sym_main_date, sym_main_date.date) %>%     # nur zur besseren Übersicht, später löschen
     # incomplete dates in sym_main_date
     mutate(
       # assess accuracy
@@ -479,19 +478,21 @@ assign_cn_to_visits <- function(data = trial_data, start = "Screening/Baselinevi
   # get right labels
   label(trial_data[[grep("^_?esym$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
   label(trial_data[[grep("^_?esym$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
-  
+  label(trial_data[[grep("^_?esym$", table_names)]]$sym_main_date.date) <- "Datum des Symtombeginns"
+
   
   labelled::var_label( trial_data[[grep("^_?esym$", table_names)]]) <- list(
     time_diff = ""
   )
   
   # Diagnosis
-  trial_data[[grep("^_?ecomorb$", table_names)]] <- trial_data[[grep("^_?ecomorb$", table_names)]] %>%   # später hochsetzen
+  trial_data[[grep("^_?ecomorb$", table_names)]] <- trial_data[[grep("^_?ecomorb$", table_names)]] %>%   
     # join visit dates
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
                 filter(mnpvislabel == start) %>%                                # using "start" enables variable starting time point
                 select(mnppid, mnpvislabel, visitreg_date.date),
-              by = "mnppid") %>%
+              by = "mnppid",
+              relationship = "many-to-many") %>%                                # some patients with mulitple "Abschlussvisite" entries
     # select(mnppid, mnpvislabel, visitreg_date.date, comorb_oth_diag_d, comorb_oth_diag_d.date) %>%     # nur zur besseren Übersicht, später löschen
     # incomplete dates in sym_main_date
     mutate(
@@ -512,7 +513,7 @@ assign_cn_to_visits <- function(data = trial_data, start = "Screening/Baselinevi
   # get right labels
   label(trial_data[[grep("^_?ecomorb$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
   label(trial_data[[grep("^_?ecomorb$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
-  
+  label(trial_data[[grep("^_?ecomorb$", table_names)]]$comorb_oth_diag_d.date) <- "Diagnosedatum"
 
   
   return (trial_data)
@@ -600,10 +601,10 @@ primary_coding_snid <- function(trial_data) {
            error = function(e) {
              warning("primary_coding_snid_mss() did not work. This is likely due to missing variables.")
              print(e)})
-  ### Assigning cn forms to visits =============================================
+  ### get time to visits =============================================
   tryCatch(expr = {trial_data <- assign_cn_to_visits(trial_data)},
            error = function(e) {
-             warning("assign_cn_to_visits() did not work. This is likely due to missing variables.")
+             warning("get_time_to_visits() did not work. This is likely due to missing variables.")
              print(e)})
   
   
