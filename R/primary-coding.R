@@ -535,7 +535,7 @@ categorize_phq8_ecu_2 <- function (ecu_phq8_sum) {
 
 #' Calculate Patient Health Questionnaire Depression Scale 9 (PHQ 9) sum score
 #' 
-#' @description Calculate sum score of PHQ-8
+#' @description Calculate sum score of PHQ-9
 #' 
 #' Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
 #' @param phq9_1 vector for item "Little interest or pleasure in doing things."
@@ -562,7 +562,7 @@ calculate_phq9_sum <- function (phq9_1, phq9_2, phq9_3, phq9_4, phq9_5, phq9_6, 
 
 #' Categorize Patient Health Questionnaire Depression Scale 9 (PHQ 9) 
 #' 
-#' @description Categorize PHQ-8 sum score in depression and no depression
+#' @description Categorize PHQ-9 sum score in depression and no depression
 #' @param ecu_phq9_sum numeric vector with sum score of phq9
 #' @return A factorized vector w/ levels "No depression" and "Depression"
 #' @export
@@ -577,7 +577,7 @@ categorize_phq9_ecu_binary <- function (ecu_phq9_sum) {
 
 #' Categorize Patient Health Questionnaire Depression Scale 9 (PHQ 9) - 5 groups
 #' 
-#' @description Categorize PHQ-8 sum score in "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+#' @description Categorize PHQ-9 sum score in "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 #' @param ecu_phq9_sum numeric vector with sum score of phq9
 #' @return A factorized vector w/ levels "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 #' @export
@@ -674,7 +674,7 @@ calculate_phqs_sum <- function (phqs_1, phqs_2, phqs_3, phqs_4, phqs_5, phqs_6, 
 
 #' Categorize Patient Health Questionnaire Stress Scale (PHQ-Stress) - 4 groups
 #' 
-#' @description Categorize PHQ-15 sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
+#' @description Categorize PHQ-Stress sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
 #' @param ecu_phqs_sum numeric vector with sum score of phqs
 #' @return A factorized vector w/ levels "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity
 #' @export
