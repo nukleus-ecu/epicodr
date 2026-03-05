@@ -76,11 +76,13 @@ primary_coding_snid_age <- function(trial_data) {
   pid <- trial_data$export_options$id_names$pid
   
   trial_data[[grep("^_?patinf$", table_names)]] <- trial_data[[grep("^_?patinf$", table_names)]] %>% 
-    # get date of signed informed consent
-    left_join(trial_data[[grep("^_?ic$", table_names)]] %>% select(all_of(pid),.data$ic_infcons_date.date), by = pid) %>%
+    # get screening date
+    left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>% 
+                filter(mnpvislabel == "Screening/Baselinevisite") %>% 
+                select(all_of(pid), visitreg_date.date), by = pid) %>%
     # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the date of birth to June 30th as middle of the respective year
     mutate(ecu_patinf_birthyear_new = ymd(paste0(.data$patinf_birthyear, "-06-30")),
-           ecu_age = calculate_full_years(from = .data$ecu_patinf_birthyear_new, to = .data$ic_infcons_date.date),
+           ecu_age = calculate_full_years(from = .data$ecu_patinf_birthyear_new, to = .data$visitreg_date.date),
            ecu_age_cat_dec = ecu_age_cat_dec(.data$ecu_age),
            ecu_age_cat_3 = ecu_age_cat_3(.data$ecu_age))
   
