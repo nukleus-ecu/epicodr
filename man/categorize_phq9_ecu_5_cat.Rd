@@ -13,5 +13,5 @@ categorize_phq9_ecu_5_cat(ecu_phq9_sum)
 A factorized vector w/ levels "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 }
 \description{
-Categorize PHQ-8 sum score in "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
+Categorize PHQ-9 sum score in "Healthy", "No depression", "Mild depression", "Moderate depression" and "Severe depression"
 }
