@@ -445,21 +445,53 @@ primary_coding_snid_lab <- function(trial_data) {
 }
 
 # get time to visits ===========================================
-# start is "Screening/Baselinevisite" or "Abschlussvisite"
+
+# calculate the time from diagnosis and the onset of symptoms to the selected visit
+
+#' Primary coding time from diagnosis and the onset of symptoms to the selected visit
+#' 
+#' add the following colums to esym:
+#' inaccuracy, sym_main_date.date, time_diff
+#' 
+#' add the following columns to ecomorb:
+#' inaccuracy, comorb_oth_diag_d.date, time_diff
+#' 
+#'
+#' @param trial_data A secuTrial data object 
+#' @importFrom rlang .data 
+#' @import dplyr
+#' @export
+#' 
+#' @examples
+#' # start is "Screening/Baselinevisite"
+#' get_time_to_visits(data = trial_data, start = "Screening/Baselinevisite")
+#' 
+#' # start is "Abschlussvisite"
+#' get_time_to_visits(data = trial_data, start = "Abschlussvisite")
 
 get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevisite"){    # set "Screening/Baselinevisite" as default starting time point
   
   table_names <- names(trial_data)
   
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    trial_data <- set_id_names(trial_data)
+  }
+  
+  if (!("id_names" %in% names(trial_data$export_options))) {
+    stop("No table named \"id_names\" in exportoptions. Did you use set_id_names()?")
+  }
+  
+  pid <- trial_data$export_options$id_names$pid
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?visitreg$", table_names)]]), "mnpvislabel", "visit_name")
+  
   # symptoms
   trial_data[[grep("^_?esym$", table_names)]] <- trial_data[[grep("^_?esym$", table_names)]] %>%                       
     # join visit dates
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
-                filter(mnpvislabel == start) %>%                                # using "start" enables variable starting time point
-                select(mnppid, mnpvislabel, visitreg_date.date),
-              by = "mnppid",
-              relationship = "many-to-many") %>%                                # some patients with mulitple "Abschlussvisite" entries
-    # select(mnppid, mnpvislabel, visitreg_date.date,  sym_main_date, sym_main_date.date) %>%     # nur zur besseren Übersicht, später löschen
+                filter(!!sym(visit_label_var_name) == start) %>%                                # using "start" enables variable starting time point
+                select(all_of(pid), all_of(visit_label_var_name), visitreg_date.date),                
+              by = pid,
+              relationship = "many-to-many") %>%                                # some patients with multiple "Abschlussvisite" entries
     # incomplete dates in sym_main_date
     mutate(
       # assess accuracy
@@ -478,24 +510,19 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
     
 
   # get right labels
-  label(trial_data[[grep("^_?esym$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
-  label(trial_data[[grep("^_?esym$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
-  label(trial_data[[grep("^_?esym$", table_names)]]$sym_main_date.date) <- "Datum des Symtombeginns"
+  Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
+  Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
+  Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$sym_main_date.date) <- "Datum des Symtombeginns"
 
-  
-  labelled::var_label( trial_data[[grep("^_?esym$", table_names)]]) <- list(
-    time_diff = ""
-  )
   
   # Diagnosis
   trial_data[[grep("^_?ecomorb$", table_names)]] <- trial_data[[grep("^_?ecomorb$", table_names)]] %>%   
     # join visit dates
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
-                filter(mnpvislabel == start) %>%                                # using "start" enables variable starting time point
-                select(mnppid, mnpvislabel, visitreg_date.date),
-              by = "mnppid",
-              relationship = "many-to-many") %>%                                # some patients with mulitple "Abschlussvisite" entries
-    # select(mnppid, mnpvislabel, visitreg_date.date, comorb_oth_diag_d, comorb_oth_diag_d.date) %>%     # nur zur besseren Übersicht, später löschen
+                filter(!!sym(visit_label_var_name) == start) %>%                                # using "start" enables variable starting time point
+                select(all_of(pid), all_of(visit_label_var_name), visitreg_date.date),
+              by = pid,
+              relationship = "many-to-many") %>%                                # some patients with multitple "Abschlussvisite" entries
     # incomplete dates in sym_main_date
     mutate(
       # assess accuracy
@@ -513,9 +540,9 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
     )
  
   # get right labels
-  label(trial_data[[grep("^_?ecomorb$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
-  label(trial_data[[grep("^_?ecomorb$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
-  label(trial_data[[grep("^_?ecomorb$", table_names)]]$comorb_oth_diag_d.date) <- "Diagnosedatum"
+  Hmisc::label(trial_data[[grep("^_?ecomorb$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
+  Hmisc::label(trial_data[[grep("^_?ecomorb$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
+  Hmisc::label(trial_data[[grep("^_?ecomorb$", table_names)]]$comorb_oth_diag_d.date) <- "Diagnosedatum"
 
   
   return (trial_data)
@@ -604,7 +631,7 @@ primary_coding_snid <- function(trial_data) {
              warning("primary_coding_snid_mss() did not work. This is likely due to missing variables.")
              print(e)})
   ### get time to visits =============================================
-  tryCatch(expr = {trial_data <- assign_cn_to_visits(trial_data)},
+  tryCatch(expr = {trial_data <- get_time_to_visits(trial_data, start = "Screening/Baselinevisite")},
            error = function(e) {
              warning("get_time_to_visits() did not work. This is likely due to missing variables.")
              print(e)})
