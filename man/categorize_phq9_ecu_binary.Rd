@@ -13,5 +13,5 @@ categorize_phq9_ecu_binary(ecu_phq9_sum)
 A factorized vector w/ levels "No depression" and "Depression"
 }
 \description{
-Categorize PHQ-8 sum score in depression and no depression
+Categorize PHQ-9 sum score in depression and no depression
 }

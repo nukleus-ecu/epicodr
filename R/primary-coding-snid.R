@@ -514,7 +514,7 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
   Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
   Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$sym_main_date.date) <- "Datum des Symtombeginns"
 
-  
+
   # Diagnosis
   trial_data[[grep("^_?ecomorb$", table_names)]] <- trial_data[[grep("^_?ecomorb$", table_names)]] %>%   
     # join visit dates
@@ -631,6 +631,7 @@ primary_coding_snid <- function(trial_data) {
              warning("primary_coding_snid_mss() did not work. This is likely due to missing variables.")
              print(e)})
   ### get time to visits =============================================
+
   tryCatch(expr = {trial_data <- get_time_to_visits(trial_data, start = "Screening/Baselinevisite")},
            error = function(e) {
              warning("get_time_to_visits() did not work. This is likely due to missing variables.")

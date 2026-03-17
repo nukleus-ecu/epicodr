@@ -41,7 +41,7 @@ Answers were coded /w levels 0 = "Not at all", 1 = "Several days", 2 = "More tha
 A numeric vector with sum score of phq9
 }
 \description{
-Calculate sum score of PHQ-8
+Calculate sum score of PHQ-9
 
 Patients are asked "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
 }

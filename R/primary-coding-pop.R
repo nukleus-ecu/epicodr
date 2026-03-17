@@ -399,8 +399,6 @@ primary_coding_pop_gad7 <- function(trial_data) {
 #' 
 #' adds the following column to surveyfrageboge: 
 #' ecu_facitf_sum, ecu_facitf_n, ecu_facitf_scale, ecu_facitf_cat
-#' ecu_facitf1, ecu_facitf2, ecu_facitf3, ecu_facitf4, ecu_facitf5, ecu_facitf6, ecu_facitf7, ecu_facitf8, ecu_facitf8
-#' ecu_facitf10, ecu_facitf11, ecu_facitf12, ecu_facitf13
 #'
 #' @param trial_data A secuTrial data object
 #' @importFrom rlang .data

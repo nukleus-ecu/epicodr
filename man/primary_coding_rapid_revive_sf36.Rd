@@ -11,7 +11,7 @@ primary_coding_rapid_revive_sf36(trial_data)
 }
 \description{
 adds the following column to sf36: 
-ecu_sf_013, ecu_sf_014, ecu_sf_015, ecu_sf_016. ecu_sf_017, v18, ecu_sf_019 (recoded items)
+ecu_sf_013, ecu_sf_014, ecu_sf_015, ecu_sf_016, ecu_sf_017, ecu_sf_018, ecu_sf_019 (recoded items)
 ecu_sf_001p, ecu_sf_002p, ecu_sf_003p, ecu_sf_004p, ecu_sf_005p, ecu_sf_006p, ecu_sf_007p, ecu_sf_008p, ecu_sf_009p,
 ecu_sf_010p, ecu_sf_011p, ecu_sf_012p, ecu_sf_013p, ecu_sf_014p, ecu_sf_015p, ecu_sf_016p, ecu_sf_017p, ecu_sf_018p,
 ecu_sf_019p, ecu_sf_020p, ecu_sf_021p, ecu_sf_022p, ecu_sf_023p, ecu_sf_024p, ecu_sf_025p, ecu_sf_026p, ecu_sf_027p,
