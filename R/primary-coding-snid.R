@@ -74,12 +74,13 @@ primary_coding_snid_age <- function(trial_data) {
   }
   
   pid <- trial_data$export_options$id_names$pid
+  visit_label_var_name <- ifelse("mnpvislabel" %in% names(trial_data[[grep("^_?visitreg$", table_names)]]), "mnpvislabel", "visit_name")
   
   trial_data[[grep("^_?patinf$", table_names)]] <- trial_data[[grep("^_?patinf$", table_names)]] %>% 
     # get screening date
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>% 
-                filter(mnpvislabel == "Screening/Baselinevisite") %>% 
-                select(all_of(pid), visitreg_date.date), by = pid) %>%
+                filter(visit_label_var_name == "Screening/Baselinevisite") %>% 
+                select(all_of(pid), .data$visitreg_date.date), by = pid) %>%
     # birth date was only reported as year (YYYY), but needed to be YYYY-MM-DD --> we added -06-30 to set the date of birth to June 30th as middle of the respective year
     mutate(ecu_patinf_birthyear_new = ymd(paste0(.data$patinf_birthyear, "-06-30")),
            ecu_age = calculate_full_years(from = .data$ecu_patinf_birthyear_new, to = .data$visitreg_date.date),
@@ -458,18 +459,13 @@ primary_coding_snid_lab <- function(trial_data) {
 #' 
 #'
 #' @param trial_data A secuTrial data object 
+#' @param start visit which the symptoms and comorbidities are mapped to, default is "Screening/Baselinevisite"
 #' @importFrom rlang .data 
 #' @import dplyr
 #' @export
-#' 
-#' @examples
-#' # start is "Screening/Baselinevisite"
-#' get_time_to_visits(data = trial_data, start = "Screening/Baselinevisite")
-#' 
-#' # start is "Abschlussvisite"
-#' get_time_to_visits(data = trial_data, start = "Abschlussvisite")
 
-get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevisite"){    # set "Screening/Baselinevisite" as default starting time point
+
+get_time_to_visits <- function(trial_data, start = "Screening/Baselinevisite"){    # set "Screening/Baselinevisite" as default starting time point
   
   table_names <- names(trial_data)
   
@@ -489,30 +485,30 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
     # join visit dates
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
                 filter(!!sym(visit_label_var_name) == start) %>%                                # using "start" enables variable starting time point
-                select(all_of(pid), all_of(visit_label_var_name), visitreg_date.date),                
+                select(all_of(pid), all_of(visit_label_var_name), .data$visitreg_date.date),                
               by = pid,
               relationship = "many-to-many") %>%                                # some patients with multiple "Abschlussvisite" entries
     # incomplete dates in sym_main_date
     mutate(
       # assess accuracy
       inaccuracy = case_when(
-        nchar(sym_main_date) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
-        nchar(sym_main_date) == 6 ~ 15,   # YYYYMM   → Monat bekannt
-        nchar(sym_main_date) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
+        nchar(.data$sym_main_date) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
+        nchar(.data$sym_main_date) == 6 ~ 15,   # YYYYMM   → Monat bekannt
+        nchar(.data$sym_main_date) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
         TRUE ~ NA_real_),
       # correct incomplete dates
       sym_main_date.date = case_when(
-        nchar(sym_main_date) == 6 ~ as.Date(paste0(sym_main_date, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
-        nchar(sym_main_date) == 4 ~ as.Date(paste0(sym_main_date, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
-        TRUE ~ sym_main_date.date),
-      time_diff = as.numeric(sym_main_date.date - visitreg_date.date)
+        nchar(sym_main_date) == 6 ~ as.Date(paste0(.data$sym_main_date, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
+        nchar(sym_main_date) == 4 ~ as.Date(paste0(.data$sym_main_date, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
+        TRUE ~ .data$sym_main_date.date),
+      time_diff = as.numeric(.data$sym_main_date.date - .data$visitreg_date.date)
       )
     
 
   # get right labels
-  labelled::var_label( trial_data[[grep("^_?esym$", table_names)]]) <- list(
-    time_diff = "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt",
-    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben",
+  labelled::var_label(trial_data[[grep("^_?esym$", table_names)]]) <- list(
+    time_diff = "Zeitdifferenz in Tagen zum ausgew\u00e4hlten Zeitpunkt",
+    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollst\\u00e4ndiger Datumsangaben",
     sym_main_date.date = "Datum des Symtombeginns"
   )
 
@@ -521,33 +517,33 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
     # join visit dates
     left_join(trial_data[[grep("^_?visitreg$", table_names)]] %>%
                 filter(!!sym(visit_label_var_name) == start) %>%                                # using "start" enables variable starting time point
-                select(all_of(pid), all_of(visit_label_var_name), visitreg_date.date),
+                select(all_of(pid), all_of(visit_label_var_name), .data$visitreg_date.date),
               by = pid,
               relationship = "many-to-many") %>%                                # some patients with multitple "Abschlussvisite" entries
     # incomplete dates in sym_main_date
     mutate(
       # assess accuracy
       inaccuracy = case_when(
-        nchar(comorb_oth_diag_d) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
-        nchar(comorb_oth_diag_d) == 6 ~ 15,   # YYYYMM   → Monat bekannt
-        nchar(comorb_oth_diag_d) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
+        nchar(.data$comorb_oth_diag_d) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
+        nchar(.data$comorb_oth_diag_d) == 6 ~ 15,   # YYYYMM   → Monat bekannt
+        nchar(.data$comorb_oth_diag_d) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
         TRUE ~ NA_real_),
       # correct incomplete dates
       comorb_oth_diag_d.date = case_when(
-        nchar(comorb_oth_diag_d) == 6 ~ as.Date(paste0(comorb_oth_diag_d, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
-        nchar(comorb_oth_diag_d) == 4 ~ as.Date(paste0(comorb_oth_diag_d, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
-        TRUE ~ comorb_oth_diag_d.date),
-      time_diff = as.numeric(comorb_oth_diag_d.date - visitreg_date.date)
+        nchar(.data$comorb_oth_diag_d) == 6 ~ as.Date(paste0(.data$comorb_oth_diag_d, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
+        nchar(.data$comorb_oth_diag_d) == 4 ~ as.Date(paste0(.data$comorb_oth_diag_d, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
+        TRUE ~ .data$comorb_oth_diag_d.date),
+      time_diff = as.numeric(.data$omorb_oth_diag_d.date - .data$visitreg_date.date)
     )
  
   # get right labels
-  labelled::var_label( trial_data[[grep("^_?ecomorb$", table_names)]]) <- list(
-    time_diff = "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt",
-    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben",
+  labelled::var_label(trial_data[[grep("^_?ecomorb$", table_names)]]) <- list(
+    time_diff = "Zeitdifferenz in Tagen zum ausgew\\u00e4hlten Zeitpunkt",
+    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollst\\u00e4ndiger Datumsangaben",
     comorb_oth_diag_d.date = "Diagnosedatum"
   )
   
-  return (trial_data)
+  return(trial_data)
   
 }
 
