@@ -510,10 +510,11 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
     
 
   # get right labels
-  Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
-  Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
-  Hmisc::label(trial_data[[grep("^_?esym$", table_names)]]$sym_main_date.date) <- "Datum des Symtombeginns"
-
+  labelled::var_label( trial_data[[grep("^_?esym$", table_names)]]) <- list(
+    time_diff = "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt",
+    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben",
+    sym_main_date.date = "Datum des Symtombeginns"
+  )
 
   # Diagnosis
   trial_data[[grep("^_?ecomorb$", table_names)]] <- trial_data[[grep("^_?ecomorb$", table_names)]] %>%   
@@ -540,10 +541,11 @@ get_time_to_visits <- function(data = trial_data, start = "Screening/Baselinevis
     )
  
   # get right labels
-  Hmisc::label(trial_data[[grep("^_?ecomorb$", table_names)]]$time_diff) <- "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt"
-  Hmisc::label(trial_data[[grep("^_?ecomorb$", table_names)]]$inaccuracy) <- "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben"
-  Hmisc::label(trial_data[[grep("^_?ecomorb$", table_names)]]$comorb_oth_diag_d.date) <- "Diagnosedatum"
-
+  labelled::var_label( trial_data[[grep("^_?ecomorb$", table_names)]]) <- list(
+    time_diff = "Zeitdifferenz in Tagen zum ausgewählten Zeitpunkt",
+    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollständiger Datumsangaben",
+    comorb_oth_diag_d.date = "Diagnosedatum"
+  )
   
   return (trial_data)
   
