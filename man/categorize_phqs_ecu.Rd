@@ -13,5 +13,5 @@ categorize_phqs_ecu(ecu_phqs_sum)
 A factorized vector w/ levels "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity
 }
 \description{
-Categorize PHQ-15 sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
+Categorize PHQ-Stress sum score in "Minimal somatic symptom severity", "Low somatic symptom severity", "Medium somatic symptom severity", and "High somatic symptom severity"
 }
