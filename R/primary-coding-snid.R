@@ -508,7 +508,7 @@ get_time_to_visits <- function(trial_data, start = "Screening/Baselinevisite"){ 
   # get right labels
   labelled::var_label(trial_data[[grep("^_?esym$", table_names)]]) <- list(
     time_diff = "Zeitdifferenz in Tagen zum ausgew\u00e4hlten Zeitpunkt",
-    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollst\\u00e4ndiger Datumsangaben",
+    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollst\u00e4ndiger Datumsangaben",
     sym_main_date.date = "Datum des Symtombeginns"
   )
 
@@ -533,13 +533,13 @@ get_time_to_visits <- function(trial_data, start = "Screening/Baselinevisite"){ 
         nchar(.data$comorb_oth_diag_d) == 6 ~ as.Date(paste0(.data$comorb_oth_diag_d, "15"), format = "%Y%m%d"),    # YYYYMM → add day 15 
         nchar(.data$comorb_oth_diag_d) == 4 ~ as.Date(paste0(.data$comorb_oth_diag_d, "0701"), format = "%Y%m%d"),  # YYYY → add 01.07. 
         TRUE ~ .data$comorb_oth_diag_d.date),
-      time_diff = as.numeric(.data$omorb_oth_diag_d.date - .data$visitreg_date.date)
+      time_diff = as.numeric(.data$comorb_oth_diag_d.date - .data$visitreg_date.date)
     )
  
   # get right labels
   labelled::var_label(trial_data[[grep("^_?ecomorb$", table_names)]]) <- list(
-    time_diff = "Zeitdifferenz in Tagen zum ausgew\\u00e4hlten Zeitpunkt",
-    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollst\\u00e4ndiger Datumsangaben",
+    time_diff = "Zeitdifferenz in Tagen zum ausgew\u00E4hlten Zeitpunkt",
+    inaccuracy = "Ungenauigkeit in Tagen aufgrund unvollst\u00e4ndiger Datumsangaben",
     comorb_oth_diag_d.date = "Diagnosedatum"
   )
   
