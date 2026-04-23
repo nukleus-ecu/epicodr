@@ -420,7 +420,7 @@ primary_coding_pop_facitf <- function(trial_data) {
              ifelse(!is.na(.data$facitf11), 1, 0) +
              ifelse(!is.na(.data$facitf12), 1, 0) +
              ifelse(!is.na(.data$facitf13), 1, 0), 
-           ecu_facitf_n = case_when(.data$ecu_facif_n == 0 ~ NA, TRUE ~ .data$ecu_facitf_n), 
+           ecu_facitf_n = case_when(.data$ecu_facitf_n == 0 ~ NA, TRUE ~ .data$ecu_facitf_n), 
            ecu_facitf_sum = calculate_facitf_sum(.data$facitf1, .data$facitf2, .data$facitf3, .data$facitf4, .data$facitf5, .data$facitf6, 
                                                  .data$facitf7, .data$facitf8, .data$facitf9, .data$facitf10, .data$facitf11, .data$facitf12, 
                                                  .data$facitf13, .data$ecu_facitf_n),
