@@ -6,10 +6,10 @@
 #    types: [newVersionEvent]
 #  workflow_dispatch:
 on:
-    workflow_dispatch:
     push:
         branches:
-            - fix-pkgdown-workflow
+            - main
+    workflow_dispatch:
 permissions:
   contents: write
 name: pkgdown
@@ -42,9 +42,8 @@ jobs:
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
-        #if: false
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
           clean: false
-          branch: gh-pages-test
+          branch: gh-pages
           folder: docs
