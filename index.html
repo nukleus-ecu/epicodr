@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">epicodr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -66,7 +66,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="epicodr-">epicodr <img src="reference/figures/logo.png" align="right" width="100"><a class="anchor" aria-label="anchor" href="#epicodr-"></a>
 </h1></div>
-<p>Import, primary coding and export functions for data of the National Pandemic Cohort Network <a href="https://www.napkon.de" class="external-link">NAPKON</a>.</p>
+<p>Import, primary coding and export functions for data of the National Pandemic Cohort Network <a href="https://www.napkon.de" class="external-link">NAPKON</a>, <a href="https://www.netzwerk-universitaetsmedizin.de/forschung/napkon-tip/studie-rapid-revive" class="external-link">RAPID REVIVE trial</a> and <a href="https://sn.netzwerk-universitaetsmedizin.de/" class="external-link">NUM Study Network</a> Infectious Diseases.</p>
 <div class="section level2">
 <h2 id="floppy_disk-versions--download">
 <span class="emoji" data-emoji="floppy_disk">💾</span> Versions &amp; Download<a class="anchor" aria-label="anchor" href="#floppy_disk-versions--download"></a>
@@ -77,11 +77,11 @@
 <h2 id="hammer-how-to-use-this-package">
 <span class="emoji" data-emoji="hammer">🔨</span> How to use this package<a class="anchor" aria-label="anchor" href="#hammer-how-to-use-this-package"></a>
 </h2>
-<p>Using this package, you can import SÜP, HAP and POP data exported from SecuTrial by the Transfer-Office, set variable and value labels, format date variables, perform primary coding, as well as export the data, e.g. in SPSS format.</p>
+<p>Using this package, you can import SÜP, HAP, POP, RAPID-REVIVE and NUM SNID data exported from SecuTrial by the Transfer-Office, set variable and value labels, format date variables, perform primary coding, as well as export the data, e.g. in SPSS format.</p>
 <div class="section level3">
 <h3 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
 </h3>
-<p>You can find a tutorial on how to use this package on YouTube at <a href="https://www.youtube.com/watch?v=WAY-DGsRYqU" class="external-link">NUKLEUS ECU</a>.</p>
+<p>You can find a tutorial on how to use this package on <a href="https://www.youtube.com/watch?v=WAY-DGsRYqU" class="external-link">YouTube</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="step-by-step-guide">Step-by-Step Guide<a class="anchor" aria-label="anchor" href="#step-by-step-guide"></a>
@@ -111,7 +111,7 @@
 <span></span>
 <span><span class="co"># Execute primary coding on data</span></span>
 <span><span class="va">data_primary_coded</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="co"># place coding function accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop()</span></span>
+<span>  <span class="co"># place coding function accordingly, e.g., primary_coding_suep() or primary_coding_hap() or primary_coding_pop() or primary_coding_snid() or primary_coding_rapid_revive()</span></span>
 <span>  <span class="fu"><a href="reference/primary_coding_suep.html">primary_coding_suep</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="co"># Execute Post-COVID-Syndrom Score (PCS score) for SUEP and HAP data</span></span>
@@ -166,8 +166,8 @@
 <h2 id="pencil2-supported-data-structure">
 <span class="emoji" data-emoji="pencil2">✏️</span> Supported data structure<a class="anchor" aria-label="anchor" href="#pencil2-supported-data-structure"></a>
 </h2>
-<p>Descriptions of the primary codings of the NAPKON cohort platforms SÜP, POP and HAP are available at the following link:</p>
-<p><a href="https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2F06_Prim%C3%A4rkodierung%20Datenauswertung__Primary%20coding%20Data%20analysis" class="external-link">https://cloud.napkon.de/s/kgSLW7gkBExBYfC?path=%2F06_Prim%C3%A4rkodierung%20Datenauswertung__Primary%20coding%20Data%20analysis</a></p>
+<p>Descriptions of the primary codings of the NAPKON cohort platforms as well as the RAPID trials and NUM study networks are available at the following link:</p>
+<p><a href="https://cloud.netzwerk-universitaetsmedizin.de/s/moAq8QJtNPpAGaF" class="external-link uri">https://cloud.netzwerk-universitaetsmedizin.de/s/moAq8QJtNPpAGaF</a></p>
 <p>Additionally, there are manuals that include variable categorizations, aids for calculating scores, defining normal ranges of laboratory parameters and clinical parameters. Further explanations are also available in the tutorial presentation.</p>
 </div>
 <div class="section level2">
@@ -178,7 +178,7 @@
 <h3 id="computer-r-code-structure">
 <span class="emoji" data-emoji="computer">💻</span> R code structure<a class="anchor" aria-label="anchor" href="#computer-r-code-structure"></a>
 </h3>
-<p>The R code is structured as follows: - <a href="R">R</a> contains platform independent and platform specific implementations: - <a href="R/write_tsExport.R">read-tsExport.R</a> contains import functions - <a href="R/write_tsExport.R">write-tsExport.R</a> contains export functions, e.g. for export to SPSS (.sav) - <a href="R/primary-coding.R">primary-coding.R</a> contains platform independent helper functions used in platform specific primary coding scripts - <a href="R/primary-coding-suep.R">primary-coding-suep.R</a> contains platform specific functions for primary coding for platform SUEP - <a href="R/primary-coding-hap.R">primary-coding-hap.R</a> contains platform specific functions for primary coding for platform HAP - <a href="R/primary-coding-pop.R">primary-coding-pop.R</a> contains platform specific functions for primary coding for platform POP</p>
+<p>The R code is structured as follows: - <a href="R">R</a> contains platform independent and platform specific implementations: - <a href="R/write_tsExport.R">read-tsExport.R</a> contains import functions - <a href="R/write_tsExport.R">write-tsExport.R</a> contains export functions, e.g. for export to SPSS (.sav) - <a href="R/primary-coding.R">primary-coding.R</a> contains platform independent helper functions used in platform specific primary coding scripts - <a href="R/primary-coding-suep.R">primary-coding-suep.R</a> contains platform specific functions for primary coding for platform SUEP - <a href="R/primary-coding-hap.R">primary-coding-hap.R</a> contains platform specific functions for primary coding for platform HAP - <a href="R/primary-coding-pop.R">primary-coding-pop.R</a> contains platform specific functions for primary coding for platform POP - <a href="R/primary-coding-rapid_revive.R">primary-coding-rapid_revive.R</a> contains platform specific functions for primary coding for the RAPID-REVIVE trial - <a href="R/primary-coding-snid.R">primary-coding-snid.R</a> contains platform specific functions for primary coding for NUM study network Infectious Diseases</p>
 </div>
 </div>
 </div>
@@ -218,11 +218,13 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Carolin Nürnberger <br><small class="roles"> Author </small> <a href="https://orcid.org/0009-0007-1029-3707" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Mirjam Kohls <br><small class="roles"> Author </small>  </li>
-<li>Miriam Rainers <br><small class="roles"> Author </small>  </li>
-<li>Olga Miljukov <br><small class="roles"> Author </small>  </li>
-<li>Klaus Kammerer <br><small class="roles"> Contributor, maintainer </small> <a href="https://orcid.org/0000-0001-8998-0890" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Carolin Nürnberger <br><small class="roles"> Author </small> <a href="https://orcid.org/0009-0007-1029-3707" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Sabrina Schmitt <br><small class="roles"> Author </small> <a href="https://orcid.org/0009-0008-2719-6513" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Lea Mergenthal <br><small class="roles"> Author </small>   </li>
+<li>Mirjam Kohls <br><small class="roles"> Author </small>   </li>
+<li>Miriam Rainers <br><small class="roles"> Author </small>   </li>
+<li>Olga Miljukov <br><small class="roles"> Author </small>   </li>
+<li>Klaus Kammerer <br><small class="roles"> Contributor, maintainer </small> <a href="https://orcid.org/0000-0001-8998-0890" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -235,12 +237,12 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Carolin Nürnberger, Mirjam Kohls, Miriam Rainers, Olga Miljukov, Klaus Kammerer.</p>
+<p>Developed by Carolin Nürnberger, Sabrina Schmitt, Lea Mergenthal, Mirjam Kohls, Miriam Rainers, Olga Miljukov, Klaus Kammerer.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
