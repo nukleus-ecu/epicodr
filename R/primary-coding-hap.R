@@ -726,11 +726,11 @@ build_who_scale_hap <- function(trial_data, pid) {
     rename(ecu_who_scale_max_with_diag.factor = "ecu_who_scale_with_diag.factor",
            ecu_who_scale_max_with_diag = "ecu_who_scale_with_diag")
 
-  trial_data[[grep("^_?osfci$", table_names)]] <-  trial_data[[grep("^_?osfci$", table_names)]] %>%
+  trial_data[[grep("^_?demo$", table_names)]] <-  trial_data[[grep("^_?demo$", table_names)]] %>%
     left_join(who_scale_max, by = pid) %>%
     left_join(who_scale_with_diag_max, by = pid)
   
-  labelled::var_label(trial_data[[grep("^_?osfci$", table_names)]]) <- list(
+  labelled::var_label(trial_data[[grep("^_?demo$", table_names)]]) <- list(
     ecu_who_scale_max = "",
     ecu_who_scale_max.factor = "",
     ecu_who_scale_max_with_diag = "",
