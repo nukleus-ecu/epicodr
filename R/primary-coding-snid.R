@@ -451,7 +451,7 @@ primary_coding_snid_lab <- function(trial_data) {
 
 #' Primary coding time from diagnosis and the onset of symptoms to the selected visit
 #' 
-#' add the following colums to esym:
+#' add the following columns to esym:
 #' inaccuracy, sym_main_date.date, time_diff
 #' 
 #' add the following columns to ecomorb:
@@ -492,9 +492,9 @@ get_time_to_visits <- function(trial_data, start = "Screening/Baselinevisite"){ 
     mutate(
       # assess accuracy
       inaccuracy = case_when(
-        nchar(.data$sym_main_date) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
-        nchar(.data$sym_main_date) == 6 ~ 15,   # YYYYMM   → Monat bekannt
-        nchar(.data$sym_main_date) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
+        nchar(.data$sym_main_date) == 8 ~ 0,    # YYYYMMDD → day known
+        nchar(.data$sym_main_date) == 6 ~ 15,   # YYYYMM   → month known
+        nchar(.data$sym_main_date) == 4 ~ 180,  # YYYY     → only year known
         TRUE ~ NA_real_),
       # correct incomplete dates
       sym_main_date.date = case_when(
@@ -524,9 +524,9 @@ get_time_to_visits <- function(trial_data, start = "Screening/Baselinevisite"){ 
     mutate(
       # assess accuracy
       inaccuracy = case_when(
-        nchar(.data$comorb_oth_diag_d) == 8 ~ 0,    # YYYYMMDD → Tag bekannt
-        nchar(.data$comorb_oth_diag_d) == 6 ~ 15,   # YYYYMM   → Monat bekannt
-        nchar(.data$comorb_oth_diag_d) == 4 ~ 180,  # YYYY     → nur Jahr bekannt
+        nchar(.data$comorb_oth_diag_d) == 8 ~ 0,    # YYYYMMDD → day known
+        nchar(.data$comorb_oth_diag_d) == 6 ~ 15,   # YYYYMM   → month known
+        nchar(.data$comorb_oth_diag_d) == 4 ~ 180,  # YYYY     → only year known
         TRUE ~ NA_real_),
       # correct incomplete dates
       comorb_oth_diag_d.date = case_when(

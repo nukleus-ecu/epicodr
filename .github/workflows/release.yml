@@ -1,3 +1,7 @@
+name: Release and Update DESCRIPTION
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -5,13 +9,42 @@ on:
   workflow_dispatch:
   
 jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      message: ${{ steps.get-commit-message.outputs.message }} # Define job-level output
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      
+      - name: Get the commit message
+        id: get-commit-message
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            COMMIT_SHA="${{ github.event.after }}"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            COMMIT_SHA="${{ github.event.pull_request.head.sha }}"
+          fi
+          message=$(git log --format=%B -n 1 $COMMIT_SHA)
+          echo "$message"
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo "$message" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+          
   check-on-push:
     runs-on: ubuntu-latest
+    needs: check-commit
+    if: ${{ !contains(needs.check-commit.outputs.message, 'norelease') }}
+    # Removed, causes problems, MY_PAT nowhere documented
+    # env:
+    #   GITHUB_PAT: ${{ secrets.MY_PAT }}
+    #   R_KEEP_PKG_SOURCE: yes
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
@@ -24,10 +57,68 @@ jobs:
   release-on-push:
     runs-on: ubuntu-latest
     needs: check-on-push
+    # env:
+    #   GITHUB_TOKEN: ${{ secrets.MY_PAT }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    outputs:
+      new_version: ${{ steps.create_release.outputs.version }}
     steps:
-      - uses: rymndhng/release-on-push-action@master
+      - name: Create Release
+        id: create_release
+        uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: minor
           use_github_release_notes: true
+
+  update-description:
+    needs: release-on-push
+    if: ${{ needs.release-on-push.outputs.new_version != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Update DESCRIPTION file with the new version
+        run: |
+          new_version="${{ needs.release-on-push.outputs.new_version }}"
+          Rscript -e "new_version <- '${new_version}'; trimmed_version <- substring(new_version, 2); lines <- readLines('DESCRIPTION'); for (i in seq_along(lines)) { if (grepl('^Version:', lines[i])) { lines[i] <- paste('Version:', trimmed_version); break } }; writeLines(lines, 'DESCRIPTION')"
+
+      - name: Create branch, commit changes
+        run: |
+          BRANCH="chore/update-version-${{ needs.release-on-push.outputs.new_version }}"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          git checkout -b "$BRANCH"
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add DESCRIPTION
+          git commit -m "Update version in DESCRIPTION [norelease]"
+          git push origin "$BRANCH"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Open pull request
+#        run: |
+#          gh pr create \
+#            --base main \
+#            --head "$BRANCH" \
+#            --title "Update DESCRIPTION version to ${{ needs.release-on-push.outputs.new_version }}" \
+#            --body "Automated version bump after release ${{ needs.release-on-push.outputs.new_version }}."
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Next steps (manual PR required)
+        run: |
+          echo "Version bump branch pushed: $BRANCH"
+          echo "Please open a pull request:"
+          echo "  Base: main"
+          echo "  Compare: $BRANCH"
+
